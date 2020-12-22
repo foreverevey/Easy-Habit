@@ -1,0 +1,55 @@
+{
+    "paths": [
+        {
+            "name": "/habits",
+            "lambdaFunction": "apiFunction",
+            "privacy": {
+                "open": true
+            }
+        },
+        {
+            "name": "/habit",
+            "lambdaFunction": "apiFunction",
+            "privacy": {
+                "open": true
+            }
+        },
+        {
+            "name": "/signin",
+            "lambdaFunction": "apiFunction",
+            "privacy": {
+                "open": true
+            }
+        },
+        {
+            "name": "/signup",
+            "lambdaFunction": "apiFunction",
+            "privacy": {
+                "open": true
+            }
+        }
+    ],
+    "resourceName": "mainApi",
+    "apiName": "mainApi",
+    "functionArns": [
+        {
+            "lambdaFunction": "apiFunction"
+        }
+    ],
+    "privacy": {
+        "auth": 0,
+        "unauth": 0,
+        "authRoleName": "amplify-habit12202020-dev-135559-authRole",
+        "unAuthRoleName": "amplify-habit12202020-dev-135559-unauthRole"
+    },
+    "dependsOn": [
+        {
+            "category": "function",
+            "resourceName": "apiFunction",
+            "attributes": [
+                "Name",
+                "Arn"
+            ]
+        }
+    ]
+}
