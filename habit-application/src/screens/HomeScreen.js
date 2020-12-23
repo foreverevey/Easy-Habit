@@ -28,8 +28,12 @@ const HomeScreen = ({navigation}) => {
     formatedDate = mm + '/' + dd + '/' + yyyy;
     console.log('today: ', formatedDate);
     try{
-      await addDateHabit(id, formatedDate);
+      setLoading(true);
+      await addDateHabit(id, formatedDate).then(()=>{
+        setLoading(false);
+      });
     } catch(error){
+      setLoading(false);
       console.log('Homescreen add date error', error);
     }
   };
@@ -44,9 +48,13 @@ const HomeScreen = ({navigation}) => {
     formatedDate = mm + '/' + dd + '/' + yyyy;
     console.log('today: ', formatedDate);
     try{
-      await removeDateHabit(id, formatedDate);
+      setLoading(true);
+      await removeDateHabit(id, formatedDate).then(()=>{
+        setLoading(false);
+      });
     } catch(error){
-      console.log('Homescreen add date error', error);
+      setLoading(false);
+      console.log('Homescreen remove date error', error);
     }
   };
 
@@ -94,7 +102,7 @@ const HomeScreen = ({navigation}) => {
               renderItem= {({item}) => {
                 return (
                   <>
-                    <HabitRow Text={item.name} onPress={()=>{navigation.navigate('Detail', {item: item._id})}}>
+                    <HabitRow Text={item.name} onPress={()=>{navigation.navigate('Detail', {item: item._id, test: item})}}>
                     </HabitRow>
                     <TouchableOpacity onPress={()=>delHabit(item._id)}>
                       <Text>Delete Habit</Text>

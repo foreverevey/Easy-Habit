@@ -10,6 +10,11 @@
             "StackName": "amplify-habit12202020-dev-135559",
             "StackId": "arn:aws:cloudformation:eu-west-1:591532399479:stack/amplify-habit12202020-dev-135559/a957d100-444c-11eb-88ed-0a8b4422ec0a",
             "AmplifyAppId": "d1oduds4pv2zko"
+        },
+        "categories": {
+            "function": {
+                "apiFunction": {}
+            }
         }
     }
 }

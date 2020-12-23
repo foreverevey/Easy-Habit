@@ -14,7 +14,7 @@ const habitReducer = ( state, action ) => {
       return state.filter((habit) => habit._id !== action.payload);
     case 'add_date':
       return state.map(habit => {
-        if(habit._id === action.payload){
+        if(habit._id === action.payload.id){
           return action.payload.habit
         } else {
           return habit;
@@ -22,7 +22,7 @@ const habitReducer = ( state, action ) => {
       });
     case 'remove_date':
       return state.map(habit => {
-        if(habit._id === action.payload){
+        if(habit._id === action.payload.id){
           return action.payload.habit;
         } else {
           return habit;
@@ -61,7 +61,7 @@ const deleteHabit = dispatch => async (id) => {
     await habitApi.delete(url, {id});
     dispatch({type: 'delete_habit', payload: id});
   } catch(error){
-    console.log('fail delete habit', error);
+    console.log('fail delete habit', error.message);
   }
 };
 
@@ -69,18 +69,20 @@ const addDateHabit = dispatch => async (id, formatedDate) => {
   try{
     console.log('addDateHabit', id, formatedDate);
     const response = await habitApi.post('/habit/add-date', {id, date:formatedDate.toString()});
+    console.log('response answer add date', response);
     dispatch({type: 'add_date', payload: {id, habit: response.data}})
   } catch(error){
-    console.log('Failed to add date', error);
+    console.log('Failed to add date', error.message);
   }
 };
 
 const removeDateHabit = dispatch => async (id, date) => {
   try{
     const response = await habitApi.post('/habit/remove-date', {id, date});
+    console.log('removeDateHabit', response.data);
     dispatch({type: 'remove_date', payload: {id, habit: response.data}})
   } catch(error){
-    console.log('Failed to remove date', error);
+    console.log('Failed to remove date', error.message);
   }
 };
 

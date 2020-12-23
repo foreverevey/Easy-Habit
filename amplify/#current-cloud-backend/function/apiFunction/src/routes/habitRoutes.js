@@ -13,8 +13,10 @@ router.use(requireAuth);
 // to req.user
 // habits - array
 router.get('/habits', async (req,res) =>{
-  const habits = await Habit.find({userId: req.user._id});
-  res.send(habits);
+  const habits = await Habit.find({userId: req.user._id}).populate('dates').exec(function(error, habits){
+    res.send(habits);
+  });;
+  // res.send(habits);
 });
 // GET one habit by user ID and habit ID
 router.get('/habit', async (req,res)=>{
@@ -51,20 +53,40 @@ router.post('/habit/add-date', async(req,res)=>{
     return res.status(422).send({error: 'You must provide a date'})
   }
   try{
-    const habit = await Habit.findById(id).exec();
-    console.log('habit', habit);
-    const checkDate = await Dates.findOne({date: date}).exec();
+    // const habit = await Habit.findById(id).exec();
+    // console.log('habit', habit);
+    const checkDate = await Dates.findOne({date: new Date(date)}).exec();
     if(!checkDate){
-      const todayDate = new Dates({date:date});
+      const todayDate = new Dates({date: date});
       await todayDate.save();
-      habit.dates.push(todayDate._id);
-      await habit.save();
-      res.send(habit);
-      console.log('todayDate2', todayDate);
-    } else{
-      habit.dates.push(checkDate._id);
-      await habit.save();
-      res.send(habit);
+      const habit = await Habit.findOneAndUpdate({'_id' : id} ,{ $push: { 'dates': todayDate._id }}, {'new': true})
+      .populate('dates')
+      .exec(function(err,habit) {
+        if (err) return res.status(422).send({error: err.message});
+        res.send(habit)
+      });
+      // habit.dates.push(todayDate._id);
+      // await habit.save();
+      // await habit.populate('dates').exec(function(error, habit){
+      //   console.log(habit, 'habit ppopulate');
+      //   res.send(habit);
+      // });
+      // res.send(habit);
+      // console.log('todayDate2', todayDate);
+      } else{
+        const habit = await Habit.findOneAndUpdate({'_id' : id} ,{ $push: { 'dates': checkDate._id }}, {'new': true})
+        .populate('dates')
+        .exec(function(err,habit) {
+          if (err) return res.status(422).send({error: err.message});
+          res.send(habit)
+      });
+      // habit.dates.push(checkDate._id);
+      // await habit.save();
+      // await habit.populate('dates').exec(function(error, habit){
+      //   console.log(habit, 'habit ppopulate');
+      //   res.send(habit);
+      // });
+      // res.send(habit);
     }
   } catch (err){
     console.log(err);
@@ -78,11 +100,32 @@ router.post('/habit/remove-date', async(req,res)=>{
     return res.status(422).send({error: 'You must provide a date'})
   }
   try{
-    const habit = Habit.findById(id);
-    const todayDate = Dates.findOne({date: date});
-    habit.dates.pull(todayDate._id);
-    await habit.save();
-    res.send(habit);
+    // const habit = await Habit.findById(id).exec();
+    // console.log('habit', habit);
+    const todayDate = await Dates.findOne({date: new Date(date)}).exec();
+    console.log('todayDate', todayDate);
+    if(todayDate){
+      const habit = await Habit.findOneAndUpdate({'_id' : id} ,{ $pull: { 'dates': todayDate._id }}, {'new': true})
+      .populate('dates')
+      .exec(function(err,habit) {
+        if (err) return res.status(422).send({error: err.message});;
+        res.send(habit)
+      });
+      // habit.dates.pull(todayDate._id);
+      // await habit.save();
+      // await habit.populate('dates').exec(function(error, habit){
+      //   console.log(habit, 'habit ppopulate');
+      //   res.send(habit);
+      // });
+      // // res.send(habit);
+    } else {
+      return res.status(422).send({error: 'Cant delete unselected date'})
+      // await habit.populate('dates').exec(function(error, habit){
+      //   console.log(habit, 'habit ppopulate');
+      //   res.send(habit);
+      // });
+      // res.send(habit);
+    };
   } catch (err){
     res.status(422).send({error: err.message});
   }
