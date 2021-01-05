@@ -5,17 +5,49 @@ import HabitRow from '../components/HabitRow';
 import { NavigationEvents} from 'react-navigation';
 import {MyContext as HabitContext} from '../context/habitContext';
 import Spinner from 'react-native-loading-spinner-overlay';
+import MyHeader from '../components/Header';
+import DateTimePickerModal from "react-native-modal-datetime-picker";
 
 const HomeScreen = ({navigation}) => {
+  const getFormatedDay = (selectDate) => {
+    const dd = String(selectDate.getDate()).padStart(2, '0');
+    const mm = String(selectDate.getMonth() + 1).padStart(2, '0'); //January is 0!
+    const yyyy = selectDate.getFullYear();
+    const formatedDate = mm + '/' + dd + '/' + yyyy;
+    return formatedDate;
+  };
+
+  const defaultDay = getFormatedDay(new Date());
   const {state, getHabits, deleteHabit, addDateHabit, removeDateHabit} = useContext(HabitContext);
   const [loading, setLoading] = useState(true);
   const [count, setCount] = useState(0);
+  const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
+  const [selectedDay, setSelectedDay] = useState(defaultDay);
+
+  const showDatePicker = () => {
+    console.log('ShowDatePicker');
+    setDatePickerVisibility(true);
+  };
+
+  const hideDatePicker = () => {
+    setDatePickerVisibility(false);
+  };
+
+  const handleConfirm = (date) => {
+    console.log("A date has been picked: ", date);
+    const formatedDate = getFormatedDay(date);
+    setSelectedDay(formatedDate);
+    hideDatePicker();
+  };
 
   const updateCount = () => {
     setCount(count + 1);
   };
 
-  console.log(count);
+  const updateDate = () => {
+    console.log('updateDate');
+    setDatePickerVisibility(true);
+  };
 
   const delHabit = async (id) => {
     try{
@@ -27,16 +59,16 @@ const HomeScreen = ({navigation}) => {
   };
 
   const addDate = async (id) =>{
-    const today = new Date();
-    const dd = String(today.getDate()).padStart(2, '0');
-    const mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
-    const yyyy = today.getFullYear();
-
-    formatedDate = mm + '/' + dd + '/' + yyyy;
-    console.log('today: ', formatedDate);
+    // const today = new Date();
+    // const dd = String(today.getDate()).padStart(2, '0');
+    // const mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+    // const yyyy = today.getFullYear();
+    //
+    // formatedDate = mm + '/' + dd + '/' + yyyy;
+    // console.log('today: ', formatedDate);
     try{
       setLoading(true);
-      await addDateHabit(id, formatedDate).then(()=>{
+      await addDateHabit(id, selectedDay).then(()=>{
         setLoading(false);
       });
     } catch(error){
@@ -47,16 +79,16 @@ const HomeScreen = ({navigation}) => {
 
   // Without date selection to test REST api
   const removeDate = async (id) =>{
-    const today = new Date();
-    const dd = String(today.getDate()).padStart(2, '0');
-    const mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
-    const yyyy = today.getFullYear();
-
-    formatedDate = mm + '/' + dd + '/' + yyyy;
-    console.log('today: ', formatedDate);
+    // const today = new Date();
+    // const dd = String(today.getDate()).padStart(2, '0');
+    // const mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+    // const yyyy = today.getFullYear();
+    //
+    // formatedDate = mm + '/' + dd + '/' + yyyy;
+    // console.log('today: ', formatedDate);
     try{
       setLoading(true);
-      await removeDateHabit(id, formatedDate).then(()=>{
+      await removeDateHabit(id, selectedDay).then(()=>{
         setLoading(false);
       });
     } catch(error){
@@ -67,7 +99,10 @@ const HomeScreen = ({navigation}) => {
 
   useEffect(() => {
       setLoading(true);
+      // TODO: check params if we already have selectedDay?
       navigation.setParams({ increaseCount: updateCount });
+      navigation.setParams({ getDatePicker: showDatePicker });
+      navigation.setParams({ selectedDay: selectedDay });
       getHabits().then(()=>{
         setLoading(false);
       });
@@ -76,6 +111,15 @@ const HomeScreen = ({navigation}) => {
   useEffect(() => {
     navigation.setParams({ increaseCount: updateCount });
   }, [count]);
+
+  useEffect(() => {
+    console.log('useEffect selectDay', selectedDay);
+    navigation.setParams({ selectedDay: selectedDay });
+    setLoading(true);
+    getHabits().then(()=>{
+      setLoading(false);
+    });
+  }, [selectedDay]);
 
   const clearStorage = async () => {
     try{
@@ -107,6 +151,14 @@ const HomeScreen = ({navigation}) => {
   if(!loading){
     return (
       <View style={styles.container}>
+        <View>
+          <DateTimePickerModal
+            isVisible={isDatePickerVisible}
+            mode="date"
+            onConfirm={handleConfirm}
+            onCancel={hideDatePicker}
+          />
+        </View>
         <NavigationEvents onWillFocus={focusFunction}/>
             <FlatList style={styles.flatList}
               data={state}
@@ -114,7 +166,7 @@ const HomeScreen = ({navigation}) => {
               renderItem= {({item}) => {
                 return (
                   <>
-                    <HabitRow Text={item.name} onPress={()=>{navigation.navigate('Detail', {item: item._id, test: item})}}>
+                    <HabitRow Text={item.name} Dates={item.dates} SelectedDate={selectedDay} onPress={()=>{navigation.navigate('Detail', {item: item._id, test: item})}}>
                     </HabitRow>
                     <TouchableOpacity onPress={()=>delHabit(item._id)}>
                       <Text>Delete Habit</Text>
@@ -161,18 +213,7 @@ const HomeScreen = ({navigation}) => {
 }
 
 HomeScreen.navigationOptions = ({navigation}) => {
-  return {
-    headerStyle: {
-      backgroundColor: '#f4511e',
-    },
-    title: 'Hi',
-    headerRight: () => (
-           <TouchableOpacity
-             style={{padding:5, marginHorizontal:10}}
-             onPress={()=>navigation.getParam('increaseCount')()}>
-             <Text style={{color:"#FFFFFF"}}>Test count</Text>
-           </TouchableOpacity>)
-  };
+  return MyHeader(navigation);
 };
 
 const styles = StyleSheet.create({
