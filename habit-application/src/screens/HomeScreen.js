@@ -9,6 +9,13 @@ import Spinner from 'react-native-loading-spinner-overlay';
 const HomeScreen = ({navigation}) => {
   const {state, getHabits, deleteHabit, addDateHabit, removeDateHabit} = useContext(HabitContext);
   const [loading, setLoading] = useState(true);
+  const [count, setCount] = useState(0);
+
+  const updateCount = () => {
+    setCount(count + 1);
+  };
+
+  console.log(count);
 
   const delHabit = async (id) => {
     try{
@@ -60,10 +67,15 @@ const HomeScreen = ({navigation}) => {
 
   useEffect(() => {
       setLoading(true);
+      navigation.setParams({ increaseCount: updateCount });
       getHabits().then(()=>{
         setLoading(false);
       });
   }, []);
+
+  useEffect(() => {
+    navigation.setParams({ increaseCount: updateCount });
+  }, [count]);
 
   const clearStorage = async () => {
     try{
@@ -124,6 +136,7 @@ const HomeScreen = ({navigation}) => {
             }>
             <Text style={styles.ForgotText}>Create</Text>
           </TouchableOpacity>
+          <Text>{count}</Text>
           <TouchableOpacity
             style={styles.NewAcc}
             onPress={() => {
@@ -147,9 +160,18 @@ const HomeScreen = ({navigation}) => {
 
 }
 
-HomeScreen.navigationOptions = () => {
+HomeScreen.navigationOptions = ({navigation}) => {
   return {
-    headerShown: false
+    headerStyle: {
+      backgroundColor: '#f4511e',
+    },
+    title: 'Hi',
+    headerRight: () => (
+           <TouchableOpacity
+             style={{padding:5, marginHorizontal:10}}
+             onPress={()=>navigation.getParam('increaseCount')()}>
+             <Text style={{color:"#FFFFFF"}}>Test count</Text>
+           </TouchableOpacity>)
   };
 };
 
