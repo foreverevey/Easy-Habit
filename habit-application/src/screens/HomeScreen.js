@@ -18,7 +18,7 @@ const HomeScreen = ({navigation}) => {
   };
 
   const defaultDay = getFormatedDay(new Date());
-  const {state, getHabits, deleteHabit, addDateHabit, removeDateHabit} = useContext(HabitContext);
+  const {state, getHabits, deleteHabit, addDateHabit, removeDateHabit, reloadState} = useContext(HabitContext);
   const [loading, setLoading] = useState(true);
   const [count, setCount] = useState(0);
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
@@ -37,6 +37,7 @@ const HomeScreen = ({navigation}) => {
     console.log("A date has been picked: ", date);
     const formatedDate = getFormatedDay(date);
     setSelectedDay(formatedDate);
+    // reloadState(!state.reload, state.data);
     hideDatePicker();
   };
 
@@ -59,6 +60,7 @@ const HomeScreen = ({navigation}) => {
   };
 
   const addDate = async (id) =>{
+    console.log('addDate in homescreen');
     // const today = new Date();
     // const dd = String(today.getDate()).padStart(2, '0');
     // const mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
@@ -115,9 +117,14 @@ const HomeScreen = ({navigation}) => {
   useEffect(() => {
     console.log('useEffect selectDay', selectedDay);
     navigation.setParams({ selectedDay: selectedDay });
+    // setLoading(true);
+    // getHabits().then(()=>{
+    //   setLoading(false);
+    // });
+    // getHabits();
     setLoading(true);
-    getHabits().then(()=>{
-      setLoading(false);
+    reloadState(!state.reload, state.data).then(()=>{
+        setLoading(false);
     });
   }, [selectedDay]);
 
@@ -161,56 +168,64 @@ const HomeScreen = ({navigation}) => {
         </View>
         <NavigationEvents onWillFocus={focusFunction}/>
             <FlatList style={styles.flatList}
-              data={state}
+              data={state.data}
+              extraData={state.reload}
               keyExtractor={item => item._id}
               renderItem= {({item}) => {
                 return (
                   <>
-                    <HabitRow Text={item.name} Dates={item.dates} SelectedDate={selectedDay} onPress={()=>{navigation.navigate('Detail', {item: item._id, test: item})}}>
+                    <HabitRow
+                      Text={item.name}
+                      Dates={item.dates}
+                      SelectedDate={selectedDay}
+                      onPress={()=>{navigation.navigate('Detail', {item: item._id, test: item})}}
+                      addDate={()=>{addDate(item._id)}}
+                      removeDate={()=>{removeDate(item._id)}}>
                     </HabitRow>
                     <TouchableOpacity onPress={()=>delHabit(item._id)}>
                       <Text>Delete Habit</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={()=>addDate(item._id)}>
-                      <Text>Add date</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={()=>removeDate(item._id)}>
-                      <Text>Remove date</Text>
-                    </TouchableOpacity>
+
                   </>
                   );
                 }}/>
-          <TouchableOpacity
-            style={styles.NewAcc}
-            onPress={() => {
-              navigation.navigate('Create')
-            }
-            }>
-            <Text style={styles.ForgotText}>Create</Text>
-          </TouchableOpacity>
-          <Text>{count}</Text>
-          <TouchableOpacity
-            style={styles.NewAcc}
-            onPress={() => {
-              console.log("state", state);
-            }
-            }>
-            <Text style={styles.ForgotText}>ConsoleLog</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.NewAcc}
-            onPress={ async () => {
-              await clearStorage();
-              navigation.navigate('Signin');
-            }
-            }>
-          <Text style={styles.ForgotText}>Logout</Text>
-          </TouchableOpacity>
       </View>
     )
   }
 
 }
+// <TouchableOpacity onPress={()=>addDate(item._id)}>
+//   <Text>Add date</Text>
+// </TouchableOpacity>
+// <TouchableOpacity onPress={()=>removeDate(item._id)}>
+//   <Text>Remove date</Text>
+// </TouchableOpacity>
+// <TouchableOpacity
+//   style={styles.NewAcc}
+//   onPress={() => {
+//     navigation.navigate('Create')
+//   }
+//   }>
+//   <Text style={styles.ForgotText}>Create</Text>
+// </TouchableOpacity>
+// <Text>{count}</Text>
+// <TouchableOpacity
+//   style={styles.NewAcc}
+//   onPress={() => {
+//     console.log("state", state);
+//   }
+//   }>
+//   <Text style={styles.ForgotText}>ConsoleLog</Text>
+// </TouchableOpacity>
+// <TouchableOpacity
+//   style={styles.NewAcc}
+//   onPress={ async () => {
+//     await clearStorage();
+//     navigation.navigate('Signin');
+//   }
+//   }>
+// <Text style={styles.ForgotText}>Logout</Text>
+// </TouchableOpacity>
 
 HomeScreen.navigationOptions = ({navigation}) => {
   return MyHeader(navigation);
@@ -227,7 +242,7 @@ const styles = StyleSheet.create({
   },
   flatList:{
     marginHorizontal: 10,
-    marginTop:25,
+    marginTop:-10,
   },
   NewAcc:{
     alignSelf:'center',

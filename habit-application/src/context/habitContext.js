@@ -7,27 +7,33 @@ import { navigate } from '../navigationRef';
 const habitReducer = ( state, action ) => {
   switch (action.type){
     case 'get_habits':
-      return action.payload
+      return {...state, data: action.payload};
     case 'add_habit':
-      return [...state, action.payload];
+      return {...state, data: action.payload};
     case 'delete_habit':
-      return state.filter((habit) => habit._id !== action.payload);
+      var data = state.data.filter((habit) => habit._id !== action.payload);
+      return {...state, data: data};
     case 'add_date':
-      return state.map(habit => {
+      var data = state.data.map(habit => {
         if(habit._id === action.payload.id){
           return action.payload.habit
         } else {
           return habit;
         }
       });
+      return {...state, data: data};
     case 'remove_date':
-      return state.map(habit => {
+      var data = state.data.map(habit => {
         if(habit._id === action.payload.id){
           return action.payload.habit;
         } else {
           return habit;
         }
       });
+      return {...state, data: data};
+    case 'reload_state':
+      var data = state.data;
+      return action.payload;
     default:
       return state;
   }
@@ -86,7 +92,13 @@ const removeDateHabit = dispatch => async (id, date) => {
   }
 };
 
+const reloadState = dispatch => async (reload, data) => {
+  console.log('reload state?', reload);
+  dispatch({type: 'reload_state', payload: {reload, data}});
+  return true;
+};
+
 export const { MyContext, Provider } = createDataContext(
   habitReducer,
-  { getHabits, addHabit, deleteHabit, addDateHabit, removeDateHabit },
-  []);
+  { getHabits, addHabit, deleteHabit, addDateHabit, removeDateHabit, reloadState},
+  { data: [], reload: false});

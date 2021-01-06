@@ -21,14 +21,25 @@ const HabitRow = (props) =>{
     };
   }, []);
 
+  const addRemoveDate = () =>{
+    console.log('addRemoveDate', selected);
+    if(!selected){
+      props.addDate();
+    } else {
+      props.removeDate();
+    }
+  };
+
   return (
     <TouchableOpacity style={styles.Row} onPress={props.onPress}>
-      <Text style={styles.NumberEl}>5</Text>
       <Text style={styles.TextElem}>{props.Text}</Text>
       <Text style={styles.NumberEl}>{selected?'Selected':'Not Selected'}</Text>
       <View style={{display:'flex'}}>
-        <Text style={styles.DateElem}>Click to complete</Text>
+        <TouchableOpacity onLongPress={()=>addRemoveDate()}>
+          <Text style={styles.DateElem}>{selected?'Remove':'Add'}</Text>
+        </TouchableOpacity>
       </View>
+
     </TouchableOpacity>
   )
 };
@@ -53,13 +64,15 @@ const styles = StyleSheet.create({
   NumberEl:{
     flex:1,
     fontSize:10,
-    paddingLeft: 10,
+    paddingLeft: 0,
   },
   DateElem:{
     flex:4,
     fontSize:18,
     paddingLeft: 10,
     textAlign: "right",
+    marginLeft: 25,
+    paddingRight: 5,
     // marginLeft:"auto",
   }
 });

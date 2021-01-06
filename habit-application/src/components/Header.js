@@ -6,24 +6,25 @@ const MyHeader = (navigation) => {
   return {
     headerStyle: {
       backgroundColor: '#f4511e',
+      borderBottomColor: 'black',
     },
     title: 'Hi',
-    headerRight: () => (
-      <TouchableOpacity
-        style={{padding:5, marginHorizontal:10}}
-        onPress={()=>navigation.getParam('increaseCount')()}>
-
-        <Text style={{color:"#FFFFFF"}}>
-          Test count22
-        </Text>
-
-      </TouchableOpacity>
-    ),
+    // headerRight: () => (
+    //   <TouchableOpacity
+    //     style={{padding:5, marginHorizontal:10}}
+    //     onPress={()=>navigation.getParam('increaseCount')()}>
+    //
+    //     <Text style={{color:"#FFFFFF"}}>
+    //       Test count22
+    //     </Text>
+    // 
+    //   </TouchableOpacity>
+    // ),
     headerTitle: () => (
       <TouchableOpacity
         onPress={()=>navigation.getParam('getDatePicker')()}>
 
-        <Text style={{color:"#FFFFFF"}}>
+        <Text style={{color:"#FFFFFF", fontSize: 18}}>
           {navigation.getParam('selectedDay')}
         </Text>
 
