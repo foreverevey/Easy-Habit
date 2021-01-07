@@ -1,9 +1,11 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useContext} from 'react';
 import { View, Text , StyleSheet, AsyncStorage, ActivityIndicator, StatusBar } from 'react-native';
+import {MyContext as ThemeContext} from '../context/themeContext';
 
 const AuthLoadingScreen = ({navigation}) => {
 
   useEffect(()=>{
+    console.log('authloadingscreen');
     _checkForToken();
   }, []);
 

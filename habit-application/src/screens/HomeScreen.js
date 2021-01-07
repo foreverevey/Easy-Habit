@@ -7,6 +7,7 @@ import {MyContext as HabitContext} from '../context/habitContext';
 import Spinner from 'react-native-loading-spinner-overlay';
 import MyHeader from '../components/Header';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
+import {MyContext as ThemeContext} from '../context/themeContext';
 
 const HomeScreen = ({navigation}) => {
   const getFormatedDay = (selectDate) => {
@@ -19,6 +20,7 @@ const HomeScreen = ({navigation}) => {
 
   const defaultDay = getFormatedDay(new Date());
   const {state, getHabits, deleteHabit, addDateHabit, removeDateHabit, reloadState} = useContext(HabitContext);
+  const themeContext = useContext(ThemeContext);
   const [loading, setLoading] = useState(true);
   const [count, setCount] = useState(0);
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
@@ -37,7 +39,6 @@ const HomeScreen = ({navigation}) => {
     console.log("A date has been picked: ", date);
     const formatedDate = getFormatedDay(date);
     setSelectedDay(formatedDate);
-    // reloadState(!state.reload, state.data);
     hideDatePicker();
   };
 
@@ -60,14 +61,6 @@ const HomeScreen = ({navigation}) => {
   };
 
   const addDate = async (id) =>{
-    console.log('addDate in homescreen');
-    // const today = new Date();
-    // const dd = String(today.getDate()).padStart(2, '0');
-    // const mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
-    // const yyyy = today.getFullYear();
-    //
-    // formatedDate = mm + '/' + dd + '/' + yyyy;
-    // console.log('today: ', formatedDate);
     try{
       setLoading(true);
       await addDateHabit(id, selectedDay).then(()=>{
@@ -79,15 +72,7 @@ const HomeScreen = ({navigation}) => {
     }
   };
 
-  // Without date selection to test REST api
   const removeDate = async (id) =>{
-    // const today = new Date();
-    // const dd = String(today.getDate()).padStart(2, '0');
-    // const mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
-    // const yyyy = today.getFullYear();
-    //
-    // formatedDate = mm + '/' + dd + '/' + yyyy;
-    // console.log('today: ', formatedDate);
     try{
       setLoading(true);
       await removeDateHabit(id, selectedDay).then(()=>{
@@ -105,10 +90,41 @@ const HomeScreen = ({navigation}) => {
       navigation.setParams({ increaseCount: updateCount });
       navigation.setParams({ getDatePicker: showDatePicker });
       navigation.setParams({ selectedDay: selectedDay });
+      _getTheme().then(()=>{
+        navigation.setParams({ theme: themeContext.state });
+      });
+      // navigation.setParams({ theme: themeContext.state });
       getHabits().then(()=>{
         setLoading(false);
-      });
+    });
   }, []);
+
+  const _changeThemeTest = () =>{
+    themeContext.changeTheme('#8b50da');
+  };
+
+  const _changeThemeTest2 = () =>{
+    themeContext.changeTheme('#2fbe74');
+  };
+
+  useEffect(() => {
+    navigation.setParams({ theme: themeContext.state });
+  }, [themeContext.state]);
+
+  const consoleTheme = () =>{
+    console.log(themeContext.state);
+    const theme = navigation.getParam('theme');
+    console.log(theme);
+  };
+
+  _getTheme = async () => {
+    const userTheme = await AsyncStorage.getItem('theme');
+    if(userTheme === null){
+      console.log('user theme is null', themeContext.state);
+    } else {
+      console.log('user theme is not null');
+    }
+  };
 
   useEffect(() => {
     navigation.setParams({ increaseCount: updateCount });
@@ -117,11 +133,6 @@ const HomeScreen = ({navigation}) => {
   useEffect(() => {
     console.log('useEffect selectDay', selectedDay);
     navigation.setParams({ selectedDay: selectedDay });
-    // setLoading(true);
-    // getHabits().then(()=>{
-    //   setLoading(false);
-    // });
-    // getHabits();
     setLoading(true);
     reloadState(!state.reload, state.data).then(()=>{
         setLoading(false);
@@ -140,8 +151,6 @@ const HomeScreen = ({navigation}) => {
   };
 
   const focusFunction = () => {
-    // getHabits();
-    // console.log('Printing habitState from focusFunction');
     console.log('focus function', state);
   }
 
@@ -189,6 +198,30 @@ const HomeScreen = ({navigation}) => {
                   </>
                   );
                 }}/>
+                <TouchableOpacity
+                  style={styles.NewAcc}
+                  onPress={ async () => {
+                    await clearStorage();
+                    navigation.navigate('Signin');
+                  }
+                  }>
+                <Text style={styles.ForgotText}>Logout</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.NewAcc}
+                  onPress={() =>_changeThemeTest()}>
+                <Text style={styles.ForgotText}>Change Theme</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.NewAcc}
+                  onPress={() =>_changeThemeTest2()}>
+                <Text style={styles.ForgotText}>Change Theme 2</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.NewAcc}
+                  onPress={() =>consoleTheme()}>
+                <Text style={styles.ForgotText}>Console Theme</Text>
+                </TouchableOpacity>
       </View>
     )
   }

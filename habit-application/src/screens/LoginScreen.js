@@ -4,16 +4,37 @@ import { MyContext } from '../context/authContext';
 import ButtonLogin from '../components/ButtonLogin';
 import PasswordLock from '../components/PasswordLock';
 import SimpleTextLogin from '../components/SimpleTextLogin';
+import {MyContext as ThemeContext} from '../context/themeContext';
+
 
 const LoginScreen = ({navigation}) => {
   const {state, signin, tryLocalSignin} = useContext(MyContext);
+  const themeContext = useContext(ThemeContext);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [hiddenState, setHiddenState] = useState(true)
 
   useEffect(()=>{
-    tryLocalSignin();
-  }, [])
+    console.log('loginscreen effect');
+    setUserTheme().then(()=>{
+      console.log('navig params in login screen');
+      navigation.setParams({ theme: themeContext.state });
+    }).then(()=>{
+      tryLocalSignin();
+    });
+  }, []);
+
+  useEffect(() => {
+    navigation.setParams({ theme: themeContext.state });
+  }, [themeContext.state]);
+
+  const setUserTheme = async () =>{
+    const userTheme = await AsyncStorage.getItem('theme');
+    console.log('longScreen theme', userTheme);
+    if(userTheme !== null){
+      themeContext.changeTheme(userTheme);
+    }
+  };
 
   return (
     <View style={styles.MainParent}>

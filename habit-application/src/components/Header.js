@@ -3,9 +3,16 @@ import {StyleSheet, Text, View, TouchableOpacity} from 'react-native';
 // import {MaterialIcons} from '@expo/vector-icons';
 
 const MyHeader = (navigation) => {
+
+  const theme = navigation.getParam('theme');
+  var themeOptions;
+  if(theme !== undefined){
+    themeOptions = theme.theme;
+  }
+
   return {
     headerStyle: {
-      backgroundColor: '#f4511e',
+      backgroundColor: themeOptions?themeOptions.pri50:'#ffaf7a',
       borderBottomColor: 'black',
     },
     title: 'Hi',
@@ -17,7 +24,7 @@ const MyHeader = (navigation) => {
     //     <Text style={{color:"#FFFFFF"}}>
     //       Test count22
     //     </Text>
-    // 
+    //
     //   </TouchableOpacity>
     // ),
     headerTitle: () => (

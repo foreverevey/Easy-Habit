@@ -11,6 +11,7 @@ import CreateHabitScreen from './src/screens/CreateHabitScreen';
 import {Provider} from './src/context/authContext';
 import { setNavigator } from './src/navigationRef';
 import {Provider as HabitProvider} from './src/context/habitContext';
+import {Provider as ThemeProvider} from './src/context/themeContext';
 import HabitDetailScreen from './src/screens/HabitDetailScreen';
 
 const SwitchNavigator = createSwitchNavigator({
@@ -32,11 +33,12 @@ const App = createAppContainer(SwitchNavigator);
 // export default App;
 export default () =>{
   return (
-    <HabitProvider>
-      <Provider>
-        <App ref={(navigator) => { setNavigator(navigator) }}/>
-      </Provider>
-    </HabitProvider>
-
+    <ThemeProvider>
+      <HabitProvider>
+        <Provider>
+          <App ref={(navigator) => { setNavigator(navigator) }}/>
+        </Provider>
+      </HabitProvider>
+    </ThemeProvider>
   )
 };
