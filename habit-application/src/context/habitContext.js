@@ -7,33 +7,45 @@ import { navigate } from '../navigationRef';
 const habitReducer = ( state, action ) => {
   switch (action.type){
     case 'get_habits':
-      return {...state, data: action.payload};
+      return action.payload;
     case 'add_habit':
-      return {...state, data: action.payload};
+      return action.payload;
     case 'delete_habit':
-      var data = state.data.filter((habit) => habit._id !== action.payload);
-      return {...state, data: data};
+      var data = state.filter((habit) => habit._id !== action.payload);
+      return data;
     case 'add_date':
-      var data = state.data.map(habit => {
+      // var data = state.map(habit => {
+      //   if(habit._id === action.payload.id){
+      //     return action.payload.habit
+      //   } else {
+      //     return habit;
+      //   }
+      // });
+      // var data = state.filter((habit)=> habit._id === action.payload.id)
+      // return [...state.filter((habit)=> habit._id === action.payload.id), action.payload.habit]
+      return [...state.map(habit => {
         if(habit._id === action.payload.id){
           return action.payload.habit
         } else {
           return habit;
         }
-      });
-      return {...state, data: data};
+      })];
     case 'remove_date':
-      var data = state.data.map(habit => {
+      // var data = state.map(habit => {
+      //   if(habit._id === action.payload.id){
+      //     return action.payload.habit;
+      //   } else {
+      //     return habit;
+      //   }
+      // });
+      // return data;
+      return [...state.map(habit => {
         if(habit._id === action.payload.id){
-          return action.payload.habit;
+          return action.payload.habit
         } else {
           return habit;
         }
-      });
-      return {...state, data: data};
-    case 'reload_state':
-      var data = state.data;
-      return action.payload;
+      })];
     default:
       return state;
   }
@@ -75,7 +87,6 @@ const addDateHabit = dispatch => async (id, formatedDate) => {
   try{
     console.log('addDateHabit', id, formatedDate);
     const response = await habitApi.post('/habit/add-date', {id, date:formatedDate.toString()});
-    console.log('response answer add date', response);
     dispatch({type: 'add_date', payload: {id, habit: response.data}})
   } catch(error){
     console.log('Failed to add date', error.message);
@@ -101,4 +112,4 @@ const reloadState = dispatch => async (reload, data) => {
 export const { MyContext, Provider } = createDataContext(
   habitReducer,
   { getHabits, addHabit, deleteHabit, addDateHabit, removeDateHabit, reloadState},
-  { data: [], reload: false});
+  []);

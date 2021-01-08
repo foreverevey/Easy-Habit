@@ -1,23 +1,28 @@
 import createDataContext from './createDataContext';
-import {AsyncStorage} from 'react-native';
+import {AsyncStorage, Image} from 'react-native';
 import { navigate } from '../navigationRef';
+import cleanBackground from '../../assets/cleanBackground.png';
+import cheerfulBackground from '../../assets/cheerfulBackground.png';
+
+const cleanBackgroundUri = Image.resolveAssetSource(cleanBackground).uri
+const cheerfulBackgroundUri = Image.resolveAssetSource(cheerfulBackground).uri
 
 const themeOptions = {
-  '#2fbe74': {
-    pri50: '#e4f6eb',
-    pri500: '#00b25c',
-    pri700: '#009145',
-    pri800: '#007f39',
-    sec700: '#be2f79',
-    sec900: '#802764',
+  'clean': {
+    pri1: '#5680e8',
+    pri2: '#84ceeb',
+    pri3: '#5ab9ea',
+    sec1: '#c1c8e4',
+    sec2: '#8860d0',
+    backgroundImage: cleanBackgroundUri,
   },
-  '#8b50da': {
-    pri50: '#f0e7fa',
-    pri500: '#752dd3',
-    pri700: '#5d1ec4',
-    pri800: '#4f17bd',
-    sec700: '#679f00',
-    sec900: '#256b00',
+  'cheerful': {
+    pri1: '#fbe8a6',
+    pri2: '#f4976c',
+    pri3: '#303c6c',
+    sec1: '#b4dfe5',
+    sec2: '#d2fdff',
+    backgroundImage: cheerfulBackgroundUri,
   },
 };
 
@@ -40,11 +45,10 @@ export const { MyContext , Provider} = createDataContext(
   themeReducer,
   {changeTheme},
   { theme: {
-      pri50: '#8b97dc',
-      pri500: '#00b25c',
-      pri700: '#009145',
-      pri800: '#007f39',
-      sec700: '#ffb5a6',
-      sec900: '#802764',
+      pri1: '#8b97dc',
+      pri2: '#00b25c',
+      pri3: '#009145',
+      sec1: '#007f39',
+      sec2: '#ffb5a6',
     }}
 );

@@ -1,6 +1,6 @@
 import React, {useState, useEffect, useContext} from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, AsyncStorage,FlatList,Platform,
-StatusBar} from 'react-native';
+StatusBar, ImageBackground} from 'react-native';
 import HabitRow from '../components/HabitRow';
 import { NavigationEvents} from 'react-navigation';
 import {MyContext as HabitContext} from '../context/habitContext';
@@ -25,6 +25,7 @@ const HomeScreen = ({navigation}) => {
   const [count, setCount] = useState(0);
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
   const [selectedDay, setSelectedDay] = useState(defaultDay);
+  const [index, setIndex] = useState(0);
 
   const showDatePicker = () => {
     console.log('ShowDatePicker');
@@ -99,12 +100,12 @@ const HomeScreen = ({navigation}) => {
     });
   }, []);
 
-  const _changeThemeTest = () =>{
-    themeContext.changeTheme('#8b50da');
+  const _changeThemeCheerful = () =>{
+    themeContext.changeTheme('cheerful');
   };
 
-  const _changeThemeTest2 = () =>{
-    themeContext.changeTheme('#2fbe74');
+  const _changeThemeClean = () =>{
+    themeContext.changeTheme('clean');
   };
 
   useEffect(() => {
@@ -130,13 +131,17 @@ const HomeScreen = ({navigation}) => {
     navigation.setParams({ increaseCount: updateCount });
   }, [count]);
 
+  // useEffect(() => {
+  //   setIndex(index + 1);
+  //   console.log('useEffect change index', index);
+  // }, [state]);
+
   useEffect(() => {
     console.log('useEffect selectDay', selectedDay);
     navigation.setParams({ selectedDay: selectedDay });
-    setLoading(true);
-    reloadState(!state.reload, state.data).then(()=>{
-        setLoading(false);
-    });
+    setIndex(index + 1);
+    // setLoading(true);
+    // setLoading(false);
   }, [selectedDay]);
 
   const clearStorage = async () => {
@@ -154,19 +159,26 @@ const HomeScreen = ({navigation}) => {
     console.log('focus function', state);
   }
 
-  if(loading){
-    return(
-      <Spinner
-        visible={true}
-        textContent={'Loading...'}
-        textStyle={styles.spinnerTextStyle}
-      />
-    )
-  }
+  // if(loading){
+  //   return(
+  //     <Spinner
+  //       visible={true}
+  //       textContent={'Loading...'}
+  //       textStyle={styles(themeContext.state.theme).spinnerTextStyle}
+  //     />
+  //   )
+  // }
 
-  if(!loading){
+  if(true){
     return (
-      <View style={styles.container}>
+      <View style={styles(themeContext.state.theme).container}>
+        <View>
+          <Spinner
+            visible={loading?true:false}
+            textContent={'Loading...'}
+            textStyle={styles(themeContext.state.theme).spinnerTextStyle}
+          />
+        </View>
         <View>
           <DateTimePickerModal
             isVisible={isDatePickerVisible}
@@ -175,96 +187,66 @@ const HomeScreen = ({navigation}) => {
             onCancel={hideDatePicker}
           />
         </View>
-        <NavigationEvents onWillFocus={focusFunction}/>
-            <FlatList style={styles.flatList}
-              data={state.data}
-              extraData={state.reload}
-              keyExtractor={item => item._id}
-              renderItem= {({item}) => {
-                return (
-                  <>
-                    <HabitRow
-                      Text={item.name}
-                      Dates={item.dates}
-                      SelectedDate={selectedDay}
-                      onPress={()=>{navigation.navigate('Detail', {item: item._id, test: item})}}
-                      addDate={()=>{addDate(item._id)}}
-                      removeDate={()=>{removeDate(item._id)}}>
-                    </HabitRow>
-                    <TouchableOpacity onPress={()=>delHabit(item._id)}>
-                      <Text>Delete Habit</Text>
-                    </TouchableOpacity>
+        <ImageBackground source={{uri: themeContext.state.theme.backgroundImage}} style={styles(themeContext.state.theme).ImageBackground}>
+          <NavigationEvents onWillFocus={focusFunction}/>
+              <FlatList style={styles(themeContext.state.theme).flatList}
+                data={state}
+                extraData={index}
+                keyExtractor={item => item._id}
+                renderItem= {({item}) => {
+                  return (
+                    <>
+                      <HabitRow
+                        Text={item.name}
+                        Dates={item.dates}
+                        SelectedDate={selectedDay}
+                        onPress={()=>{navigation.navigate('Detail', {item: item._id, test: item})}}
+                        addDate={()=>{addDate(item._id)}}
+                        removeDate={()=>{removeDate(item._id)}}>
+                      </HabitRow>
+                      <TouchableOpacity onPress={()=>delHabit(item._id)}>
+                        <Text>Delete Habit</Text>
+                      </TouchableOpacity>
 
-                  </>
-                  );
-                }}/>
-                <TouchableOpacity
-                  style={styles.NewAcc}
-                  onPress={ async () => {
-                    await clearStorage();
-                    navigation.navigate('Signin');
-                  }
-                  }>
-                <Text style={styles.ForgotText}>Logout</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={styles.NewAcc}
-                  onPress={() =>_changeThemeTest()}>
-                <Text style={styles.ForgotText}>Change Theme</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={styles.NewAcc}
-                  onPress={() =>_changeThemeTest2()}>
-                <Text style={styles.ForgotText}>Change Theme 2</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={styles.NewAcc}
-                  onPress={() =>consoleTheme()}>
-                <Text style={styles.ForgotText}>Console Theme</Text>
-                </TouchableOpacity>
+                    </>
+                    );
+                  }}/>
+                  <TouchableOpacity
+                    style={styles(themeContext.state.theme).NewAcc}
+                    onPress={ async () => {
+                      await clearStorage();
+                      navigation.navigate('Signin');
+                    }
+                    }>
+                  <Text style={styles(themeContext.state.theme).ForgotText}>Logout</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={styles(themeContext.state.theme).NewAcc}
+                    onPress={() =>_changeThemeCheerful()}>
+                  <Text style={styles(themeContext.state.theme).ForgotText}>Change Theme Cheerful</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={styles(themeContext.state.theme).NewAcc}
+                    onPress={() =>_changeThemeClean()}>
+                  <Text style={styles(themeContext.state.theme).ForgotText}>Change Theme Clean</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={styles(themeContext.state.theme).NewAcc}
+                    onPress={() =>consoleTheme()}>
+                  <Text style={styles(themeContext.state.theme).ForgotText}>Console Theme</Text>
+                  </TouchableOpacity>
+        </ImageBackground>
       </View>
     )
   }
 
 }
-// <TouchableOpacity onPress={()=>addDate(item._id)}>
-//   <Text>Add date</Text>
-// </TouchableOpacity>
-// <TouchableOpacity onPress={()=>removeDate(item._id)}>
-//   <Text>Remove date</Text>
-// </TouchableOpacity>
-// <TouchableOpacity
-//   style={styles.NewAcc}
-//   onPress={() => {
-//     navigation.navigate('Create')
-//   }
-//   }>
-//   <Text style={styles.ForgotText}>Create</Text>
-// </TouchableOpacity>
-// <Text>{count}</Text>
-// <TouchableOpacity
-//   style={styles.NewAcc}
-//   onPress={() => {
-//     console.log("state", state);
-//   }
-//   }>
-//   <Text style={styles.ForgotText}>ConsoleLog</Text>
-// </TouchableOpacity>
-// <TouchableOpacity
-//   style={styles.NewAcc}
-//   onPress={ async () => {
-//     await clearStorage();
-//     navigation.navigate('Signin');
-//   }
-//   }>
-// <Text style={styles.ForgotText}>Logout</Text>
-// </TouchableOpacity>
 
 HomeScreen.navigationOptions = ({navigation}) => {
   return MyHeader(navigation);
 };
 
-const styles = StyleSheet.create({
+const styles = (props) => StyleSheet.create({
   spinnerTextStyle: {
     color: '#FFF'
   },
@@ -272,6 +254,10 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
     // alignItems: "center",
     paddingTop: Platform.OS === "android" ? StatusBar.currentHeight: 0,
+  },
+  ImageBackground:{
+    paddingTop: 150,
+
   },
   flatList:{
     marginHorizontal: 10,

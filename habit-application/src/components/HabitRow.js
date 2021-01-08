@@ -1,42 +1,61 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useContext} from 'react';
 import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
+import {MyContext as ThemeContext} from '../context/themeContext';
+import {FontAwesome} from '@expo/vector-icons';
+import mainStyle from '../styles/mainStyle';
 
 // TODO: add another components to this component.
 
 const HabitRow = (props) =>{
   const [selected, setSelected] = useState(false);
+  const {state, changeTheme} = useContext(ThemeContext);
+  console.log('habitrow');
+  console.log(props.SelectedDate);
 
   useEffect(() => {
+    console.log('effect from props.selectedDay');
     const splitDay = props.SelectedDate.split('/');
     const selectedDay = new Date(Date.UTC(splitDay[2], splitDay[0] - 1, splitDay[1]));
+    var foundDay = false;
     if(props.Dates.length>0){
       for(var i=0; i<props.Dates.length; i++){
         var dateToObj = new Date(props.Dates[i].date);
+        // console.log('habitrow useeffect', dateToObj, selectedDay, props.Text);
         if(dateToObj.valueOf() === selectedDay.valueOf()){
-          console.log('yes');
+          console.log('first effect setting to selected true', props.Text);
           setSelected(true);
+          foundDay = true;
           break;
         };
       };
     };
-  }, []);
+    if(!foundDay){
+      setSelected(false);
+    }
+  }, [props.SelectedDate]);
 
   const addRemoveDate = () =>{
-    console.log('addRemoveDate', selected);
+    console.log('addRemoveDate habitrow: ', selected, props.Text);
     if(!selected){
       props.addDate();
+      setSelected(true);
     } else {
       props.removeDate();
+      console.log('remove selected in habitrow');
+      setSelected(false);
     }
   };
 
+  useEffect(() => {
+    console.log('day selected');
+  }, [selected]);
+
   return (
-    <TouchableOpacity style={styles.Row} onPress={props.onPress}>
-      <Text style={styles.TextElem}>{props.Text}</Text>
-      <Text style={styles.NumberEl}>{selected?'Selected':'Not Selected'}</Text>
-      <View style={{display:'flex'}}>
+    <TouchableOpacity style={styles(state.theme).Row} onPress={props.onPress}>
+      <Text style={styles(state.theme).TextElem}>{props.Text}</Text>
+      <View style={styles(state.theme).CheckboxView}>
         <TouchableOpacity onLongPress={()=>addRemoveDate()}>
-          <Text style={styles.DateElem}>{selected?'Remove':'Add'}</Text>
+          <FontAwesome style={styles(state.theme).Checkbox} name={selected?"check":'close'}/>
         </TouchableOpacity>
       </View>
 
@@ -44,37 +63,32 @@ const HabitRow = (props) =>{
   )
 };
 
-const styles = StyleSheet.create({
+const styles = (props) => StyleSheet.create({
   Row:{
-    borderWidth: 1,
     flexDirection: 'row',
     flex: 1,
     justifyContent: 'center',
-    alignItems: 'stretch',
-    backgroundColor:'lightgrey',
+    alignItems: 'center',
+    backgroundColor:'white',
     marginBottom:10,
+    paddingLeft:10,
+    height:75,
+    borderRadius:30,
   },
   TextElem:{
+    flex:8,
     textAlign: "left",
-    flex:6,
-    // width:160,
     fontSize:18,
-    paddingLeft: 10,
-  },
-  NumberEl:{
-    flex:1,
-    fontSize:10,
     paddingLeft: 0,
   },
-  DateElem:{
-    flex:4,
-    fontSize:18,
-    paddingLeft: 10,
-    textAlign: "right",
-    marginLeft: 25,
-    paddingRight: 5,
-    // marginLeft:"auto",
-  }
+  CheckboxView:{
+    flex:3,
+    alignItems: 'center',
+  },
+  Checkbox:{
+    fontSize:30,
+    color: props.pri1,
+  },
 });
 
 export default HabitRow;

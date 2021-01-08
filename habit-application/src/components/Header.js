@@ -12,8 +12,9 @@ const MyHeader = (navigation) => {
 
   return {
     headerStyle: {
-      backgroundColor: themeOptions?themeOptions.pri50:'#ffaf7a',
+      backgroundColor: themeOptions?themeOptions.pri1:'#ffaf7a',
       borderBottomColor: 'black',
+      height:90,
     },
     title: 'Hi',
     // headerRight: () => (
