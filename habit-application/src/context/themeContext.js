@@ -14,6 +14,8 @@ const themeOptions = {
     pri3: '#5ab9ea',
     sec1: '#c1c8e4',
     sec2: '#8860d0',
+    white: '#fff',
+    headerPlus: '#fff',
     backgroundImage: cleanBackgroundUri,
   },
   'cheerful': {
@@ -22,6 +24,8 @@ const themeOptions = {
     pri3: '#303c6c',
     sec1: '#b4dfe5',
     sec2: '#d2fdff',
+    white: '#fff',
+    headerPlus: '#303C6C',
     backgroundImage: cheerfulBackgroundUri,
   },
 };
@@ -50,5 +54,7 @@ export const { MyContext , Provider} = createDataContext(
       pri3: '#009145',
       sec1: '#007f39',
       sec2: '#ffb5a6',
+      white: '#fff',
+      backgroundImage: cheerfulBackgroundUri,
     }}
 );

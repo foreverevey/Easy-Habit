@@ -9,11 +9,8 @@ import mainStyle from '../styles/mainStyle';
 const HabitRow = (props) =>{
   const [selected, setSelected] = useState(false);
   const {state, changeTheme} = useContext(ThemeContext);
-  console.log('habitrow');
-  console.log(props.SelectedDate);
 
   useEffect(() => {
-    console.log('effect from props.selectedDay');
     const splitDay = props.SelectedDate.split('/');
     const selectedDay = new Date(Date.UTC(splitDay[2], splitDay[0] - 1, splitDay[1]));
     var foundDay = false;
@@ -22,7 +19,6 @@ const HabitRow = (props) =>{
         var dateToObj = new Date(props.Dates[i].date);
         // console.log('habitrow useeffect', dateToObj, selectedDay, props.Text);
         if(dateToObj.valueOf() === selectedDay.valueOf()){
-          console.log('first effect setting to selected true', props.Text);
           setSelected(true);
           foundDay = true;
           break;
@@ -35,20 +31,14 @@ const HabitRow = (props) =>{
   }, [props.SelectedDate]);
 
   const addRemoveDate = () =>{
-    console.log('addRemoveDate habitrow: ', selected, props.Text);
     if(!selected){
       props.addDate();
       setSelected(true);
     } else {
       props.removeDate();
-      console.log('remove selected in habitrow');
       setSelected(false);
     }
   };
-
-  useEffect(() => {
-    console.log('day selected');
-  }, [selected]);
 
   return (
     <TouchableOpacity style={styles(state.theme).Row} onPress={props.onPress}>

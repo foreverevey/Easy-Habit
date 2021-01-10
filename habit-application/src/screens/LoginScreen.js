@@ -15,9 +15,9 @@ const LoginScreen = ({navigation}) => {
   const [hiddenState, setHiddenState] = useState(true)
 
   useEffect(()=>{
-    console.log('loginscreen effect');
+    // console.log('loginscreen effect');
     setUserTheme().then(()=>{
-      console.log('navig params in login screen');
+      // console.log('navig params in login screen');
       navigation.setParams({ theme: themeContext.state });
     }).then(()=>{
       tryLocalSignin();
@@ -30,7 +30,7 @@ const LoginScreen = ({navigation}) => {
 
   const setUserTheme = async () =>{
     const userTheme = await AsyncStorage.getItem('theme');
-    console.log('longScreen theme', userTheme);
+    // console.log('longScreen theme', userTheme);
     if(userTheme !== null){
       themeContext.changeTheme(userTheme);
     }

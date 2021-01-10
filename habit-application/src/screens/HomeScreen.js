@@ -1,6 +1,6 @@
 import React, {useState, useEffect, useContext} from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, AsyncStorage,FlatList,Platform,
-StatusBar, ImageBackground} from 'react-native';
+StatusBar, ImageBackground, Modal, TouchableHighlight} from 'react-native';
 import HabitRow from '../components/HabitRow';
 import { NavigationEvents} from 'react-navigation';
 import {MyContext as HabitContext} from '../context/habitContext';
@@ -19,16 +19,15 @@ const HomeScreen = ({navigation}) => {
   };
 
   const defaultDay = getFormatedDay(new Date());
-  const {state, getHabits, deleteHabit, addDateHabit, removeDateHabit, reloadState} = useContext(HabitContext);
+  const {state, getHabits, addHabit, deleteHabit, addDateHabit, removeDateHabit} = useContext(HabitContext);
   const themeContext = useContext(ThemeContext);
   const [loading, setLoading] = useState(true);
-  const [count, setCount] = useState(0);
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
   const [selectedDay, setSelectedDay] = useState(defaultDay);
-  const [index, setIndex] = useState(0);
+  const [isSettingsPickerVisible, setSettingsPickerVisibility] = useState(false);
 
   const showDatePicker = () => {
-    console.log('ShowDatePicker');
+    // console.log('ShowDatePicker');
     setDatePickerVisibility(true);
   };
 
@@ -36,19 +35,24 @@ const HomeScreen = ({navigation}) => {
     setDatePickerVisibility(false);
   };
 
+  const showSettingsPicker = () => {
+    console.log('settings button');
+    setSettingsPickerVisibility(!isSettingsPickerVisible);
+  };
+
+  const hideSettingsPicker = () => {
+    setSettingsPickerVisibility(false);
+  };
+
   const handleConfirm = (date) => {
-    console.log("A date has been picked: ", date);
+    // console.log("A date has been picked: ", date);
     const formatedDate = getFormatedDay(date);
     setSelectedDay(formatedDate);
     hideDatePicker();
   };
 
-  const updateCount = () => {
-    setCount(count + 1);
-  };
-
   const updateDate = () => {
-    console.log('updateDate');
+    // console.log('updateDate');
     setDatePickerVisibility(true);
   };
 
@@ -56,6 +60,15 @@ const HomeScreen = ({navigation}) => {
     try{
       await deleteHabit(id);
     } catch(error){
+      console.log(error);
+      return false;
+    }
+  };
+
+  const newHabit = async () => {
+    try{
+      await addHabit();
+    } catch (error){
       console.log(error);
       return false;
     }
@@ -86,15 +99,13 @@ const HomeScreen = ({navigation}) => {
   };
 
   useEffect(() => {
+      console.log('first use effect on homescreen');
       setLoading(true);
-      // TODO: check params if we already have selectedDay?
-      navigation.setParams({ increaseCount: updateCount });
       navigation.setParams({ getDatePicker: showDatePicker });
+      navigation.setParams({ getSettingsPicker: showSettingsPicker });
       navigation.setParams({ selectedDay: selectedDay });
-      _getTheme().then(()=>{
-        navigation.setParams({ theme: themeContext.state });
-      });
-      // navigation.setParams({ theme: themeContext.state });
+      navigation.setParams({ theme: themeContext.state });
+      navigation.setParams({ newHabit: newHabit});
       getHabits().then(()=>{
         setLoading(false);
     });
@@ -112,36 +123,8 @@ const HomeScreen = ({navigation}) => {
     navigation.setParams({ theme: themeContext.state });
   }, [themeContext.state]);
 
-  const consoleTheme = () =>{
-    console.log(themeContext.state);
-    const theme = navigation.getParam('theme');
-    console.log(theme);
-  };
-
-  _getTheme = async () => {
-    const userTheme = await AsyncStorage.getItem('theme');
-    if(userTheme === null){
-      console.log('user theme is null', themeContext.state);
-    } else {
-      console.log('user theme is not null');
-    }
-  };
-
   useEffect(() => {
-    navigation.setParams({ increaseCount: updateCount });
-  }, [count]);
-
-  // useEffect(() => {
-  //   setIndex(index + 1);
-  //   console.log('useEffect change index', index);
-  // }, [state]);
-
-  useEffect(() => {
-    console.log('useEffect selectDay', selectedDay);
     navigation.setParams({ selectedDay: selectedDay });
-    setIndex(index + 1);
-    // setLoading(true);
-    // setLoading(false);
   }, [selectedDay]);
 
   const clearStorage = async () => {
@@ -155,91 +138,92 @@ const HomeScreen = ({navigation}) => {
     }
   };
 
-  const focusFunction = () => {
-    console.log('focus function', state);
-  }
-
-  // if(loading){
-  //   return(
-  //     <Spinner
-  //       visible={true}
-  //       textContent={'Loading...'}
-  //       textStyle={styles(themeContext.state.theme).spinnerTextStyle}
-  //     />
-  //   )
-  // }
-
-  if(true){
-    return (
-      <View style={styles(themeContext.state.theme).container}>
-        <View>
-          <Spinner
-            visible={loading?true:false}
-            textContent={'Loading...'}
-            textStyle={styles(themeContext.state.theme).spinnerTextStyle}
-          />
-        </View>
-        <View>
-          <DateTimePickerModal
-            isVisible={isDatePickerVisible}
-            mode="date"
-            onConfirm={handleConfirm}
-            onCancel={hideDatePicker}
-          />
-        </View>
-        <ImageBackground source={{uri: themeContext.state.theme.backgroundImage}} style={styles(themeContext.state.theme).ImageBackground}>
-          <NavigationEvents onWillFocus={focusFunction}/>
-              <FlatList style={styles(themeContext.state.theme).flatList}
-                data={state}
-                extraData={index}
-                keyExtractor={item => item._id}
-                renderItem= {({item}) => {
-                  return (
-                    <>
-                      <HabitRow
-                        Text={item.name}
-                        Dates={item.dates}
-                        SelectedDate={selectedDay}
-                        onPress={()=>{navigation.navigate('Detail', {item: item._id, test: item})}}
-                        addDate={()=>{addDate(item._id)}}
-                        removeDate={()=>{removeDate(item._id)}}>
-                      </HabitRow>
-                      <TouchableOpacity onPress={()=>delHabit(item._id)}>
-                        <Text>Delete Habit</Text>
-                      </TouchableOpacity>
-
-                    </>
-                    );
-                  }}/>
-                  <TouchableOpacity
-                    style={styles(themeContext.state.theme).NewAcc}
-                    onPress={ async () => {
-                      await clearStorage();
-                      navigation.navigate('Signin');
-                    }
-                    }>
-                  <Text style={styles(themeContext.state.theme).ForgotText}>Logout</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    style={styles(themeContext.state.theme).NewAcc}
-                    onPress={() =>_changeThemeCheerful()}>
-                  <Text style={styles(themeContext.state.theme).ForgotText}>Change Theme Cheerful</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    style={styles(themeContext.state.theme).NewAcc}
-                    onPress={() =>_changeThemeClean()}>
-                  <Text style={styles(themeContext.state.theme).ForgotText}>Change Theme Clean</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    style={styles(themeContext.state.theme).NewAcc}
-                    onPress={() =>consoleTheme()}>
-                  <Text style={styles(themeContext.state.theme).ForgotText}>Console Theme</Text>
-                  </TouchableOpacity>
-        </ImageBackground>
+  return (
+    <View style={styles(themeContext.state.theme).container}>
+      <View>
+        <Spinner
+          visible={loading?true:false}
+          textContent={'Loading...'}
+          textStyle={styles(themeContext.state.theme).spinnerTextStyle}
+        />
       </View>
-    )
-  }
+      <View>
+        <DateTimePickerModal
+          isVisible={isDatePickerVisible}
+          mode="date"
+          onConfirm={handleConfirm}
+          onCancel={hideDatePicker}
+        />
+      </View>
+      <View style={styles(themeContext.state.theme).centeredView}>
+        <Modal
+          animationType="none"
+          transparent={true}
+          visible={isSettingsPickerVisible}
+          onRequestClose={() => {
+            Alert.alert("Modal has been closed.");
+              }}
+            >
+          <View style={styles(themeContext.state.theme).centeredView}>
+            <View style={styles(themeContext.state.theme).modalView}>
+              <Text style={styles(themeContext.state.theme).modalText}>Hello World!</Text>
 
+              <TouchableHighlight
+                style={{ ...styles(themeContext.state.theme).openButton, backgroundColor: "#2196F3" }}
+                onPress={() => {
+                    hideSettingsPicker();
+                  }}
+                >
+                <Text style={styles(themeContext.state.theme).textStyle}>Hide Modal</Text>
+              </TouchableHighlight>
+            </View>
+          </View>
+        </Modal>
+      </View>
+      <ImageBackground source={{uri: themeContext.state.theme.backgroundImage}} style={styles(themeContext.state.theme).ImageBackground}>
+            <FlatList style={styles(themeContext.state.theme).flatList}
+              data={state}
+              keyExtractor={item => item._id}
+              renderItem= {({item}) => {
+                return (
+                  <>
+                    <HabitRow
+                      Text={item.name}
+                      Dates={item.dates}
+                      SelectedDate={selectedDay}
+                      onPress={()=>{navigation.navigate('Detail', {item: item._id, test: item})}}
+                      addDate={()=>{addDate(item._id)}}
+                      removeDate={()=>{removeDate(item._id)}}>
+                    </HabitRow>
+                    <TouchableOpacity onPress={()=>delHabit(item._id)}>
+                      <Text>Delete Habit</Text>
+                    </TouchableOpacity>
+
+                  </>
+                  );
+                }}/>
+                <TouchableOpacity
+                  style={styles(themeContext.state.theme).NewAcc}
+                  onPress={ async () => {
+                    await clearStorage();
+                    navigation.navigate('Signin');
+                  }
+                  }>
+                <Text style={styles(themeContext.state.theme).ForgotText}>Logout</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles(themeContext.state.theme).NewAcc}
+                  onPress={() =>_changeThemeCheerful()}>
+                <Text style={styles(themeContext.state.theme).ForgotText}>Change Theme Cheerful</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles(themeContext.state.theme).NewAcc}
+                  onPress={() =>_changeThemeClean()}>
+                <Text style={styles(themeContext.state.theme).ForgotText}>Change Theme Clean</Text>
+                </TouchableOpacity>
+      </ImageBackground>
+    </View>
+  )
 }
 
 HomeScreen.navigationOptions = ({navigation}) => {
@@ -256,7 +240,7 @@ const styles = (props) => StyleSheet.create({
     paddingTop: Platform.OS === "android" ? StatusBar.currentHeight: 0,
   },
   ImageBackground:{
-    paddingTop: 150,
+    paddingTop: 130,
 
   },
   flatList:{
@@ -267,6 +251,43 @@ const styles = (props) => StyleSheet.create({
     alignSelf:'center',
     marginTop:30,
   },
+  centeredView: {
+    flex: 1,
+    justifyContent: "flex-start",
+    alignItems: "flex-end",
+    marginTop: 66,
+  },
+  modalView: {
+    // margin: 20,
+    backgroundColor: "white",
+    // borderRadius: 20,
+    padding: 35,
+    height:300,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5
+  },
+  openButton: {
+    backgroundColor: "#F194FF",
+    borderRadius: 20,
+    padding: 10,
+    elevation: 2
+  },
+  textStyle: {
+    color: "white",
+    fontWeight: "bold",
+    textAlign: "center"
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: "center"
+  }
 })
 
 export default HomeScreen;

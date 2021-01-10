@@ -9,77 +9,84 @@ import {
   Platform,
   StatusBar,
   CheckBox,
+  ImageBackground,
 } from 'react-native';
 import {MyContext} from '../context/authContext';
 import Spacer from '../components/Spacer';
 import ButtonLogin from '../components/ButtonLogin';
 import {MyContext as HabitContext} from '../context/habitContext';
-
+import {MyContext as ThemeContext} from '../context/themeContext';
 
 const CreateHabitScreen = ({navigation}) =>{
   const {state} = useContext(MyContext);
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [privateBool, setPrivateBool] = useState(false);
-  const {habitState, addHabit} = useContext(HabitContext);
-  // state for bool?
+  const {addHabit} = useContext(HabitContext);
+  const themeContext = useContext(ThemeContext);
 
   const createHabit = async (name,description,privateBool) => {
     await addHabit(name, privateBool, description);
-    // console.log(habitState);
     navigation.navigate('Home');
   };
 
   return (
-    <View style={styles.MainParent}>
-      <Spacer>
-        <TextInput style={styles.TextInputName}
-          autoCapitalize="none"
-          autoCorrect={false}
-          value={name}
-          onChangeText={(newValue)=> setName(newValue)}
-          placeholder="Name"/>
-      </Spacer>
-      <Spacer>
-        <TextInput style={styles.TextInputDescription}
-          multiline
-          autoCapitalize="none"
-          autoCorrect={false}
-          value={description}
-          onChangeText={(newValue)=> setDescription(newValue)}
-          placeholder="Description"/>
-      </Spacer>
-      <Spacer>
-        <View style={styles.Grouped}>
-          <CheckBox value={privateBool} onValueChange={()=>{setPrivateBool(!privateBool)}}/>
-          <Text style={styles.Text}>Private</Text>
-        </View>
-      </Spacer>
-      <ButtonLogin text='Create' onPress={()=>createHabit(name,description, privateBool)}/>
+    <View style={styles(themeContext.state.theme).MainParent}>
+      <ImageBackground source={{uri: themeContext.state.theme.backgroundImage}} style={styles(themeContext.state.theme).ImageBackground}>
+        <Spacer>
+          <TextInput style={styles(themeContext.state.theme).TextInputName}
+            autoCapitalize="none"
+            autoCorrect={false}
+            value={name}
+            onChangeText={(newValue)=> setName(newValue)}
+            placeholder="Name"
+            paddingLeft={15}/>
+        </Spacer>
+        <Spacer>
+          <TextInput style={styles(themeContext.state.theme).TextInputDescription}
+            multiline
+            autoCapitalize="none"
+            autoCorrect={false}
+            value={description}
+            onChangeText={(newValue)=> setDescription(newValue)}
+            placeholder="Description"
+            paddingLeft={15}
+            paddingTop={15}/>
+        </Spacer>
+        <Spacer>
+          <View style={styles(themeContext.state.theme).Grouped}>
+            <CheckBox value={privateBool} onValueChange={()=>{setPrivateBool(!privateBool)}}/>
+            <Text style={styles(themeContext.state.theme).Text}>Private</Text>
+          </View>
+        </Spacer>
+        <ButtonLogin text='Create' onPress={()=>createHabit(name,description, privateBool)}/>
+      </ImageBackground>
     </View>
   )
 };
 
 CreateHabitScreen.navigationOptions = () => {
   return {
-    headerShown: false
+    headerShown: true
   };
 };
 
-const styles = StyleSheet.create({
+const styles = (props) => StyleSheet.create({
   MainParent:{
-    borderWidth: 1,
-    borderColor: 'black',
     flex: 1,
-    // justifyContent: 'center',
-    paddingTop: Platform.OS === "android" ? StatusBar.currentHeight + 50: 0,
-    backgroundColor: '#131B2E',
+    // paddingTop: Platform.OS === "android" ? StatusBar.currentHeight + 50: 0,
   },
   TextInputName:{
+    marginTop: Platform.OS === "android" ? StatusBar.currentHeight + 20: 0,
     backgroundColor:'#fff',
+    borderRadius: 15,
+    height:50,
   },
   TextInputDescription:{
     backgroundColor:'#fff',
+    borderRadius: 15,
+    height:120,
+    textAlignVertical: 'top',
   },
   Grouped:{
     flexDirection: 'row',
@@ -87,7 +94,12 @@ const styles = StyleSheet.create({
   },
   Text:{
     color:'white',
-  }
+  },
+  ImageBackground:{
+    paddingTop: 0,
+    width: '100%',
+    height: '100%',
+  },
 });
 
 export default CreateHabitScreen;

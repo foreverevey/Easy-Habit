@@ -9,20 +9,11 @@ const habitReducer = ( state, action ) => {
     case 'get_habits':
       return action.payload;
     case 'add_habit':
-      return action.payload;
+      return [...state, action.payload];
     case 'delete_habit':
       var data = state.filter((habit) => habit._id !== action.payload);
       return data;
     case 'add_date':
-      // var data = state.map(habit => {
-      //   if(habit._id === action.payload.id){
-      //     return action.payload.habit
-      //   } else {
-      //     return habit;
-      //   }
-      // });
-      // var data = state.filter((habit)=> habit._id === action.payload.id)
-      // return [...state.filter((habit)=> habit._id === action.payload.id), action.payload.habit]
       return [...state.map(habit => {
         if(habit._id === action.payload.id){
           return action.payload.habit
@@ -31,14 +22,6 @@ const habitReducer = ( state, action ) => {
         }
       })];
     case 'remove_date':
-      // var data = state.map(habit => {
-      //   if(habit._id === action.payload.id){
-      //     return action.payload.habit;
-      //   } else {
-      //     return habit;
-      //   }
-      // });
-      // return data;
       return [...state.map(habit => {
         if(habit._id === action.payload.id){
           return action.payload.habit
@@ -55,7 +38,6 @@ const habitReducer = ( state, action ) => {
 const getHabits = dispatch => async () => {
   try{
     const response = await habitApi.get('/habits');
-    console.log('getHabits', response.data);
     dispatch({type: 'get_habits', payload: response.data});
     return true;
   } catch(error){
@@ -85,7 +67,6 @@ const deleteHabit = dispatch => async (id) => {
 
 const addDateHabit = dispatch => async (id, formatedDate) => {
   try{
-    console.log('addDateHabit', id, formatedDate);
     const response = await habitApi.post('/habit/add-date', {id, date:formatedDate.toString()});
     dispatch({type: 'add_date', payload: {id, habit: response.data}})
   } catch(error){
@@ -96,20 +77,13 @@ const addDateHabit = dispatch => async (id, formatedDate) => {
 const removeDateHabit = dispatch => async (id, date) => {
   try{
     const response = await habitApi.post('/habit/remove-date', {id, date});
-    console.log('removeDateHabit', response.data);
     dispatch({type: 'remove_date', payload: {id, habit: response.data}})
   } catch(error){
     console.log('Failed to remove date', error.message);
   }
 };
 
-const reloadState = dispatch => async (reload, data) => {
-  console.log('reload state?', reload);
-  dispatch({type: 'reload_state', payload: {reload, data}});
-  return true;
-};
-
 export const { MyContext, Provider } = createDataContext(
   habitReducer,
-  { getHabits, addHabit, deleteHabit, addDateHabit, removeDateHabit, reloadState},
+  { getHabits, addHabit, deleteHabit, addDateHabit, removeDateHabit},
   []);
