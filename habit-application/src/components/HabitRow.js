@@ -4,8 +4,6 @@ import {MyContext as ThemeContext} from '../context/themeContext';
 import {FontAwesome} from '@expo/vector-icons';
 import mainStyle from '../styles/mainStyle';
 
-// TODO: add another components to this component.
-
 const HabitRow = (props) =>{
   const [selected, setSelected] = useState(false);
   const {state, changeTheme} = useContext(ThemeContext);
@@ -17,7 +15,6 @@ const HabitRow = (props) =>{
     if(props.Dates.length>0){
       for(var i=0; i<props.Dates.length; i++){
         var dateToObj = new Date(props.Dates[i].date);
-        // console.log('habitrow useeffect', dateToObj, selectedDay, props.Text);
         if(dateToObj.valueOf() === selectedDay.valueOf()){
           setSelected(true);
           foundDay = true;
@@ -41,14 +38,13 @@ const HabitRow = (props) =>{
   };
 
   return (
-    <TouchableOpacity style={styles(state.theme).Row} onPress={props.onPress}>
+    <TouchableOpacity style={props.Selected?styles(state.theme).RowSelected:styles(state.theme).Row} onPress={props.onPress} onLongPress={props.onLongPress}>
       <Text style={styles(state.theme).TextElem}>{props.Text}</Text>
       <View style={styles(state.theme).CheckboxView}>
         <TouchableOpacity onLongPress={()=>addRemoveDate()}>
           <FontAwesome style={styles(state.theme).Checkbox} name={selected?"check":'close'}/>
         </TouchableOpacity>
       </View>
-
     </TouchableOpacity>
   )
 };
@@ -60,9 +56,25 @@ const styles = (props) => StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor:'white',
-    marginBottom:10,
+    marginBottom:20,
     paddingLeft:10,
     height:75,
+    borderRadius:30,
+  },
+  RowSelected:{
+    flexDirection: 'row',
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor:'white',
+    borderTopWidth: 1,
+    borderWidth: 2,
+    borderBottomWidth: 3,
+    borderColor: 'black',
+    elevation: 10,
+    marginBottom:10,
+    paddingLeft:10,
+    height:65,
     borderRadius:30,
   },
   TextElem:{
@@ -77,7 +89,7 @@ const styles = (props) => StyleSheet.create({
   },
   Checkbox:{
     fontSize:30,
-    color: props.pri1,
+    color: props.check,
   },
 });
 

@@ -37,10 +37,12 @@ const signin = dispatch => {
       await AsyncStorage.setItem('token', response.data.token);
       await AsyncStorage.setItem('email', email);
       dispatch({ type: 'signin', payload: response.data.token});
-      navigate('Home');
+      return true
+      // navigate('Home');
     }catch(err){
       console.log('signing error', err);
       dispatch({type: 'add_error', payload: 'Something Went wrong'});
+      return false;
     }
   };
 };

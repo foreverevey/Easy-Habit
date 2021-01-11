@@ -1,18 +1,21 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
+import {MyContext as ThemeContext} from '../context/themeContext';
 
 const ButtonLogin = (props) => {
+  const {state} = useContext(ThemeContext);
+
   return (
-    <TouchableOpacity style={styles.Button} onPress={props.onPress}>
-      <Text style={styles.ButtonText}>{props.text}</Text>
+    <TouchableOpacity style={styles(state.theme).Button} onPress={props.onPress}>
+      <Text style={styles(state.theme).ButtonText}>{props.text}</Text>
     </TouchableOpacity>
   )
 };
 
-const styles = StyleSheet.create({
+const styles = (props) => StyleSheet.create({
   Button:{
     borderRadius: 30,
-    backgroundColor: '#C2867C',
+    backgroundColor: props.button,
     margin: 20,
     height: 45,
     alignItems: 'center',

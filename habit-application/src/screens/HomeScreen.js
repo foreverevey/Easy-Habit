@@ -1,6 +1,6 @@
 import React, {useState, useEffect, useContext} from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, AsyncStorage,FlatList,Platform,
-StatusBar, ImageBackground, Modal, TouchableHighlight} from 'react-native';
+StatusBar, ImageBackground} from 'react-native';
 import HabitRow from '../components/HabitRow';
 import { NavigationEvents} from 'react-navigation';
 import {MyContext as HabitContext} from '../context/habitContext';
@@ -10,6 +10,7 @@ import DateTimePickerModal from "react-native-modal-datetime-picker";
 import {MyContext as ThemeContext} from '../context/themeContext';
 
 const HomeScreen = ({navigation}) => {
+
   const getFormatedDay = (selectDate) => {
     const dd = String(selectDate.getDate()).padStart(2, '0');
     const mm = String(selectDate.getMonth() + 1).padStart(2, '0'); //January is 0!
@@ -24,7 +25,7 @@ const HomeScreen = ({navigation}) => {
   const [loading, setLoading] = useState(true);
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
   const [selectedDay, setSelectedDay] = useState(defaultDay);
-  const [isSettingsPickerVisible, setSettingsPickerVisibility] = useState(false);
+  const [selectedHabit, setSelectedHabit] = useState(null);
 
   const showDatePicker = () => {
     // console.log('ShowDatePicker');
@@ -33,11 +34,6 @@ const HomeScreen = ({navigation}) => {
 
   const hideDatePicker = () => {
     setDatePickerVisibility(false);
-  };
-
-  const showSettingsPicker = () => {
-    console.log('settings button');
-    setSettingsPickerVisibility(!isSettingsPickerVisible);
   };
 
   const hideSettingsPicker = () => {
@@ -51,14 +47,11 @@ const HomeScreen = ({navigation}) => {
     hideDatePicker();
   };
 
-  const updateDate = () => {
-    // console.log('updateDate');
-    setDatePickerVisibility(true);
-  };
-
   const delHabit = async (id) => {
+    console.log('delHabit', id);
     try{
       await deleteHabit(id);
+      setSelectedHabit(null);
     } catch(error){
       console.log(error);
       return false;
@@ -99,25 +92,17 @@ const HomeScreen = ({navigation}) => {
   };
 
   useEffect(() => {
-      console.log('first use effect on homescreen');
       setLoading(true);
       navigation.setParams({ getDatePicker: showDatePicker });
-      navigation.setParams({ getSettingsPicker: showSettingsPicker });
       navigation.setParams({ selectedDay: selectedDay });
       navigation.setParams({ theme: themeContext.state });
-      navigation.setParams({ newHabit: newHabit});
+      navigation.setParams({ newHabit: newHabit });
+      navigation.setParams({ selectedHabit: selectedHabit });
+      navigation.setParams({ deleteHabit: delHabit });
       getHabits().then(()=>{
         setLoading(false);
     });
   }, []);
-
-  const _changeThemeCheerful = () =>{
-    themeContext.changeTheme('cheerful');
-  };
-
-  const _changeThemeClean = () =>{
-    themeContext.changeTheme('clean');
-  };
 
   useEffect(() => {
     navigation.setParams({ theme: themeContext.state });
@@ -127,16 +112,18 @@ const HomeScreen = ({navigation}) => {
     navigation.setParams({ selectedDay: selectedDay });
   }, [selectedDay]);
 
-  const clearStorage = async () => {
-    try{
-      await AsyncStorage.removeItem('token');
-      const item = await AsyncStorage.getItem('token');
-      return true;
-    } catch(error){
-      console.log(error);
-      return false;
+  const selectHabit = (id) => {
+    console.log('selectHabit', id);
+    if(id === selectedHabit){
+      setSelectedHabit(null);
+    } else{
+      setSelectedHabit(id);
     }
   };
+
+  useEffect(() => {
+    navigation.setParams({ selectedHabit: selectedHabit });
+  }, [selectedHabit]);
 
   return (
     <View style={styles(themeContext.state.theme).container}>
@@ -155,72 +142,28 @@ const HomeScreen = ({navigation}) => {
           onCancel={hideDatePicker}
         />
       </View>
-      <View style={styles(themeContext.state.theme).centeredView}>
-        <Modal
-          animationType="none"
-          transparent={true}
-          visible={isSettingsPickerVisible}
-          onRequestClose={() => {
-            Alert.alert("Modal has been closed.");
-              }}
-            >
-          <View style={styles(themeContext.state.theme).centeredView}>
-            <View style={styles(themeContext.state.theme).modalView}>
-              <Text style={styles(themeContext.state.theme).modalText}>Hello World!</Text>
-
-              <TouchableHighlight
-                style={{ ...styles(themeContext.state.theme).openButton, backgroundColor: "#2196F3" }}
-                onPress={() => {
-                    hideSettingsPicker();
-                  }}
-                >
-                <Text style={styles(themeContext.state.theme).textStyle}>Hide Modal</Text>
-              </TouchableHighlight>
-            </View>
-          </View>
-        </Modal>
-      </View>
       <ImageBackground source={{uri: themeContext.state.theme.backgroundImage}} style={styles(themeContext.state.theme).ImageBackground}>
             <FlatList style={styles(themeContext.state.theme).flatList}
               data={state}
               keyExtractor={item => item._id}
+              extraData={selectedHabit}
               renderItem= {({item}) => {
                 return (
                   <>
                     <HabitRow
                       Text={item.name}
                       Dates={item.dates}
+                      ID={item._id}
                       SelectedDate={selectedDay}
+                      Selected={selectedHabit === item._id?true:false}
                       onPress={()=>{navigation.navigate('Detail', {item: item._id, test: item})}}
+                      onLongPress={()=>{selectHabit(item._id)}}
                       addDate={()=>{addDate(item._id)}}
                       removeDate={()=>{removeDate(item._id)}}>
                     </HabitRow>
-                    <TouchableOpacity onPress={()=>delHabit(item._id)}>
-                      <Text>Delete Habit</Text>
-                    </TouchableOpacity>
-
                   </>
                   );
                 }}/>
-                <TouchableOpacity
-                  style={styles(themeContext.state.theme).NewAcc}
-                  onPress={ async () => {
-                    await clearStorage();
-                    navigation.navigate('Signin');
-                  }
-                  }>
-                <Text style={styles(themeContext.state.theme).ForgotText}>Logout</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={styles(themeContext.state.theme).NewAcc}
-                  onPress={() =>_changeThemeCheerful()}>
-                <Text style={styles(themeContext.state.theme).ForgotText}>Change Theme Cheerful</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={styles(themeContext.state.theme).NewAcc}
-                  onPress={() =>_changeThemeClean()}>
-                <Text style={styles(themeContext.state.theme).ForgotText}>Change Theme Clean</Text>
-                </TouchableOpacity>
       </ImageBackground>
     </View>
   )
@@ -237,11 +180,13 @@ const styles = (props) => StyleSheet.create({
   container:{
     justifyContent: 'space-around',
     // alignItems: "center",
-    paddingTop: Platform.OS === "android" ? StatusBar.currentHeight: 0,
+    flex: 1,
+    // paddingTop: Platform.OS === "android" ? StatusBar.currentHeight: 0,
   },
   ImageBackground:{
-    paddingTop: 130,
-
+    // paddingTop: 130,
+    paddingTop: Platform.OS === "android" ? StatusBar.currentHeight: 0,
+    flex:1
   },
   flatList:{
     marginHorizontal: 10,

@@ -17,6 +17,14 @@ const themeOptions = {
     white: '#fff',
     headerPlus: '#fff',
     backgroundImage: cleanBackgroundUri,
+    name: 'clean',
+    button: '#8860d0',
+    sliderThumbOn: '#5680e8',
+    sliderTrackOn: '#8860d0',
+    sliderThumbOff: '#84ceeb',
+    sliderTrackOff: '#8860d0',
+    text: '#fff',
+    check: '#5680e8',
   },
   'cheerful': {
     pri1: '#fbe8a6',
@@ -27,6 +35,14 @@ const themeOptions = {
     white: '#fff',
     headerPlus: '#303C6C',
     backgroundImage: cheerfulBackgroundUri,
+    name: 'cheerful',
+    button: '#303c6c',
+    sliderThumbOn: '#f4976c',
+    sliderTrackOn: '#303c6c',
+    sliderThumbOff: '#b4dfe5',
+    sliderTrackOff: '#8860d0',
+    text: '#303c6c',
+    check: '#f4976c',
   },
 };
 
@@ -48,13 +64,5 @@ const changeTheme = dispatch => async (theme) =>{
 export const { MyContext , Provider} = createDataContext(
   themeReducer,
   {changeTheme},
-  { theme: {
-      pri1: '#8b97dc',
-      pri2: '#00b25c',
-      pri3: '#009145',
-      sec1: '#007f39',
-      sec2: '#ffb5a6',
-      white: '#fff',
-      backgroundImage: cheerfulBackgroundUri,
-    }}
+  { theme: themeOptions['cheerful']}
 );

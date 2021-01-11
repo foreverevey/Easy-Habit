@@ -13,6 +13,7 @@ import { setNavigator } from './src/navigationRef';
 import {Provider as HabitProvider} from './src/context/habitContext';
 import {Provider as ThemeProvider} from './src/context/themeContext';
 import HabitDetailScreen from './src/screens/HabitDetailScreen';
+import SettingsScreen from './src/screens/SettingsScreen';
 
 const SwitchNavigator = createSwitchNavigator({
   loginFlow: createStackNavigator({
@@ -24,6 +25,7 @@ const SwitchNavigator = createSwitchNavigator({
     Auth: AuthLoadingScreen,
     Create: CreateHabitScreen,
     Detail: HabitDetailScreen,
+    Settings: SettingsScreen,
   })
     // initialRouteName:  'AuthLoading',
 });
