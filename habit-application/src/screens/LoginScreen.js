@@ -48,10 +48,18 @@ const LoginScreen = ({navigation}) => {
     } else {
       console.log('wrong pass');
       setBadAttempt(true);
+      setPassword('');
       setLoading(false);
     }
     // navigation.navigate('Home');
-  }
+  };
+
+  const navigateRegisterScreen = () => {
+    setBadAttempt(false);
+    setPassword('');
+    setEmail('');
+    navigation.navigate('Signup');
+  };
 
   return (
     <View style={styles(themeContext.state.theme).MainParent}>
@@ -87,12 +95,12 @@ const LoginScreen = ({navigation}) => {
             />
         </View>
         {badAttempt && <View>
-          <Text>Wrong email or password, try again</Text>
+          <Text style={styles(themeContext.state.theme).errorMessage}>Wrong email or password!</Text>
         </View>}
         <ButtonLogin text='Login' onPress={()=>signin({email,password})}/>
         <SimpleTextLogin text='Forgot Password?'/>
         <SimpleTextLogin text={`Don't have an acount?
-          Register here`} onPress={()=>navigation.navigate('Signup')}/>
+          Register here`} onPress={()=>navigateRegisterScreen()}/>
       </ImageBackground>
     </View>
   )
@@ -146,6 +154,11 @@ const styles = (props) => StyleSheet.create({
   spinnerTextStyle: {
     color: '#FFF'
   },
+  errorMessage: {
+    paddingLeft:40,
+    marginTop:10,
+    color: props.text,
+  }
 });
 
 export default LoginScreen;

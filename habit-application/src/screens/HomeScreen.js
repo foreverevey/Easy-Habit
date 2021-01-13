@@ -91,9 +91,27 @@ const HomeScreen = ({navigation}) => {
     }
   };
 
+  const selectNextDay = () => {
+    const currentDay = new Date(selectedDay);
+    const nextDayAdd = currentDay.setDate(currentDay.getDate() + 1);
+    const nextDay = new Date(nextDayAdd);
+    const formatedDate = getFormatedDay(nextDay);
+    setSelectedDay(formatedDate);
+  };
+
+  const selectPreviousDay = () => {
+    const currentDay = new Date(selectedDay);
+    const previousDayAdd = currentDay.setDate(currentDay.getDate() - 1);
+    const previousDay = new Date(previousDayAdd);
+    const formatedDate = getFormatedDay(previousDay);
+    setSelectedDay(formatedDate);
+  };
+
   useEffect(() => {
       setLoading(true);
       navigation.setParams({ getDatePicker: showDatePicker });
+      navigation.setParams({ selectNextDay: selectNextDay});
+      navigation.setParams({ selectPreviousDay: selectPreviousDay});
       navigation.setParams({ selectedDay: selectedDay });
       navigation.setParams({ theme: themeContext.state });
       navigation.setParams({ newHabit: newHabit });
@@ -110,6 +128,8 @@ const HomeScreen = ({navigation}) => {
 
   useEffect(() => {
     navigation.setParams({ selectedDay: selectedDay });
+    navigation.setParams({ selectNextDay: selectNextDay});
+    navigation.setParams({ selectPreviousDay: selectPreviousDay});
   }, [selectedDay]);
 
   const selectHabit = (id) => {
@@ -138,6 +158,7 @@ const HomeScreen = ({navigation}) => {
         <DateTimePickerModal
           isVisible={isDatePickerVisible}
           mode="date"
+          date={new Date(selectedDay)}
           onConfirm={handleConfirm}
           onCancel={hideDatePicker}
         />
@@ -156,7 +177,7 @@ const HomeScreen = ({navigation}) => {
                       ID={item._id}
                       SelectedDate={selectedDay}
                       Selected={selectedHabit === item._id?true:false}
-                      onPress={()=>{navigation.navigate('Detail', {item: item._id, test: item})}}
+                      onPress={()=>{navigation.navigate('Detail', {item: item._id, data: item})}}
                       onLongPress={()=>{selectHabit(item._id)}}
                       addDate={()=>{addDate(item._id)}}
                       removeDate={()=>{removeDate(item._id)}}>

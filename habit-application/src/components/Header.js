@@ -29,8 +29,7 @@ const MyHeader = (navigation) => {
   if(theme !== undefined){
     themeOptions = theme.theme;
   }
-  // navigation.getParam('newHabit')()
-  // visible={navigation.getParam('showDeleteHabit')}
+
   return {
     headerStyle: {
       backgroundColor: themeOptions?themeOptions.pri1:'#ffaf7a',
@@ -62,12 +61,22 @@ const MyHeader = (navigation) => {
       </View>
     ),
     headerTitle: () => (
-      <TouchableOpacity
-        onPress={()=>navigation.getParam('getDatePicker')()}>
-        <Text style={{color:themeOptions?themeOptions.headerPlus:'#fff', fontSize: 18}}>
-          {monthName}
-        </Text>
-      </TouchableOpacity>
+      <View style={styles.container}>
+        <TouchableOpacity style={styles.buttonPrev}
+          onPress={()=>navigation.getParam('selectPreviousDay')()}>
+          <FontAwesome style={{color:themeOptions?themeOptions.headerPlus:'#fff', fontSize:22, textAlign:'right'}} name="caret-left"/>
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={()=>navigation.getParam('getDatePicker')()}>
+          <Text style={{color:themeOptions?themeOptions.headerPlus:'#fff', fontSize: 18, marginLeft:10, marginRight:10}}>
+            {monthName}
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.buttonNext}
+          onPress={()=>navigation.getParam('selectNextDay')()}>
+          <FontAwesome style={{color:themeOptions?themeOptions.headerPlus:'#fff', fontSize:22}} name="caret-right"/>
+        </TouchableOpacity>
+      </View>
     ),
     headerTitleAlign: 'center',
   };
@@ -80,6 +89,18 @@ const styles = StyleSheet.create({
     alignItems: "center",
     flexDirection: 'row',
   },
+  buttonNext:{
+    // borderWidth: 2,
+    // borderColor: 'black',
+    // borderStyle: 'solid',
+    width:20,
+  },
+  buttonPrev:{
+    // borderWidth: 2,
+    // borderColor: 'black',
+    // borderStyle: 'solid',
+    width:20,
+  }
 })
 
 export default MyHeader;
