@@ -3,9 +3,13 @@ import {AsyncStorage, Image} from 'react-native';
 import { navigate } from '../navigationRef';
 import cleanBackground from '../../assets/cleanBackground.png';
 import cheerfulBackground from '../../assets/cheerfulBackground.png';
+import darkBackground from '../../assets/darkBackground.png';
+import cleanBackground2 from '../../assets/cleanBackground2.png';
 
 const cleanBackgroundUri = Image.resolveAssetSource(cleanBackground).uri
 const cheerfulBackgroundUri = Image.resolveAssetSource(cheerfulBackground).uri
+const darkBackgroundUri = Image.resolveAssetSource(darkBackground).uri
+const cleanBackground2Uri = Image.resolveAssetSource(cleanBackground2).uri
 
 const themeOptions = {
   'clean': {
@@ -15,16 +19,24 @@ const themeOptions = {
     sec1: '#c1c8e4',
     sec2: '#8860d0',
     white: '#fff',
-    headerPlus: '#fff',
-    backgroundImage: cleanBackgroundUri,
+    headerPlus: '#a0e6f2',
+    backgroundImage: cleanBackground2Uri,
     name: 'clean',
-    button: '#8860d0',
-    sliderThumbOn: '#5680e8',
-    sliderTrackOn: '#8860d0',
-    sliderThumbOff: '#84ceeb',
-    sliderTrackOff: '#8860d0',
-    text: '#fff',
-    check: '#5680e8',
+    button: '#a0e6f2',
+    sliderThumbOn: '#e91e63',
+    sliderTrackOn: '#272b36',
+    sliderThumbOff: '#272b36',
+    sliderTrackOff: '#e91e63',
+    text: '#051e22',
+    checkPlus: '#e91e63',
+    check: '#051e22',
+    streak: '#e91e63',
+    headerBackground: '#051e22',
+    habitRowBackground: '#a0e6f2',
+    chartBackground: '#04505d',
+    chartRgba: '160, 230, 242',
+    calendarText: '#b4dfe5',
+    calendarBackground: '#04505d',
   },
   'cheerful': {
     pri1: '#fbe8a6',
@@ -37,12 +49,46 @@ const themeOptions = {
     backgroundImage: cheerfulBackgroundUri,
     name: 'cheerful',
     button: '#303c6c',
-    sliderThumbOn: '#f4976c',
-    sliderTrackOn: '#303c6c',
-    sliderThumbOff: '#b4dfe5',
-    sliderTrackOff: '#8860d0',
-    text: '#303c6c',
-    check: '#f4976c',
+    sliderThumbOn: '#fbe8a6',
+    sliderTrackOn: '#f4976c',
+    sliderThumbOff: '#f4976c',
+    sliderTrackOff: '#fbe8a6',
+    text: '#fff',
+    checkPlus: '#e91e63',
+    check: '#b4dfe5',
+    streak: '#f58a42',
+    headerBackground: '#f4976c',
+    habitRowBackground: '#303C6C',
+    chartBackground: '#303c6c',
+    chartRgba: '180, 223, 229',
+    calendarText: '#b4dfe5',
+    calendarBackground: '#303c6c',
+  },
+  'dark': {
+    pri1: '#272b36',
+    pri2: '#f4976c',
+    pri3: '#303c6c',
+    sec1: '#b4dfe5',
+    sec2: '#d2fdff',
+    white: '#fff',
+    headerPlus: '#fff',
+    backgroundImage: darkBackgroundUri,
+    name: 'dark',
+    button: '#777e86',
+    sliderThumbOn: '#e91e63',
+    sliderTrackOn: '#272b36',
+    sliderThumbOff: '#272b36',
+    sliderTrackOff: '#e91e63',
+    text: '#cfd8dd',
+    checkPlus: '#e91e63',
+    check: '#272b36',
+    streak: '#e91e63',
+    headerBackground: '#181d20',
+    habitRowBackground: '#777e86',
+    chartBackground: '#181d20',
+    chartRgba: '233, 30, 99',
+    calendarText: '#e91e63',
+    calendarBackground: '#181d20',
   },
 };
 

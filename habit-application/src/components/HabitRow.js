@@ -42,7 +42,11 @@ const HabitRow = (props) =>{
       <Text style={styles(state.theme).TextElem}>{props.Text}</Text>
       <View style={styles(state.theme).CheckboxView}>
         <TouchableOpacity onLongPress={()=>addRemoveDate()}>
-          <FontAwesome style={styles(state.theme).Checkbox} name={selected?"check":'close'}/>
+          {selected &&
+            <FontAwesome style={styles(state.theme).CheckboxPlus} name="check"/>}
+          {!selected &&
+            <FontAwesome style={styles(state.theme).Checkbox} name='close'/>}
+
         </TouchableOpacity>
       </View>
     </TouchableOpacity>
@@ -55,8 +59,8 @@ const styles = (props) => StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor:'white',
-    marginBottom:20,
+    backgroundColor: props.habitRowBackground,
+    marginBottom:10,
     paddingLeft:10,
     height:75,
     borderRadius:30,
@@ -66,26 +70,33 @@ const styles = (props) => StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor:'white',
+    backgroundColor: props.habitRowBackground,
     borderTopWidth: 1,
     borderWidth: 2,
     borderBottomWidth: 3,
-    borderColor: 'black',
-    elevation: 10,
+    borderColor: props.checkPlus,
+    // elevation: 10,
     marginBottom:10,
-    paddingLeft:10,
-    height:65,
-    borderRadius:30,
+    marginLeft: 10,
+    marginRight: 10,
+    paddingLeft: 10,
+    height: 65,
+    borderRadius: 30,
   },
   TextElem:{
     flex:8,
     textAlign: "left",
-    fontSize:18,
-    paddingLeft: 0,
+    fontSize:20,
+    paddingLeft: 20,
+    color: props.text,
   },
   CheckboxView:{
     flex:3,
     alignItems: 'center',
+  },
+  CheckboxPlus:{
+    fontSize:30,
+    color: props.checkPlus,
   },
   Checkbox:{
     fontSize:30,

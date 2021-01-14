@@ -25,7 +25,7 @@ const styles = (props) => StyleSheet.create({
   ButtonText:{
     fontSize: 20,
     letterSpacing: 3,
-    color: '#FFFFFF',
+    color: props.text,
   }
 });
 

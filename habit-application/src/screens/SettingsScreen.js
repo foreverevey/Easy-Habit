@@ -9,7 +9,7 @@ const SettingsScreen = ({navigation}) =>{
   const {state, changeTheme} = useContext(ThemeContext);
   // const cleanTheme = state.name;
   const _changeThemeCheerful = () =>{
-    console.log('changeThemeCheerful');
+    console.log('changeThemeCheerful', state.theme.name);
     if(state.theme.name === 'cheerful'){
       changeTheme('clean');
     } else {
@@ -18,10 +18,20 @@ const SettingsScreen = ({navigation}) =>{
   };
 
   const _changeThemeClean = () =>{
+    console.log('changeThemeClean', state.theme.name);
     if(state.theme.name === 'clean'){
       changeTheme('cheerful');
     } else {
       changeTheme('clean');
+    }
+  };
+
+  const _changeThemeDark = () =>{
+    console.log('changeThemeDark', state.theme.name);
+    if(state.theme.name === 'dark'){
+      changeTheme('cheerful');
+    } else {
+      changeTheme('dark');
     }
   };
 
@@ -42,6 +52,7 @@ const SettingsScreen = ({navigation}) =>{
         <Text style={styles(state.theme).Header}>Change Theme</Text>
         <ThemeSwitch Value={state.theme.name === 'cheerful'?true:false} OnValueChange={()=>{_changeThemeCheerful()}} Text='Cheerful'/>
         <ThemeSwitch Value={state.theme.name === 'clean'?true:false} OnValueChange={()=>{_changeThemeClean()}} Text='Clean'/>
+        <ThemeSwitch Value={state.theme.name === 'dark'?true:false} OnValueChange={()=>{_changeThemeDark()}} Text='Dark'/>
         <ButtonLogin text='Logout' onPress={async()=>{
             await clearStorage();
             navigation.navigate('Signin');}

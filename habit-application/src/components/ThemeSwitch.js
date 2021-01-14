@@ -13,7 +13,7 @@ const ThemeSwitch = (props) => {
         value={props.Value}
         onValueChange={props.OnValueChange}
         thumbColor={props.Value?state.theme.sliderThumbOn:state.theme.sliderThumbOff}
-        trackColor={{false: 'grey', true: state.theme.sliderTrackOn}}
+        trackColor={{false: state.theme.sliderTrackOff, true: state.theme.sliderTrackOn}}
         />
     </View>
   )
@@ -25,17 +25,16 @@ const styles = (props) => StyleSheet.create({
     // flex: 1,
     justifyContent: 'space-between',
     alignItems: 'center',
-    backgroundColor:'white',
+    backgroundColor: props.habitRowBackground,
     paddingTop: 5,
     paddingBottom: 5,
     marginBottom: 5,
-    // borderBottomColor: 'black',
-    // borderBottomWidth: 1,
     elevation: 3,
   },
   Text:{
     marginLeft: 20,
     fontSize: 15,
+    color: props.text,
   },
   Switch:{
     marginRight:20,

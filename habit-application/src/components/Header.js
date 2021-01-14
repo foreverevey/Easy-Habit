@@ -32,7 +32,7 @@ const MyHeader = (navigation) => {
 
   return {
     headerStyle: {
-      backgroundColor: themeOptions?themeOptions.pri1:'#ffaf7a',
+      backgroundColor: themeOptions?themeOptions.headerBackground:'#ffaf7a',
       borderBottomColor: 'black',
       height:90,
     },
@@ -64,17 +64,17 @@ const MyHeader = (navigation) => {
       <View style={styles.container}>
         <TouchableOpacity style={styles.buttonPrev}
           onPress={()=>navigation.getParam('selectPreviousDay')()}>
-          <FontAwesome style={{color:themeOptions?themeOptions.headerPlus:'#fff', fontSize:22, textAlign:'right'}} name="caret-left"/>
+          <FontAwesome style={{color:themeOptions?themeOptions.headerPlus:'#fff', fontSize:24, textAlign:'right'}} name="caret-left"/>
         </TouchableOpacity>
         <TouchableOpacity
           onPress={()=>navigation.getParam('getDatePicker')()}>
-          <Text style={{color:themeOptions?themeOptions.headerPlus:'#fff', fontSize: 18, marginLeft:10, marginRight:10}}>
+          <Text style={{color:themeOptions?themeOptions.headerPlus:'#fff', fontSize: 20, marginLeft:10, marginRight:10}}>
             {monthName}
           </Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.buttonNext}
           onPress={()=>navigation.getParam('selectNextDay')()}>
-          <FontAwesome style={{color:themeOptions?themeOptions.headerPlus:'#fff', fontSize:22}} name="caret-right"/>
+          <FontAwesome style={{color:themeOptions?themeOptions.headerPlus:'#fff', fontSize:24}} name="caret-right"/>
         </TouchableOpacity>
       </View>
     ),
