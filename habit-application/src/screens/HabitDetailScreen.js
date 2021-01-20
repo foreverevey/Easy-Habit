@@ -1,5 +1,5 @@
 import React, {useState, useContext, useEffect} from 'react';
-import { View, Text, StyleSheet, StatusBar, AsyncStorage, ScrollView, ImageBackground } from 'react-native';
+import { View, Text, StyleSheet, StatusBar, AsyncStorage, ScrollView, ImageBackground, CheckBox, TextInput, TouchableOpacity } from 'react-native';
 import { MyContext as HabitContext } from '../context/habitContext';
 import habitApi from '../api/habitApi';
 import {Calendar, CalendarList, Agenda} from 'react-native-calendars';
@@ -8,13 +8,17 @@ import { Dimensions } from "react-native";
 import {MyContext as ThemeContext} from '../context/themeContext';
 import moment from 'moment';
 import StreakRow from '../components/StreakRow';
+import {FontAwesome} from '@expo/vector-icons';
+import ButtonLogin from '../components/ButtonLogin';
+
 
 const HabitDetailScreen = ({navigation}) => {
-  const {state} = useContext(HabitContext);
+  const {state, editHabit} = useContext(HabitContext);
   const themeContext = useContext(ThemeContext);
   const id = navigation.getParam('item');
   const data = navigation.getParam('data');
   const screenWidth = Dimensions.get("window").width;
+  const screenHeight = Dimensions.get('window').height;
   const [result, setResult] = useState(data);
 
   const getData = (data) =>{
@@ -179,6 +183,13 @@ const HabitDetailScreen = ({navigation}) => {
   const [markedDays, contributionDays, longestStreak, currentStreak, barData] = getData(data);
   const [dates, setDates] = useState(markedDays);
   const [contributionGraphDays, setContributionGraphDays] = useState(contributionDays);
+  const [privateBool, setPrivateBool] = useState(result.private_bool);
+  const [name, setName] = useState(result.name);
+  const [description, setDescription] = useState(result.description);
+  const [trackedDays, setTrackedDays] = useState(result.trackedDays);
+  const [edit, setEdit] = useState(false);
+  const [repeat, setRepeat] = useState('daily');
+  const [reload, setReload] = useState(true);
 
   const getGraphEndDay = () => {
     const currentDay = new Date();
@@ -222,11 +233,120 @@ const HabitDetailScreen = ({navigation}) => {
     console.log('Habit detail screen state', result);
   }, [result]);
 
+  useEffect(()=>{
+    console.log('detail screen reload');
+    console.log('trackedDays', trackedDays);
+    console.log('edit', edit);
+  });
+
+  const changeTrackedDays = (day) => {
+    console.log(day, trackedDays.Mon, trackedDays[day]);
+    const newTracked = trackedDays;
+    newTracked[day] = !trackedDays[day];
+    console.log(newTracked);
+    setTrackedDays(newTracked);
+    setReload(!reload);
+  };
+
   return(
       <View style={styles(themeContext.state.theme).container}>
         <ScrollView>
           <ImageBackground source={{uri: themeContext.state.theme.backgroundImage}} style={styles(themeContext.state.theme).ImageBackground}>
-            <Text>{result?result.name:''}</Text>
+            <Text style={styles(themeContext.state.theme).Header}>Habit details</Text>
+            <TextInput style={styles(themeContext.state.theme).TextInputName}
+              autoCapitalize="none"
+              autoCorrect={false}
+              value={name}
+              onChangeText={(newValue)=> setName(newValue)}
+              editable={edit?true:false}
+              placeholder="Name"
+              paddingLeft={15}/>
+            <TextInput style={styles(themeContext.state.theme).TextInputDescription}
+              multiline
+              autoCapitalize="none"
+              autoCorrect={false}
+              value={description}
+              editable={edit?true:false}
+              onChangeText={(newValue)=> setDescription(newValue)}
+              placeholder="Description"
+              paddingLeft={15}
+              paddingTop={15}/>
+            <View style={styles(themeContext.state.theme).Grouped}>
+              <Text style={styles(themeContext.state.theme).Text}>Private</Text>
+              <CheckBox disabled={edit?false:true} value={privateBool} onValueChange={()=>{setPrivateBool(!privateBool)}}/>
+            </View>
+            <View style={styles(themeContext.state.theme).Schedule1}>
+              <Text style={styles(themeContext.state.theme).Schedule1Label}>Day(s)</Text>
+              <Text style={styles(themeContext.state.theme).Schedule1Item}>Mon</Text>
+              <Text style={styles(themeContext.state.theme).Schedule1Item}>Tue</Text>
+              <Text style={styles(themeContext.state.theme).Schedule1Item}>Wen</Text>
+              <Text style={styles(themeContext.state.theme).Schedule1Item}>Thu</Text>
+              <Text style={styles(themeContext.state.theme).Schedule1Item}>Fri</Text>
+              <Text style={styles(themeContext.state.theme).Schedule1Item}>Sat</Text>
+              <Text style={styles(themeContext.state.theme).Schedule1Item}>Sun</Text>
+            </View>
+            <View style={styles(themeContext.state.theme).Schedule2}>
+              <Text style={styles(themeContext.state.theme).Schedule1Label}></Text>
+              <View style={styles(themeContext.state.theme).CheckboxView}>
+                <TouchableOpacity disabled={edit?false:true} onPress={()=>changeTrackedDays('Mon')}>
+                  {trackedDays.Mon &&
+                    <FontAwesome style={styles(themeContext.state.theme).CheckboxPlus} name="check"/>}
+                  {!trackedDays.Mon &&
+                    <FontAwesome style={styles(themeContext.state.theme).Checkbox} name='close'/>}
+                </TouchableOpacity>
+              </View>
+              <View style={styles(themeContext.state.theme).CheckboxView}>
+                <TouchableOpacity disabled={edit?false:true} onPress={()=>changeTrackedDays('Tue')}>
+                  {trackedDays.Tue &&
+                    <FontAwesome style={styles(themeContext.state.theme).CheckboxPlus} name="check"/>}
+                  {!trackedDays.Tue &&
+                    <FontAwesome style={styles(themeContext.state.theme).Checkbox} name='close'/>}
+                </TouchableOpacity>
+              </View>
+              <View style={styles(themeContext.state.theme).CheckboxView}>
+                <TouchableOpacity disabled={edit?false:true} onPress={()=>changeTrackedDays('Wed')}>
+                  {trackedDays.Wed &&
+                    <FontAwesome style={styles(themeContext.state.theme).CheckboxPlus} name="check"/>}
+                  {!trackedDays.Wed &&
+                    <FontAwesome style={styles(themeContext.state.theme).Checkbox} name='close'/>}
+                </TouchableOpacity>
+              </View>
+              <View style={styles(themeContext.state.theme).CheckboxView}>
+                <TouchableOpacity disabled={edit?false:true} onPress={()=>changeTrackedDays('Thu')}>
+                  {trackedDays.Thu &&
+                    <FontAwesome style={styles(themeContext.state.theme).CheckboxPlus} name="check"/>}
+                  {!trackedDays.Thu &&
+                    <FontAwesome style={styles(themeContext.state.theme).Checkbox} name='close'/>}
+                </TouchableOpacity>
+              </View>
+              <View style={styles(themeContext.state.theme).CheckboxView}>
+                <TouchableOpacity disabled={edit?false:true} onPress={()=>changeTrackedDays('Fri')}>
+                  {trackedDays.Fri &&
+                    <FontAwesome style={styles(themeContext.state.theme).CheckboxPlus} name="check"/>}
+                  {!trackedDays.Fri &&
+                    <FontAwesome style={styles(themeContext.state.theme).Checkbox} name='close'/>}
+                </TouchableOpacity>
+              </View>
+              <View style={styles(themeContext.state.theme).CheckboxView}>
+                <TouchableOpacity disabled={edit?false:true} onPress={()=>changeTrackedDays('Sat')}>
+                  {trackedDays.Sat &&
+                    <FontAwesome style={styles(themeContext.state.theme).CheckboxPlus} name="check"/>}
+                  {!trackedDays.Sat &&
+                    <FontAwesome style={styles(themeContext.state.theme).Checkbox} name='close'/>}
+                </TouchableOpacity>
+              </View>
+              <View style={styles(themeContext.state.theme).CheckboxView}>
+                <TouchableOpacity disabled={edit?false:true} onPress={()=>changeTrackedDays('Sun')}>
+                  {trackedDays.Sun &&
+                    <FontAwesome style={styles(themeContext.state.theme).CheckboxPlus} name="check"/>}
+                  {!trackedDays.Sun &&
+                    <FontAwesome style={styles(themeContext.state.theme).Checkbox} name='close'/>}
+                </TouchableOpacity>
+              </View>
+            </View>
+            <TouchableOpacity style={{marginTop:10}} text='Edit' onPress={()=>setEdit(true)}>
+              <Text>Edit</Text>
+            </TouchableOpacity>
             <StreakRow StreakText={`Longest Streak: ${longestStreak}`}/>
             <StreakRow StreakText={`Current Streak ${currentStreak}`}/>
             <ContributionGraph
@@ -318,7 +438,7 @@ const styles = (props) => StyleSheet.create({
   },
   ImageBackground:{
     // paddingTop: 130,
-    paddingTop: Platform.OS === "android" ? StatusBar.currentHeight: 0,
+    // paddingTop: Platform.OS === "android" ? StatusBar.currentHeight: 0,
     flex:1,
     // alignItems: "center",
     justifyContent: 'space-around',
@@ -334,7 +454,59 @@ const styles = (props) => StyleSheet.create({
   Calendar:{
     // margin: 5,
     marginTop: 10,
-  }
+  },
+  Header:{
+    fontSize: 26,
+    alignSelf: 'center',
+  },
+  TextInputName:{
+    // marginTop: Platform.OS === "android" ? StatusBar.currentHeight + 20: 0,
+    marginTop: 10,
+    backgroundColor:'#fff',
+    borderRadius: 15,
+    height:50,
+  },
+  TextInputDescription:{
+    marginTop:10,
+    backgroundColor:'#fff',
+    borderRadius: 15,
+    height:120,
+    textAlignVertical: 'top',
+  },
+  Grouped:{
+    flexDirection: 'row',
+    alignItems:'center',
+  },
+  Schedule1:{
+    flexDirection: 'row',
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  Schedule2:{
+    flexDirection: 'row',
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+  Schedule1Item:{
+    flex: 1,
+  },
+  Schedule1Label:{
+    flex: 1,
+  },
+  CheckboxView:{
+    flex: 1,
+  },
+  CheckboxPlus:{
+    fontSize:26,
+    color: props.checkPlus,
+  },
+  Checkbox:{
+    fontSize:26,
+    color: props.check,
+  },
 })
 
 export default HabitDetailScreen;

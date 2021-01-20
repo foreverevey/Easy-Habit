@@ -88,7 +88,7 @@ const styles = (props) => StyleSheet.create({
     textAlign: "left",
     fontSize:20,
     paddingLeft: 20,
-    color: props.text,
+    color: props.buttonText,
   },
   CheckboxView:{
     flex:3,

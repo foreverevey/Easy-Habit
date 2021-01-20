@@ -38,7 +38,7 @@ const styles = (props) => StyleSheet.create({
     textAlign: "left",
     fontSize:18,
     paddingLeft: 0,
-    color: props.text,
+    color: props.buttonText,
   },
 });
 

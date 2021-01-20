@@ -1,11 +1,13 @@
 import React from 'react';
-import {StyleSheet, Text, View, TouchableOpacity} from 'react-native';
+import {StyleSheet, Text, View, TouchableOpacity, Dimensions} from 'react-native';
 import {FontAwesome} from '@expo/vector-icons';
 
 const MyHeader = (navigation) => {
   const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
     "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
   ];
+
+  const screenHeight = Dimensions.get('window').height;
 
   const getDate = () => {
     const selectedDate = navigation.getParam('selectedDay');
@@ -34,7 +36,7 @@ const MyHeader = (navigation) => {
     headerStyle: {
       backgroundColor: themeOptions?themeOptions.headerBackground:'#ffaf7a',
       borderBottomColor: 'black',
-      height:90,
+      height: screenHeight * 0.15,
     },
     title: 'Hi',
     headerLeft: () => (

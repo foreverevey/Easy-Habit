@@ -24,6 +24,7 @@ const RegisterScreen = ({navigation}) => {
           value={email}
           onChangeText={(newValue) => setEmail(newValue)}
           placeholder="Email"
+          placeholderTextColor={themeContext.state.theme.placeholderText}
         />
         <View style={styles(themeContext.state.theme).passwordInput}>
           <TextInput
@@ -33,6 +34,7 @@ const RegisterScreen = ({navigation}) => {
             value={password}
             onChangeText={(newValue) => setPassword(newValue)}
             placeholder="Password"
+            placeholderTextColor={themeContext.state.theme.placeholderText}
             secureTextEntry={hiddenState ? true : false}
           />
           <PasswordLock onPress={()=>{setHiddenState(hiddenState => !hiddenState)}} name={hiddenState? "unlock" : "lock"}/>

@@ -15,7 +15,7 @@ router.use(requireAuth);
 router.get('/habits', async (req,res) =>{
   const habits = await Habit.find({userId: req.user._id}).populate('dates').exec(function(error, habits){
     res.send(habits);
-  });;
+  });
   // res.send(habits);
 });
 // GET one habit by user ID and habit ID
@@ -33,16 +33,30 @@ router.get('/habit', async (req,res)=>{
 
 //Create habit, so we dont need dates, because creating it is empty
 router.post('/habits', async(req,res)=>{
-  const { name, private_bool, description } = req.body;
-
+  const { name, private_bool, description, trackedDays } = req.body;
   if (!name){
     return res.status(422).send({error: 'You must provide a name'})
   }
   try{
-    const habit = new Habit({ name, private_bool, userId: req.user._id, description});
+    const habit = new Habit({ name, private_bool, userId: req.user._id, description, trackedDays});
     await habit.save();
     res.send(habit);
   } catch (err){
+    res.status(422).send({error: err.message});
+  }
+});
+
+router.post('/habit/edit-habit', async(req,res)=>{
+  const {id, name, private_bool, description, trackedDays} = req.body;
+  try {
+    const habit = await Habit.findOneAndUpdate({'_id': id}, {$set:
+    {'name': name, 'private_bool': private_bool, 'description': description, 'trackedDays': trackedDays}})
+      .populate('dates').exec(function(err, habit){
+        if(err) return res.status(422).send({error: err.message});
+        res.send(habit)
+      });
+  } catch (err){
+    console.log(err);
     res.status(422).send({error: err.message});
   }
 });

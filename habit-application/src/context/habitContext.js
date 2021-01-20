@@ -13,6 +13,14 @@ const habitReducer = ( state, action ) => {
     case 'delete_habit':
       var data = state.filter((habit) => habit._id !== action.payload);
       return data;
+    case 'edit_habit':
+      return [...state.map(habit => {
+        if(habit._id === action.payload.id){
+          return action.payload.habit
+        } else {
+          return habit;
+        }
+      })];
     case 'add_date':
       return [...state.map(habit => {
         if(habit._id === action.payload.id){
@@ -44,13 +52,12 @@ const getHabits = dispatch => async () => {
     console.log('Error in HabitContext getHabits', error);
     return true;
   }
-
 };
 
 //to add habits
-const addHabit = dispatch => async (name, private_bool, description) => {
+const addHabit = dispatch => async (name, private_bool, description, trackedDays) => {
   const response = await habitApi.post('/habits',
-    {name, private_bool, description}
+    {name, private_bool, description, trackedDays}
   );
   dispatch({type: 'add_habit', payload: response.data});
 };
@@ -62,6 +69,15 @@ const deleteHabit = dispatch => async (id) => {
     dispatch({type: 'delete_habit', payload: id});
   } catch(error){
     console.log('fail delete habit', error.message);
+  }
+};
+
+const editHabit = dispatch => async (id, name, private_bool, description, trackedDays) =>{
+  try{
+    const response = await habitApi.post('/habit/edit-habit', {id, name, private_bool, description, trackedDays});
+    dispatch({type: 'edit_habit', payload: {id, habit: response.data}});
+  } catch(error){
+    console.log('fail to edit habit', error.message);
   }
 };
 
@@ -85,5 +101,5 @@ const removeDateHabit = dispatch => async (id, date) => {
 
 export const { MyContext, Provider } = createDataContext(
   habitReducer,
-  { getHabits, addHabit, deleteHabit, addDateHabit, removeDateHabit},
+  { getHabits, addHabit, deleteHabit, addDateHabit, removeDateHabit, editHabit},
   []);

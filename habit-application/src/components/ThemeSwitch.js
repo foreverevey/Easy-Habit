@@ -34,7 +34,7 @@ const styles = (props) => StyleSheet.create({
   Text:{
     marginLeft: 20,
     fontSize: 15,
-    color: props.text,
+    color: props.buttonText,
   },
   Switch:{
     marginRight:20,

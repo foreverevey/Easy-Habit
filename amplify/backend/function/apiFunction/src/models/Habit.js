@@ -24,7 +24,8 @@ const habitSchema = new mongoose.Schema({
   dates: [{
     type: mongoose.Schema.Types.ObjectId,
     ref:'Dates'
-  }]
+  }],
+  trackedDays: Object
 });
 
 mongoose.model('Habit', habitSchema);

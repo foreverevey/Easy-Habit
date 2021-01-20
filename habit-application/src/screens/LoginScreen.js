@@ -79,6 +79,7 @@ const LoginScreen = ({navigation}) => {
           value={email}
           onChangeText={(newValue) => setEmail(newValue)}
           placeholder="Email"
+          placeholderTextColor={themeContext.state.theme.placeholderText}
         />
         <View style={styles(themeContext.state.theme).passwordInput}>
           <TextInput
@@ -88,6 +89,7 @@ const LoginScreen = ({navigation}) => {
             value={password}
             onChangeText={(newValue) => setPassword(newValue)}
             placeholder="Password"
+            placeholderTextColor={themeContext.state.theme.placeholderText}
             secureTextEntry={hiddenState ? true : false}
             onSubmitEditing={(e)=>{attemptSignIn(email,password)}}
           />
@@ -97,7 +99,7 @@ const LoginScreen = ({navigation}) => {
         {badAttempt && <View>
           <Text style={styles(themeContext.state.theme).errorMessage}>Wrong email or password!</Text>
         </View>}
-        <ButtonLogin text='Login' onPress={()=>signin({email,password})}/>
+        <ButtonLogin text='Login' onPress={()=>attemptSignIn(email,password)}/>
         <SimpleTextLogin text='Forgot Password?'/>
         <SimpleTextLogin text={`Don't have an acount?
           Register here`} onPress={()=>navigateRegisterScreen()}/>

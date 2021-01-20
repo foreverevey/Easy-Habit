@@ -22,11 +22,14 @@ const CreateHabitScreen = ({navigation}) =>{
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [privateBool, setPrivateBool] = useState(false);
+  const [trackedDays, setTrackedDays] = useState({
+    'Mon': false, 'Tue': false, 'Wed': false, 'Thu': false, 'Fri': false,
+    'Sat': false, 'Sun': false})
   const {addHabit} = useContext(HabitContext);
   const themeContext = useContext(ThemeContext);
 
-  const createHabit = async (name,description,privateBool) => {
-    await addHabit(name, privateBool, description);
+  const createHabit = async (name,description,privateBool,trackedDays) => {
+    await addHabit(name, privateBool, description, trackedDays);
     navigation.navigate('Home');
   };
 
@@ -59,7 +62,7 @@ const CreateHabitScreen = ({navigation}) =>{
             <Text style={styles(themeContext.state.theme).Text}>Private</Text>
           </View>
         </Spacer>
-        <ButtonLogin text='Create' onPress={()=>createHabit(name,description, privateBool)}/>
+        <ButtonLogin text='Create' onPress={()=>createHabit(name,description, privateBool, trackedDays)}/>
       </ImageBackground>
     </View>
   )
