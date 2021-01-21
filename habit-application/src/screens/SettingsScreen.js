@@ -1,9 +1,10 @@
-import React, {useState, useContext} from 'react';
+import React, {useState, useContext, useEffect} from 'react';
 import {View, Text, StyleSheet, TouchableOpacity, ImageBackground, StatusBar,
   AsyncStorage} from 'react-native';
 import {MyContext as ThemeContext} from '../context/themeContext';
 import ThemeSwitch from '../components/ThemeSwitch';
 import ButtonLogin from '../components/ButtonLogin';
+import MyHeaderSecondary from '../components/HeaderSecondary';
 
 const SettingsScreen = ({navigation}) =>{
   const {state, changeTheme} = useContext(ThemeContext);
@@ -46,6 +47,10 @@ const SettingsScreen = ({navigation}) =>{
     }
   };
 
+  useEffect(() => {
+    navigation.setParams({ theme: state.theme });
+  }, [state]);
+
   return (
     <View style={styles(state.theme).container}>
       <ImageBackground source={{uri: state.theme.backgroundImage}} style={styles(state.theme).ImageBackground}>
@@ -61,6 +66,13 @@ const SettingsScreen = ({navigation}) =>{
 
     </View>
   )
+};
+
+SettingsScreen.navigationOptions = ({navigation}) => {
+  const text = 'Settings';
+  const { params } = navigation.state;
+  const theme = params.theme;
+  return MyHeaderSecondary(navigation, text, theme);
 };
 
 const styles = (props) =>StyleSheet.create({

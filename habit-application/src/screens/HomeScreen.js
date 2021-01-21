@@ -177,7 +177,7 @@ const HomeScreen = ({navigation}) => {
                       ID={item._id}
                       SelectedDate={selectedDay}
                       Selected={selectedHabit === item._id?true:false}
-                      onPress={()=>{navigation.navigate('Detail', {item: item._id, data: item})}}
+                      onPress={()=>{navigation.navigate('Detail', {item: item._id, data: item, theme: themeContext.state.theme})}}
                       onLongPress={()=>{selectHabit(item._id)}}
                       addDate={()=>{addDate(item._id)}}
                       removeDate={()=>{removeDate(item._id)}}>

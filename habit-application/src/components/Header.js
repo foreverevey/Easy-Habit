@@ -43,7 +43,7 @@ const MyHeader = (navigation) => {
       <View style={styles.container}>
         {navigation.getParam('selectedHabit') === null && <TouchableOpacity
           style={{marginLeft:30,}}
-          onPress={()=>navigation.navigate('Create')}>
+          onPress={()=>navigation.navigate('Create', {theme: themeOptions})}>
           <FontAwesome style={{color:themeOptions?themeOptions.headerPlus:'#fff',fontSize:30}} name="plus"/>
         </TouchableOpacity>}
         {navigation.getParam('selectedHabit') !== null && <TouchableOpacity
@@ -57,7 +57,7 @@ const MyHeader = (navigation) => {
       <View style={styles.container}>
         <TouchableOpacity
           style={{marginRight:30}}
-          onPress={()=>navigation.navigate('Settings')}>
+          onPress={()=>navigation.navigate('Settings', {theme: themeOptions})}>
           <FontAwesome style={{color:themeOptions?themeOptions.headerPlus:'#fff',fontSize:30}} name="cog"/>
         </TouchableOpacity>
       </View>
