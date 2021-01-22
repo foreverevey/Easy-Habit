@@ -6,7 +6,7 @@ const ButtonLogin = (props) => {
   const {state} = useContext(ThemeContext);
 
   return (
-    <TouchableOpacity style={styles(state.theme).Button} onPress={props.onPress}>
+    <TouchableOpacity style={props.style} onPress={props.onPress}>
       <Text style={styles(state.theme).ButtonText}>{props.text}</Text>
     </TouchableOpacity>
   )

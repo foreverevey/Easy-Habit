@@ -58,7 +58,7 @@ const SettingsScreen = ({navigation}) =>{
         <ThemeSwitch Value={state.theme.name === 'cheerful'?true:false} OnValueChange={()=>{_changeThemeCheerful()}} Text='Cheerful'/>
         <ThemeSwitch Value={state.theme.name === 'clean'?true:false} OnValueChange={()=>{_changeThemeClean()}} Text='Clean'/>
         <ThemeSwitch Value={state.theme.name === 'dark'?true:false} OnValueChange={()=>{_changeThemeDark()}} Text='Dark'/>
-        <ButtonLogin text='Logout' onPress={async()=>{
+        <ButtonLogin style={styles(state.theme).ButtonSave} text='Logout' onPress={async()=>{
             await clearStorage();
             navigation.navigate('Signin');}
           }/>
@@ -87,7 +87,15 @@ const styles = (props) =>StyleSheet.create({
     fontSize: 18,
     margin: 10,
     marginLeft: 20,
-  }
+  },
+  ButtonSave:{
+    borderRadius: 30,
+    backgroundColor: props.button,
+    margin: 20,
+    height: 45,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
 });
 
 export default SettingsScreen;

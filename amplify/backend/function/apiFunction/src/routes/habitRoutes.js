@@ -50,7 +50,7 @@ router.post('/habit/edit-habit', async(req,res)=>{
   const {id, name, private_bool, description, trackedDays} = req.body;
   try {
     const habit = await Habit.findOneAndUpdate({'_id': id}, {$set:
-    {'name': name, 'private_bool': private_bool, 'description': description, 'trackedDays': trackedDays}})
+    {'name': name, 'private_bool': private_bool, 'description': description, 'trackedDays': trackedDays}}, {'new': true})
       .populate('dates').exec(function(err, habit){
         if(err) return res.status(422).send({error: err.message});
         res.send(habit)

@@ -1,5 +1,5 @@
 import React, {useState, useContext, useEffect} from 'react';
-import { View, Text, StyleSheet, StatusBar, AsyncStorage, ScrollView, ImageBackground, CheckBox, TextInput, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, StatusBar, AsyncStorage, ScrollView, ImageBackground, TextInput, TouchableOpacity } from 'react-native';
 import { MyContext as HabitContext } from '../context/habitContext';
 import habitApi from '../api/habitApi';
 import {Calendar, CalendarList, Agenda} from 'react-native-calendars';
@@ -11,6 +11,8 @@ import StreakRow from '../components/StreakRow';
 import {FontAwesome} from '@expo/vector-icons';
 import ButtonLogin from '../components/ButtonLogin';
 import MyHeaderSecondary from '../components/HeaderSecondary';
+import CheckBox from '@react-native-community/checkbox';
+import Spinner from 'react-native-loading-spinner-overlay';
 
 const HabitDetailScreen = ({navigation}) => {
   const {state, editHabit} = useContext(HabitContext);
@@ -190,6 +192,7 @@ const HabitDetailScreen = ({navigation}) => {
   const [edit, setEdit] = useState(false);
   const [repeat, setRepeat] = useState('daily');
   const [reload, setReload] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   const getGraphEndDay = () => {
     const currentDay = new Date();
@@ -235,15 +238,25 @@ const HabitDetailScreen = ({navigation}) => {
 
   useEffect(()=>{
     navigation.setParams({ editHabit: editHab });
+    navigation.setParams({ edit: edit });
   }, []);
 
   useEffect(()=>{
     navigation.setParams({ editHabit: editHab });
+    navigation.setParams({ edit: edit });
   }, [edit]);
 
   const editHab = () => {
     console.log('edit habi', edit);
     setEdit(!edit);
+  };
+
+  const saveEditHabit = async () => {
+    console.log(id, '\n', name,'\n', description,'\n', privateBool,'\n', trackedDays);
+    setLoading(true);
+    await editHabit(id, name, privateBool, description, trackedDays);
+    setLoading(false);
+    setEdit(false);
   };
 
   // useEffect(() => {
@@ -261,10 +274,16 @@ const HabitDetailScreen = ({navigation}) => {
 
   return(
       <View style={styles(themeContext.state.theme).container}>
+        <View>
+          <Spinner
+            visible={loading?true:false}
+            textContent={'Loading...'}
+            textStyle={styles(themeContext.state.theme).spinnerTextStyle}
+          />
+        </View>
         <ScrollView>
           <ImageBackground source={{uri: themeContext.state.theme.backgroundImage}} style={styles(themeContext.state.theme).ImageBackground}>
             <View style={styles(themeContext.state.theme).HabitDetails}>
-              <Text style={styles(themeContext.state.theme).Header}>Habit details</Text>
               <TextInput style={styles(themeContext.state.theme).TextInputName}
                 autoCapitalize="none"
                 autoCorrect={false}
@@ -285,7 +304,13 @@ const HabitDetailScreen = ({navigation}) => {
                 paddingTop={15}/>
               <View style={styles(themeContext.state.theme).Grouped}>
                 <Text style={styles(themeContext.state.theme).Text}>Private</Text>
-                <CheckBox disabled={edit?false:true} value={privateBool} onValueChange={()=>{setPrivateBool(!privateBool)}}/>
+                <CheckBox
+                  style={styles(themeContext.state.theme).CheckboxPrivate}
+                  disabled={edit?false:true}
+                  value={privateBool}
+                  onValueChange={setPrivateBool}
+                  tintColors={{true:themeContext.state.theme.checkPlus, false:themeContext.state.theme.habitRowBackground}}
+                  />
               </View>
               <View style={styles(themeContext.state.theme).Schedule1}>
                 <Text style={styles(themeContext.state.theme).Schedule1Label}>Day(s)</Text>
@@ -356,23 +381,27 @@ const HabitDetailScreen = ({navigation}) => {
                   </TouchableOpacity>
                 </View>
               </View>
-              {edit && <ButtonLogin visible={edit} text='Save' onPress={()=>{
-                  console.log('save button');
+              {edit && <ButtonLogin style={styles(themeContext.state.theme).ButtonSave} text='Save' onPress={()=>{
+                  saveEditHabit();
                 }
                 }/>}
             </View>
             <StreakRow StreakText={`Longest Streak: ${longestStreak}`}/>
             <StreakRow StreakText={`Current Streak ${currentStreak}`}/>
-            <ContributionGraph
-              values={contributionGraphDays}
-              endDate={graphEndDay}
-              numDays={105}
-              width={screenWidth}
-              height={220}
-              chartConfig={chartConfig}
-              style={styles(themeContext.state.theme).ContributionGraph}
-              showWeekdayLabels={true}
-            />
+            <View style={styles(themeContext.state.theme).GraphView}>
+              <Text style={styles(themeContext.state.theme).GraphText}>Contribution Graph</Text>
+              <ContributionGraph
+                values={contributionGraphDays}
+                endDate={graphEndDay}
+                numDays={105}
+                width={screenWidth}
+                height={220}
+                chartConfig={chartConfig}
+                style={styles(themeContext.state.theme).ContributionGraph}
+                showWeekdayLabels={true}
+              />
+            </View>
+
             {false && <BarChart
               style={styles(themeContext.state.theme).BarGraph}
               data={barData}
@@ -383,25 +412,33 @@ const HabitDetailScreen = ({navigation}) => {
               verticalLabelRotation={30}
               fromZero={true}
             />}
-            <LineChart
-              style={styles(themeContext.state.theme).LineChart}
-              data={barData}
-              width={screenWidth}
-              height={220}
-              chartConfig={barChartConfig}
-              decimalPlaces={0}
-            />
-            <Calendar
-              style={styles(themeContext.state.theme).Calendar}
-              markedDates={dates}
-              markingType={'period'}
-              theme={{
-                calendarBackground: themeContext.state.theme.calendarBackground,
-                textSectionTitleColor: themeContext.state.theme.calendarText,
-                arrowColor: themeContext.state.theme.calendarText,
-                monthTextColor: themeContext.state.theme.calendarText,
-              }}
-            />
+            <View style={styles(themeContext.state.theme).GraphView}>
+              <Text style={styles(themeContext.state.theme).GraphText}>Monthly Line Chart</Text>
+              <LineChart
+                style={styles(themeContext.state.theme).LineChart}
+                data={barData}
+                width={screenWidth}
+                height={220}
+                chartConfig={barChartConfig}
+                decimalPlaces={0}
+              />
+            </View>
+            <View style={styles(themeContext.state.theme).GraphView}>
+              <Text style={styles(themeContext.state.theme).GraphText}>Calendar Overview</Text>
+              <Calendar
+                style={styles(themeContext.state.theme).Calendar}
+                markedDates={dates}
+                markingType={'period'}
+                theme={{
+                  calendarBackground: themeContext.state.theme.calendarBackground,
+                  textSectionTitleColor: themeContext.state.theme.calendarText,
+                  arrowColor: themeContext.state.theme.calendarText,
+                  monthTextColor: themeContext.state.theme.calendarText,
+                  dayTextColor:themeContext.state.theme.calendarText,
+                }}
+              />
+            </View>
+
           </ImageBackground>
         </ScrollView>
       </View>
@@ -432,11 +469,6 @@ const HabitDetailScreen = ({navigation}) => {
 // textMonthFontSize: 16,
 // textDayHeaderFontSize: 16
 
-// HabitDetailScreen.navigationOptions = () => {
-//   return {
-//     // headerShown: false
-//   };
-// };
 HabitDetailScreen.navigationOptions = ({navigation}) => {
   const text = 'Habit details';
   const { params } = navigation.state;
@@ -447,6 +479,14 @@ HabitDetailScreen.navigationOptions = ({navigation}) => {
 const styles = (props) => StyleSheet.create({
   container:{
     flex:1,
+  },
+  ButtonSave:{
+    borderRadius: 30,
+    backgroundColor: props.button,
+    margin: 20,
+    height: 45,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   ContributionGraph:{
     marginTop: 5,
@@ -503,7 +543,7 @@ const styles = (props) => StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 10,
+    // marginBottom: 10,
     marginLeft: 10,
   },
   Schedule1Item:{
@@ -527,7 +567,25 @@ const styles = (props) => StyleSheet.create({
   },
   HabitDetails:{
     margin: 10,
+    marginBottom: 20,
   },
+  CheckboxPrivate:{
+    color: props.headerPlus,
+  },
+  spinnerTextStyle: {
+    color: '#FFF'
+  },
+  GraphView:{
+    marginTop:15,
+    borderBottomWidth: 5,
+    borderTopWidth: 0,
+    borderColor: props.habitRowBackground,
+  },
+  GraphText:{
+    color: props.headerPlus,
+    fontSize: 16,
+    alignSelf: 'center',
+  }
 })
 
 export default HabitDetailScreen;

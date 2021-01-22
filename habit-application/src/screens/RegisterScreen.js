@@ -39,7 +39,7 @@ const RegisterScreen = ({navigation}) => {
           />
           <PasswordLock onPress={()=>{setHiddenState(hiddenState => !hiddenState)}} name={hiddenState? "unlock" : "lock"}/>
         </View>
-        <ButtonLogin text='Register' onPress={()=>signup({email,password})}/>
+        <ButtonLogin style={styles(themeContext.state.theme).Button} text='Register' onPress={()=>signup({email,password})}/>
         <SimpleTextLogin/>
         <SimpleTextLogin text={`Already have an acount?
               Login here`} onPress={()=>navigation.navigate('Signin')} style={styles(themeContext.state.theme).NewAcc}/>
@@ -65,6 +65,15 @@ const styles = (props) => StyleSheet.create({
     marginBottom: 10,
     marginTop:75,
     color: props.text,
+  },
+  Button:{
+    borderRadius: 30,
+    backgroundColor: props.button,
+    margin: 20,
+    height: 45,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop:50
   },
   inputPass:{
     flex:1,

@@ -76,6 +76,7 @@ const editHabit = dispatch => async (id, name, private_bool, description, tracke
   try{
     const response = await habitApi.post('/habit/edit-habit', {id, name, private_bool, description, trackedDays});
     dispatch({type: 'edit_habit', payload: {id, habit: response.data}});
+    console.log('edit habit success', response.data);
   } catch(error){
     console.log('fail to edit habit', error.message);
   }

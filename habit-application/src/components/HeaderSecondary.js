@@ -8,6 +8,12 @@ const MyHeaderSecondary = (navigation, text, theme) => {
   console.log('hedaer secondary', theme)
 
   const themeParam = navigation.getParam('theme');
+  const edit = navigation.getParam('edit');
+
+  var editValue;
+  if(edit !== undefined){
+    editValue = edit;
+  }
 
   if(themeParam !== undefined){
     theme = themeParam;
@@ -24,7 +30,7 @@ const MyHeaderSecondary = (navigation, text, theme) => {
       headerLeft: () => (
         <View style={styles.container}>
           <TouchableOpacity
-            style={{marginLeft:30, width:60, textAlign:'center', textAlignVertical:'center'}}
+            style={{alignItems: 'center', marginLeft:10, width:60, textAlign:'center', textAlignVertical:'center'}}
             onPress={()=>navigation.goBack()}>
             <FontAwesome style={{color:theme.headerPlus,fontSize:30}} name="angle-left"/>
           </TouchableOpacity>
@@ -35,7 +41,7 @@ const MyHeaderSecondary = (navigation, text, theme) => {
           <TouchableOpacity
             style={{marginRight:30}}
             onPress={()=>navigation.getParam('editHabit')()}>
-            <FontAwesome style={{color:theme.headerPlus,fontSize:30}} name="edit"/>
+            <FontAwesome style={{color:theme.headerPlus,fontSize:30}} name={editValue?"times":"edit"}/>
           </TouchableOpacity>
         </View>
       ),
@@ -57,7 +63,7 @@ const MyHeaderSecondary = (navigation, text, theme) => {
       headerLeft: () => (
         <View style={styles.container}>
           <TouchableOpacity
-            style={{marginLeft:30, width:60, textAlign:'center', textAlignVertical:'center'}}
+            style={{alignItems: 'center', marginLeft:10, width:60, textAlign:'center', textAlignVertical:'center'}}
             onPress={()=>navigation.goBack()}>
             <FontAwesome style={{color:theme.headerPlus,fontSize:30}} name="angle-left"/>
           </TouchableOpacity>

@@ -99,7 +99,7 @@ const LoginScreen = ({navigation}) => {
         {badAttempt && <View>
           <Text style={styles(themeContext.state.theme).errorMessage}>Wrong email or password!</Text>
         </View>}
-        <ButtonLogin text='Login' onPress={()=>attemptSignIn(email,password)}/>
+        <ButtonLogin style={styles(themeContext.state.theme).Button} text='Login' onPress={()=>attemptSignIn(email,password)}/>
         <SimpleTextLogin text='Forgot Password?'/>
         <SimpleTextLogin text={`Don't have an acount?
           Register here`} onPress={()=>navigateRegisterScreen()}/>
@@ -160,7 +160,16 @@ const styles = (props) => StyleSheet.create({
     paddingLeft:40,
     marginTop:10,
     color: props.text,
-  }
+  },
+  Button:{
+    borderRadius: 30,
+    backgroundColor: props.button,
+    margin: 20,
+    height: 45,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop:50
+  },
 });
 
 export default LoginScreen;

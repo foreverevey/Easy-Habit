@@ -8,7 +8,6 @@ import {
   AsyncStorage,
   Platform,
   StatusBar,
-  CheckBox,
   ImageBackground,
 } from 'react-native';
 import {MyContext} from '../context/authContext';
@@ -18,6 +17,7 @@ import {MyContext as HabitContext} from '../context/habitContext';
 import {MyContext as ThemeContext} from '../context/themeContext';
 import {FontAwesome} from '@expo/vector-icons';
 import MyHeaderSecondary from '../components/HeaderSecondary';
+import CheckBox from '@react-native-community/checkbox';
 
 const CreateHabitScreen = ({navigation}) =>{
   const {state} = useContext(MyContext);
@@ -147,7 +147,7 @@ const CreateHabitScreen = ({navigation}) =>{
           </View>
         </View>
 
-        <ButtonLogin text='Create' onPress={()=>createHabit(name,description, privateBool, trackedDays)}/>
+        <ButtonLogin style={styles(themeContext.state.theme).ButtonSave} text='Create' onPress={()=>createHabit(name,description, privateBool, trackedDays)}/>
       </ImageBackground>
     </View>
   )
@@ -170,12 +170,16 @@ const styles = (props) => StyleSheet.create({
     backgroundColor:'#fff',
     borderRadius: 15,
     height:50,
+    backgroundColor: props.habitRowBackground,
+    color: props.buttonText,
   },
   TextInputDescription:{
     backgroundColor:'#fff',
     borderRadius: 15,
     height:120,
     textAlignVertical: 'top',
+    backgroundColor: props.habitRowBackground,
+    color: props.buttonText,
   },
   Grouped:{
     flexDirection: 'row',
@@ -223,7 +227,15 @@ const styles = (props) => StyleSheet.create({
   },
   trackDays:{
     height: 70,
-  }
+  },
+  ButtonSave:{
+    borderRadius: 30,
+    backgroundColor: props.button,
+    margin: 20,
+    height: 45,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
 });
 
 export default CreateHabitScreen;
