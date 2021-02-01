@@ -24,6 +24,8 @@ const HabitDetailScreen = ({navigation}) => {
   const [result, setResult] = useState(data);
 
   const getData = (data) =>{
+    console.log('getData detail screen', data);
+    const trackedHabitDays = data.trackedDays;
     const formatDates = data.dates;
     var datesArray = [];
     formatDates.forEach(date=>{
@@ -35,10 +37,55 @@ const HabitDetailScreen = ({navigation}) => {
     datesArray.sort((a, b) => a - b);
     var markedDates = getMarkedDates(datesArray);
     var contributionDays = getContributionGraphDays(datesArray);
-    var [longestStreak, currentStreak] = getStreak(datesArray);
+    var [longestStreak, currentStreak] = getStreak(datesArray, trackedHabitDays);
     var barData = getBarData(datesArray);
     console.log('streaks', longestStreak, currentStreak);
     return [markedDates, contributionDays, longestStreak, currentStreak, barData];
+  };
+
+  const getTrackedDaysDiff = (trackedHabitDays) => {
+    /*
+    This function takes user selected days and marks distances between them,
+    to help calculate streaks. Example if selected days are Wed and Fri. If user
+    completes week1 Wed and Fri and week2 Wed but no Fri, streak will be 3. Ignoring
+    all the other dates whether they are marked (assume from previous settings) or not.
+    */
+    const objectDay = {
+      "Mon": 0,
+      "Tue": 0,
+      "Wed": 0,
+      "Thu": 0,
+      "Fri": 0,
+      "Sat": 0,
+      "Sun": 0,
+    };
+
+    const dayList = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+    for(var i = 0; i < dayList.length; i++){
+      if(trackedHabitDays[dayList[i]] === true){
+        var counter = 0;
+        for(var j = 0; j < dayList.length; j++){
+          if(i!==j){
+            if(trackedHabitDays[dayList[j]] === true){
+              if(j < i && counter == 0){
+                var diff = j - i;
+                if(diff < 0){
+                  diff += 7;
+                }
+                objectDay[dayList[i]] = diff
+                counter++;
+              }
+              if(j>i){
+                var diff = j - i;
+                objectDay[dayList[i]] = diff
+                break;
+              }
+            };
+          };
+        };
+      };
+    };
+    return objectDay;
   };
 
   const getMarkedDates = (datesArray) =>{
@@ -96,13 +143,16 @@ const HabitDetailScreen = ({navigation}) => {
     return diffInMs / (1000 * 60 * 60 * 24);
   };
 
-  const getStreak = (datesArray) => {
+  const getStreak = (datesArray, trackedHabitDays) => {
     var today = moment();
     var yesterday = moment().subtract(1, 'days');
     var longestStreak = 0;
     var currentStreak = 0;
     var streakNumber = 1;
     var streakGoing = true;
+
+    const daysTrackObj = getTrackedDaysDiff(trackedHabitDays);
+
     for (var i=0; i < datesArray.length; i++) {
       if(i===0){
         var startingDay = moment(datesArray[i]);
@@ -116,10 +166,21 @@ const HabitDetailScreen = ({navigation}) => {
         };
         continue;
       };
+      var checkIfSelected = trackedHabitDays[startingDay.format('dddd').slice(0,3)];
+      if(checkIfSelected === false){
+        startingDay = moment(datesArray[i]);
+        continue;
+      };
       var currentDay = moment(datesArray[i]);
+      var checkIfSelectedCurrent = trackedHabitDays[currentDay.format('dddd').slice(0,3)];
+      if(checkIfSelectedCurrent === false){
+        continue;
+      };
       var daysDiff = currentDay.diff(startingDay, 'days');
+      // console.log('tttttt', daysTrackObj[startingDay.format('dddd').slice(0,3)], daysDiff, startingDay.format('dddd').slice(0,3), currentDay.format('dddd').slice(0,3));
+      var startingDayFormat = startingDay.format('dddd').slice(0,3);
       startingDay = currentDay;
-      if(daysDiff === 1){
+      if(daysDiff === daysTrackObj[startingDayFormat]){
         streakNumber++;
         if(i === datesArray.length - 1){
           var daysDiffCurrent = today.diff(currentDay, 'days');

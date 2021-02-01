@@ -5,8 +5,6 @@ import {FontAwesome} from '@expo/vector-icons';
 const MyHeaderSecondary = (navigation, text, theme) => {
 
   const screenHeight = Dimensions.get('window').height;
-  console.log('hedaer secondary', theme)
-
   const themeParam = navigation.getParam('theme');
   const edit = navigation.getParam('edit');
 

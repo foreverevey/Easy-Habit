@@ -27,6 +27,13 @@
             "privacy": {
                 "open": true
             }
+        },
+        {
+            "name": "/email",
+            "lambdaFunction": "apiFunction",
+            "privacy": {
+                "open": true
+            }
         }
     ],
     "resourceName": "mainApi",
@@ -51,5 +58,6 @@
                 "Arn"
             ]
         }
-    ]
+    ],
+    "uuid": "d6704d95"
 }

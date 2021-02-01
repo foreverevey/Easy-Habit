@@ -20,6 +20,7 @@ require('./models/User');
 require('./models/Habit');
 const authRoutes = require('./routes/authRoutes');
 const habitRoutes = require('./routes/habitRoutes');
+const emailRoutes = require('./routes/emailRoutes');
 const requireAuth = require('./middlewares/requireAuth');
 
 // declare a new express app
@@ -28,6 +29,7 @@ app.use(bodyParser.json())
 app.use(awsServerlessExpressMiddleware.eventContext())
 app.use(authRoutes);
 app.use(habitRoutes);
+app.use(emailRoutes);
 
 // Enable CORS for all methods
 app.use(function(req, res, next) {

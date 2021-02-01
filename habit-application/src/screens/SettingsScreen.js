@@ -5,9 +5,16 @@ import {MyContext as ThemeContext} from '../context/themeContext';
 import ThemeSwitch from '../components/ThemeSwitch';
 import ButtonLogin from '../components/ButtonLogin';
 import MyHeaderSecondary from '../components/HeaderSecondary';
+import habitApi from '../api/habitApi';
+import LineButton from '../components/LineButton';
+import CustomModal from '../components/CustomModal';
+import Spacer from '../components/Spacer';
 
 const SettingsScreen = ({navigation}) =>{
   const {state, changeTheme} = useContext(ThemeContext);
+  const [bugModal, setBugModal] = useState(false);
+  const [feedbackModal, setFeedbackModal] = useState(false);
+
   // const cleanTheme = state.name;
   const _changeThemeCheerful = () =>{
     console.log('changeThemeCheerful', state.theme.name);
@@ -47,6 +54,31 @@ const SettingsScreen = ({navigation}) =>{
     }
   };
 
+  const sendEmail = async (body, subject) =>{
+    try{
+      console.log('test sendemail click', body, subject);
+      const to = "patkppDev@gmail.com";
+      const from = "patkppDev@gmail.com";
+      // const body = "test message HELOOOOOO";
+      // const subject = "test subject";
+      const response = await habitApi.post('/email',
+        {to, from, body, subject}
+      );
+      // console.log(response);
+    } catch(error){
+      console.log('sendEmail error', error);
+    }
+  };
+
+  const openModal = (modalType) => {
+    if(modalType === 'bug'){
+      setBugModal(true);
+    };
+    if(modalType === 'feedback'){
+      setFeedbackModal(true);
+    };
+  };
+
   useEffect(() => {
     navigation.setParams({ theme: state.theme });
   }, [state]);
@@ -54,10 +86,15 @@ const SettingsScreen = ({navigation}) =>{
   return (
     <View style={styles(state.theme).container}>
       <ImageBackground source={{uri: state.theme.backgroundImage}} style={styles(state.theme).ImageBackground}>
-        <Text style={styles(state.theme).Header}>Change Theme</Text>
+        <CustomModal isVisible={bugModal} type='bug' title='Report a Bug!' onPressOutside={()=>setBugModal(!bugModal)} sendEmail={sendEmail}/>
+        <CustomModal isVisible={feedbackModal} type='feedback' title='Provide your feedback!' onPressOutside={()=>setFeedbackModal(!feedbackModal)} sendEmail={sendEmail}/>
+        <Text style={styles(state.theme).Header}>Theme Options</Text>
         <ThemeSwitch Value={state.theme.name === 'cheerful'?true:false} OnValueChange={()=>{_changeThemeCheerful()}} Text='Cheerful'/>
         <ThemeSwitch Value={state.theme.name === 'clean'?true:false} OnValueChange={()=>{_changeThemeClean()}} Text='Clean'/>
         <ThemeSwitch Value={state.theme.name === 'dark'?true:false} OnValueChange={()=>{_changeThemeDark()}} Text='Dark'/>
+        <Spacer/>
+        <LineButton text="Report a Bug" onPress={()=>openModal('bug')} type='bug'/>
+        <LineButton text="Give us Feedback!" onPress={()=>openModal('feedback')} type='paper-plane'/>
         <ButtonLogin style={styles(state.theme).ButtonSave} text='Logout' onPress={async()=>{
             await clearStorage();
             navigation.navigate('Signin');}
@@ -67,6 +104,7 @@ const SettingsScreen = ({navigation}) =>{
     </View>
   )
 };
+// <ButtonLogin style={styles(state.theme).ButtonSave} text='Test Email' onPress={()=>sendEmail()}/>
 
 SettingsScreen.navigationOptions = ({navigation}) => {
   const text = 'Settings';
@@ -87,6 +125,8 @@ const styles = (props) =>StyleSheet.create({
     fontSize: 18,
     margin: 10,
     marginLeft: 20,
+    alignSelf: 'center',
+    color: props.headerPlus,
   },
   ButtonSave:{
     borderRadius: 30,
