@@ -26,10 +26,16 @@ const MyHeader = (navigation) => {
   const monthName = getDate();
 
   const theme = navigation.getParam('theme');
+  const language = navigation.getParam('language');
 
   var themeOptions;
   if(theme !== undefined){
     themeOptions = theme.theme;
+  }
+
+  var languageOptions;
+  if(language !== undefined){
+    languageOptions = language.language;
   }
 
   return {
@@ -43,7 +49,7 @@ const MyHeader = (navigation) => {
       <View style={styles.container}>
         {navigation.getParam('selectedHabit') === null && <TouchableOpacity
           style={{marginLeft:30,}}
-          onPress={()=>navigation.navigate('Create', {theme: themeOptions})}>
+          onPress={()=>navigation.navigate('Create', {theme: themeOptions, language: languageOptions})}>
           <FontAwesome style={{color:themeOptions?themeOptions.headerPlus:'#fff',fontSize:30}} name="plus"/>
         </TouchableOpacity>}
         {navigation.getParam('selectedHabit') !== null && <TouchableOpacity
@@ -57,7 +63,7 @@ const MyHeader = (navigation) => {
       <View style={styles.container}>
         <TouchableOpacity
           style={{marginRight:30}}
-          onPress={()=>navigation.navigate('Settings', {theme: themeOptions})}>
+          onPress={()=>navigation.navigate('Settings', {theme: themeOptions, language: languageOptions})}>
           <FontAwesome style={{color:themeOptions?themeOptions.headerPlus:'#fff',fontSize:30}} name="cog"/>
         </TouchableOpacity>
       </View>

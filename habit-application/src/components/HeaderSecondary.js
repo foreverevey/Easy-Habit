@@ -2,10 +2,11 @@ import React from 'react';
 import {StyleSheet, Text, View, TouchableOpacity, Dimensions} from 'react-native';
 import {FontAwesome} from '@expo/vector-icons';
 
-const MyHeaderSecondary = (navigation, text, theme) => {
+const MyHeaderSecondary = (navigation, text, theme, language) => {
 
   const screenHeight = Dimensions.get('window').height;
   const themeParam = navigation.getParam('theme');
+  const languageParam = navigation.getParam('language');
   const edit = navigation.getParam('edit');
 
   var editValue;
@@ -15,6 +16,10 @@ const MyHeaderSecondary = (navigation, text, theme) => {
 
   if(themeParam !== undefined){
     theme = themeParam;
+  };
+
+  if(languageParam !== undefined){
+    language = languageParam;
   };
 
   if(text === 'Habit details'){
@@ -45,12 +50,12 @@ const MyHeaderSecondary = (navigation, text, theme) => {
       ),
       headerTitle: () => (
         <View style={styles.container}>
-          <Text style={{color:theme.headerPlus,fontSize:30}}>{text}</Text>
+          <Text style={{color:theme.headerPlus,fontSize:30}}>{language.detailScreenHeaderText}</Text>
         </View>
       ),
       headerTitleAlign: 'center',
     };
-  } else {
+  } else if(text === 'Settings') {
     return {
       headerStyle: {
         backgroundColor: theme.headerBackground,
@@ -69,7 +74,31 @@ const MyHeaderSecondary = (navigation, text, theme) => {
       ),
       headerTitle: () => (
         <View style={styles.container}>
-          <Text style={{color:theme.headerPlus,fontSize:30}}>{text}</Text>
+          <Text style={{color:theme.headerPlus,fontSize:30}}>{language.settingScreenHeaderText}</Text>
+        </View>
+      ),
+      headerTitleAlign: 'center',
+    };
+  } else if(text === 'Create Habit'){
+    return {
+      headerStyle: {
+        backgroundColor: theme.headerBackground,
+        borderBottomColor: 'black',
+        height: screenHeight * 0.15,
+      },
+      title: 'Hi',
+      headerLeft: () => (
+        <View style={styles.container}>
+          <TouchableOpacity
+            style={{alignItems: 'center', marginLeft:10, width:60, textAlign:'center', textAlignVertical:'center'}}
+            onPress={()=>navigation.goBack()}>
+            <FontAwesome style={{color:theme.headerPlus,fontSize:30}} name="angle-left"/>
+          </TouchableOpacity>
+        </View>
+      ),
+      headerTitle: () => (
+        <View style={styles.container}>
+          <Text style={{color:theme.headerPlus,fontSize:30}}>{language.createScreenHeaderText}</Text>
         </View>
       ),
       headerTitleAlign: 'center',

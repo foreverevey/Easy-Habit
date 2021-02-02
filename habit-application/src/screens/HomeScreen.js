@@ -8,6 +8,7 @@ import Spinner from 'react-native-loading-spinner-overlay';
 import MyHeader from '../components/Header';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import {MyContext as ThemeContext} from '../context/themeContext';
+import {MyContext as LanguageContext} from '../context/languageContext';
 
 const HomeScreen = ({navigation}) => {
 
@@ -22,6 +23,7 @@ const HomeScreen = ({navigation}) => {
   const defaultDay = getFormatedDay(new Date());
   const {state, getHabits, addHabit, deleteHabit, addDateHabit, removeDateHabit} = useContext(HabitContext);
   const themeContext = useContext(ThemeContext);
+  const languageContext = useContext(LanguageContext);
   const [loading, setLoading] = useState(true);
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
   const [selectedDay, setSelectedDay] = useState(defaultDay);
@@ -108,12 +110,14 @@ const HomeScreen = ({navigation}) => {
   };
 
   useEffect(() => {
+      console.log('language homsecreen', languageContext.state);
       setLoading(true);
       navigation.setParams({ getDatePicker: showDatePicker });
       navigation.setParams({ selectNextDay: selectNextDay});
       navigation.setParams({ selectPreviousDay: selectPreviousDay});
       navigation.setParams({ selectedDay: selectedDay });
       navigation.setParams({ theme: themeContext.state });
+      navigation.setParams({ language: languageContext.state });
       navigation.setParams({ newHabit: newHabit });
       navigation.setParams({ selectedHabit: selectedHabit });
       navigation.setParams({ deleteHabit: delHabit });
@@ -124,7 +128,12 @@ const HomeScreen = ({navigation}) => {
 
   useEffect(() => {
     navigation.setParams({ theme: themeContext.state });
+    console.log('useEffect on theme state homescreen change');
   }, [themeContext.state]);
+
+  useEffect(() => {
+    navigation.setParams({ language: languageContext.state });
+  }, [languageContext.state]);
 
   useEffect(() => {
     navigation.setParams({ selectedDay: selectedDay });
@@ -150,7 +159,7 @@ const HomeScreen = ({navigation}) => {
       <View>
         <Spinner
           visible={loading?true:false}
-          textContent={'Loading...'}
+          textContent={languageContext.state.language.spinnerLoading}
           textStyle={styles(themeContext.state.theme).spinnerTextStyle}
         />
       </View>
@@ -177,7 +186,7 @@ const HomeScreen = ({navigation}) => {
                       ID={item._id}
                       SelectedDate={selectedDay}
                       Selected={selectedHabit === item._id?true:false}
-                      onPress={()=>{navigation.navigate('Detail', {item: item._id, data: item, theme: themeContext.state.theme})}}
+                      onPress={()=>{navigation.navigate('Detail', {item: item._id, data: item, theme: themeContext.state.theme, language: languageContext.state.language})}}
                       onLongPress={()=>{selectHabit(item._id)}}
                       addDate={()=>{addDate(item._id)}}
                       removeDate={()=>{removeDate(item._id)}}>

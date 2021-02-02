@@ -6,6 +6,7 @@ import {Calendar, CalendarList, Agenda} from 'react-native-calendars';
 import {ContributionGraph, BarChart, LineChart} from 'react-native-chart-kit';
 import { Dimensions } from "react-native";
 import {MyContext as ThemeContext} from '../context/themeContext';
+import {MyContext as LanguageContext} from '../context/languageContext';
 import moment from 'moment';
 import StreakRow from '../components/StreakRow';
 import {FontAwesome} from '@expo/vector-icons';
@@ -17,6 +18,7 @@ import Spinner from 'react-native-loading-spinner-overlay';
 const HabitDetailScreen = ({navigation}) => {
   const {state, editHabit} = useContext(HabitContext);
   const themeContext = useContext(ThemeContext);
+  const languageContext = useContext(LanguageContext);
   const id = navigation.getParam('item');
   const data = navigation.getParam('data');
   const screenWidth = Dimensions.get("window").width;
@@ -351,7 +353,7 @@ const HabitDetailScreen = ({navigation}) => {
                 value={name}
                 onChangeText={(newValue)=> setName(newValue)}
                 editable={edit?true:false}
-                placeholder="Name"
+                placeholder={languageContext.state.language.habitNamePlaceholder}
                 paddingLeft={15}/>
               <TextInput style={styles(themeContext.state.theme).TextInputDescription}
                 multiline
@@ -360,11 +362,11 @@ const HabitDetailScreen = ({navigation}) => {
                 value={description}
                 editable={edit?true:false}
                 onChangeText={(newValue)=> setDescription(newValue)}
-                placeholder="Description"
+                placeholder={languageContext.state.language.habitDescriptionPlaceholder}
                 paddingLeft={15}
                 paddingTop={15}/>
               <View style={styles(themeContext.state.theme).Grouped}>
-                <Text style={styles(themeContext.state.theme).Text}>Private</Text>
+                <Text style={styles(themeContext.state.theme).Text}>{languageContext.state.language.privateText}</Text>
                 <CheckBox
                   style={styles(themeContext.state.theme).CheckboxPrivate}
                   disabled={edit?false:true}
@@ -374,17 +376,15 @@ const HabitDetailScreen = ({navigation}) => {
                   />
               </View>
               <View style={styles(themeContext.state.theme).Schedule1}>
-                <Text style={styles(themeContext.state.theme).Schedule1Label}>Day(s)</Text>
-                <Text style={styles(themeContext.state.theme).Schedule1Item}>Mon</Text>
-                <Text style={styles(themeContext.state.theme).Schedule1Item}>Tue</Text>
-                <Text style={styles(themeContext.state.theme).Schedule1Item}>Wen</Text>
-                <Text style={styles(themeContext.state.theme).Schedule1Item}>Thu</Text>
-                <Text style={styles(themeContext.state.theme).Schedule1Item}>Fri</Text>
-                <Text style={styles(themeContext.state.theme).Schedule1Item}>Sat</Text>
-                <Text style={styles(themeContext.state.theme).Schedule1Item}>Sun</Text>
+                <Text style={styles(themeContext.state.theme).Schedule1Item}>{languageContext.state.language.mon}</Text>
+                <Text style={styles(themeContext.state.theme).Schedule1Item}>{languageContext.state.language.tue}</Text>
+                <Text style={styles(themeContext.state.theme).Schedule1Item}>{languageContext.state.language.wen}</Text>
+                <Text style={styles(themeContext.state.theme).Schedule1Item}>{languageContext.state.language.thu}</Text>
+                <Text style={styles(themeContext.state.theme).Schedule1Item}>{languageContext.state.language.fri}</Text>
+                <Text style={styles(themeContext.state.theme).Schedule1Item}>{languageContext.state.language.sat}</Text>
+                <Text style={styles(themeContext.state.theme).Schedule1Item}>{languageContext.state.language.sun}</Text>
               </View>
               <View style={styles(themeContext.state.theme).Schedule2}>
-                <Text style={styles(themeContext.state.theme).Schedule1Label}></Text>
                 <View style={styles(themeContext.state.theme).CheckboxView}>
                   <TouchableOpacity disabled={edit?false:true} onPress={()=>changeTrackedDays('Mon')}>
                     {trackedDays.Mon &&
@@ -442,15 +442,15 @@ const HabitDetailScreen = ({navigation}) => {
                   </TouchableOpacity>
                 </View>
               </View>
-              {edit && <ButtonLogin style={styles(themeContext.state.theme).ButtonSave} text='Save' onPress={()=>{
+              {edit && <ButtonLogin style={styles(themeContext.state.theme).ButtonSave} text={languageContext.state.language.save} onPress={()=>{
                   saveEditHabit();
                 }
                 }/>}
             </View>
-            <StreakRow StreakText={`Longest Streak: ${longestStreak}`}/>
-            <StreakRow StreakText={`Current Streak ${currentStreak}`}/>
+            <StreakRow StreakText={languageContext.state.language.longestStreak + `${longestStreak}`}/>
+            <StreakRow StreakText={languageContext.state.language.currentStreak + `${currentStreak}`}/>
             <View style={styles(themeContext.state.theme).GraphView}>
-              <Text style={styles(themeContext.state.theme).GraphText}>Contribution Graph</Text>
+              <Text style={styles(themeContext.state.theme).GraphText}>{languageContext.state.language.contributionGraph}</Text>
               <ContributionGraph
                 values={contributionGraphDays}
                 endDate={graphEndDay}
@@ -474,7 +474,7 @@ const HabitDetailScreen = ({navigation}) => {
               fromZero={true}
             />}
             <View style={styles(themeContext.state.theme).GraphView}>
-              <Text style={styles(themeContext.state.theme).GraphText}>Monthly Line Chart</Text>
+              <Text style={styles(themeContext.state.theme).GraphText}>{languageContext.state.language.monthlyLineChart}</Text>
               <LineChart
                 style={styles(themeContext.state.theme).LineChart}
                 data={barData}
@@ -485,7 +485,7 @@ const HabitDetailScreen = ({navigation}) => {
               />
             </View>
             <View style={styles(themeContext.state.theme).GraphView}>
-              <Text style={styles(themeContext.state.theme).GraphText}>Calendar Overview</Text>
+              <Text style={styles(themeContext.state.theme).GraphText}>{languageContext.state.language.calendarOverview}</Text>
               <Calendar
                 style={styles(themeContext.state.theme).Calendar}
                 markedDates={dates}
@@ -534,7 +534,8 @@ HabitDetailScreen.navigationOptions = ({navigation}) => {
   const text = 'Habit details';
   const { params } = navigation.state;
   const theme = params.theme;
-  return MyHeaderSecondary(navigation, text, theme);
+  const language = params.language;
+  return MyHeaderSecondary(navigation, text, theme, language);
 };
 
 const styles = (props) => StyleSheet.create({
@@ -587,7 +588,9 @@ const styles = (props) => StyleSheet.create({
   Grouped:{
     flexDirection: 'row',
     alignItems:'center',
-    marginLeft: 10,
+    marginLeft: 20,
+    marginTop: 5,
+    marginBottom: 5,
   },
   Text:{
     color: props.headerPlus,
@@ -597,7 +600,7 @@ const styles = (props) => StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    marginLeft: 10,
+    marginLeft: 20,
   },
   Schedule2:{
     flexDirection: 'row',
@@ -605,7 +608,7 @@ const styles = (props) => StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     // marginBottom: 10,
-    marginLeft: 10,
+    marginLeft: 20,
   },
   Schedule1Item:{
     flex: 1,

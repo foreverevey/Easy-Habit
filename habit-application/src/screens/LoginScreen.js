@@ -5,11 +5,13 @@ import ButtonLogin from '../components/ButtonLogin';
 import PasswordLock from '../components/PasswordLock';
 import SimpleTextLogin from '../components/SimpleTextLogin';
 import {MyContext as ThemeContext} from '../context/themeContext';
+import {MyContext as LanguageContext} from '../context/languageContext';
 import Spinner from 'react-native-loading-spinner-overlay';
 
 const LoginScreen = ({navigation}) => {
   const {state, signin, tryLocalSignin} = useContext(MyContext);
   const themeContext = useContext(ThemeContext);
+  const languageContext = useContext(LanguageContext);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [hiddenState, setHiddenState] = useState(true)
@@ -18,9 +20,9 @@ const LoginScreen = ({navigation}) => {
 
   useEffect(()=>{
     // console.log('loginscreen effect');
-    setUserTheme().then(()=>{
-      // console.log('navig params in login screen');
+    setUserSettings().then(()=>{
       navigation.setParams({ theme: themeContext.state });
+      navigation.setParams({ language: languageContext.state });
     }).then(()=>{
       tryLocalSignin();
     });
@@ -30,11 +32,18 @@ const LoginScreen = ({navigation}) => {
     navigation.setParams({ theme: themeContext.state });
   }, [themeContext.state]);
 
-  const setUserTheme = async () =>{
+  useEffect(() => {
+    navigation.setParams({ language: languageContext.state });
+  }, [languageContext.state]);
+
+  const setUserSettings = async () =>{
     const userTheme = await AsyncStorage.getItem('theme');
-    // console.log('longScreen theme', userTheme);
+    const userLanguage = await AsyncStorage.getItem('language');
     if(userTheme !== null){
       themeContext.changeTheme(userTheme);
+    }
+    if(userLanguage !== null){
+      languageContext.changeLanguage(userLanguage);
     }
   };
 
@@ -66,7 +75,7 @@ const LoginScreen = ({navigation}) => {
       <View>
         <Spinner
           visible={loading?true:false}
-          textContent={'Loading...'}
+          textContent={languageContext.state.language.spinnerLoading}
           textStyle={styles(themeContext.state.theme).spinnerTextStyle}
         />
       </View>
@@ -78,7 +87,7 @@ const LoginScreen = ({navigation}) => {
           autoCorrect={false}
           value={email}
           onChangeText={(newValue) => setEmail(newValue)}
-          placeholder="Email"
+          placeholder={languageContext.state.language.userNameInputPlaceholder}
           placeholderTextColor={themeContext.state.theme.placeholderText}
         />
         <View style={styles(themeContext.state.theme).passwordInput}>
@@ -88,7 +97,7 @@ const LoginScreen = ({navigation}) => {
             autoCorrect={false}
             value={password}
             onChangeText={(newValue) => setPassword(newValue)}
-            placeholder="Password"
+            placeholder={languageContext.state.language.passwordInputPlaceholder}
             placeholderTextColor={themeContext.state.theme.placeholderText}
             secureTextEntry={hiddenState ? true : false}
             onSubmitEditing={(e)=>{attemptSignIn(email,password)}}
@@ -97,12 +106,11 @@ const LoginScreen = ({navigation}) => {
             />
         </View>
         {badAttempt && <View>
-          <Text style={styles(themeContext.state.theme).errorMessage}>Wrong email or password!</Text>
+          <Text style={styles(themeContext.state.theme).errorMessage}>{languageContext.state.language.loginScreenWrong}</Text>
         </View>}
-        <ButtonLogin style={styles(themeContext.state.theme).Button} text='Login' onPress={()=>attemptSignIn(email,password)}/>
-        <SimpleTextLogin text='Forgot Password?'/>
-        <SimpleTextLogin text={`Don't have an acount?
-          Register here`} onPress={()=>navigateRegisterScreen()}/>
+        <ButtonLogin style={styles(themeContext.state.theme).Button} text={languageContext.state.language.login} onPress={()=>attemptSignIn(email,password)}/>
+        <SimpleTextLogin text={languageContext.state.language.loginScreenSimpleText1}/>
+        <SimpleTextLogin text={languageContext.state.language.loginScreenSimpleText2} onPress={()=>navigateRegisterScreen()}/>
       </ImageBackground>
     </View>
   )

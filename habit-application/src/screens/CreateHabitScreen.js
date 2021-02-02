@@ -15,6 +15,7 @@ import Spacer from '../components/Spacer';
 import ButtonLogin from '../components/ButtonLogin';
 import {MyContext as HabitContext} from '../context/habitContext';
 import {MyContext as ThemeContext} from '../context/themeContext';
+import {MyContext as LanguageContext} from '../context/languageContext';
 import {FontAwesome} from '@expo/vector-icons';
 import MyHeaderSecondary from '../components/HeaderSecondary';
 import CheckBox from '@react-native-community/checkbox';
@@ -29,6 +30,7 @@ const CreateHabitScreen = ({navigation}) =>{
     'Sat': true, 'Sun': true})
   const {addHabit} = useContext(HabitContext);
   const themeContext = useContext(ThemeContext);
+  const languageContext = useContext(LanguageContext);
   const [reload, setReload] = useState(true);
 
   const createHabit = async (name,description,privateBool,trackedDays) => {
@@ -55,7 +57,7 @@ const CreateHabitScreen = ({navigation}) =>{
             autoCorrect={false}
             value={name}
             onChangeText={(newValue)=> setName(newValue)}
-            placeholder="Name"
+            placeholder={languageContext.state.language.habitNamePlaceholder}
             paddingLeft={15}/>
         </Spacer>
         <Spacer>
@@ -65,29 +67,27 @@ const CreateHabitScreen = ({navigation}) =>{
             autoCorrect={false}
             value={description}
             onChangeText={(newValue)=> setDescription(newValue)}
-            placeholder="Description"
+            placeholder={languageContext.state.language.habitDescriptionPlaceholder}
             paddingLeft={15}
             paddingTop={15}/>
         </Spacer>
         <Spacer>
           <View style={styles(themeContext.state.theme).Grouped}>
-            <Text style={styles(themeContext.state.theme).Text}>Private</Text>
+            <Text style={styles(themeContext.state.theme).Text}>{languageContext.state.language.privateText}</Text>
             <CheckBox value={privateBool} onValueChange={()=>{setPrivateBool(!privateBool)}}/>
           </View>
         </Spacer>
         <View style={styles(themeContext.state.theme).trackDays}>
           <View style={styles(themeContext.state.theme).Schedule1}>
-            <Text style={styles(themeContext.state.theme).Schedule1Label}>Day(s)</Text>
-            <Text style={styles(themeContext.state.theme).Schedule1Item}>Mon</Text>
-            <Text style={styles(themeContext.state.theme).Schedule1Item}>Tue</Text>
-            <Text style={styles(themeContext.state.theme).Schedule1Item}>Wen</Text>
-            <Text style={styles(themeContext.state.theme).Schedule1Item}>Thu</Text>
-            <Text style={styles(themeContext.state.theme).Schedule1Item}>Fri</Text>
-            <Text style={styles(themeContext.state.theme).Schedule1Item}>Sat</Text>
-            <Text style={styles(themeContext.state.theme).Schedule1Item}>Sun</Text>
+            <Text style={styles(themeContext.state.theme).Schedule1Item}>{languageContext.state.language.mon}</Text>
+            <Text style={styles(themeContext.state.theme).Schedule1Item}>{languageContext.state.language.tue}</Text>
+            <Text style={styles(themeContext.state.theme).Schedule1Item}>{languageContext.state.language.wen}</Text>
+            <Text style={styles(themeContext.state.theme).Schedule1Item}>{languageContext.state.language.thu}</Text>
+            <Text style={styles(themeContext.state.theme).Schedule1Item}>{languageContext.state.language.fri}</Text>
+            <Text style={styles(themeContext.state.theme).Schedule1Item}>{languageContext.state.language.sat}</Text>
+            <Text style={styles(themeContext.state.theme).Schedule1Item}>{languageContext.state.language.sun}</Text>
           </View>
           <View style={styles(themeContext.state.theme).Schedule2}>
-            <Text style={styles(themeContext.state.theme).Schedule1Label}></Text>
             <View style={styles(themeContext.state.theme).CheckboxView}>
               <TouchableOpacity onPress={()=>changeTrackedDays('Mon')}>
                 {trackedDays.Mon &&
@@ -147,7 +147,7 @@ const CreateHabitScreen = ({navigation}) =>{
           </View>
         </View>
 
-        <ButtonLogin style={styles(themeContext.state.theme).ButtonSave} text='Create' onPress={()=>createHabit(name,description, privateBool, trackedDays)}/>
+        <ButtonLogin style={styles(themeContext.state.theme).ButtonSave} text={languageContext.state.language.create} onPress={()=>createHabit(name,description, privateBool, trackedDays)}/>
       </ImageBackground>
     </View>
   )
@@ -157,7 +157,8 @@ CreateHabitScreen.navigationOptions = ({navigation}) => {
   const text = 'Create Habit';
   const { params } = navigation.state;
   const theme = params.theme;
-  return MyHeaderSecondary(navigation, text, theme);
+  const language = params.language;
+  return MyHeaderSecondary(navigation, text, theme, language);
 };
 
 const styles = (props) => StyleSheet.create({
@@ -184,6 +185,7 @@ const styles = (props) => StyleSheet.create({
   Grouped:{
     flexDirection: 'row',
     alignItems:'center',
+    marginLeft: 10,
   },
   Text:{
     color: props.headerPlus,
@@ -196,7 +198,7 @@ const styles = (props) => StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    marginLeft: 10,
+    marginLeft: 20,
   },
   Schedule2:{
     flexDirection: 'row',
@@ -204,7 +206,7 @@ const styles = (props) => StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 10,
-    marginLeft: 10,
+    marginLeft: 20,
   },
   Schedule1Item:{
     flex: 1,

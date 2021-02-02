@@ -20,7 +20,7 @@ const styles = (props) => StyleSheet.create({
   ForgotText:{
     fontSize: 16,
     color: props.text,
-    alignSelf: 'center',
+    textAlign: 'center',
   },
 });
 

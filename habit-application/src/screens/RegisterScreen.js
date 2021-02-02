@@ -5,10 +5,12 @@ import ButtonLogin from '../components/ButtonLogin';
 import PasswordLock from '../components/PasswordLock';
 import SimpleTextLogin from '../components/SimpleTextLogin';
 import {MyContext as ThemeContext} from '../context/themeContext';
+import {MyContext as LanguageContext} from '../context/languageContext';
 
 const RegisterScreen = ({navigation}) => {
   const {state, signup} = useContext(MyContext);
   const themeContext = useContext(ThemeContext);
+  const languageContext = useContext(LanguageContext);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [hiddenState, setHiddenState] = useState(true)
@@ -23,7 +25,7 @@ const RegisterScreen = ({navigation}) => {
           autoCorrect={false}
           value={email}
           onChangeText={(newValue) => setEmail(newValue)}
-          placeholder="Email"
+          placeholder={languageContext.state.language.userNameInputPlaceholder}
           placeholderTextColor={themeContext.state.theme.placeholderText}
         />
         <View style={styles(themeContext.state.theme).passwordInput}>
@@ -33,16 +35,15 @@ const RegisterScreen = ({navigation}) => {
             autoCorrect={false}
             value={password}
             onChangeText={(newValue) => setPassword(newValue)}
-            placeholder="Password"
+            placeholder={languageContext.state.language.passwordInputPlaceholder}
             placeholderTextColor={themeContext.state.theme.placeholderText}
             secureTextEntry={hiddenState ? true : false}
           />
           <PasswordLock onPress={()=>{setHiddenState(hiddenState => !hiddenState)}} name={hiddenState? "unlock" : "lock"}/>
         </View>
-        <ButtonLogin style={styles(themeContext.state.theme).Button} text='Register' onPress={()=>signup({email,password})}/>
+        <ButtonLogin style={styles(themeContext.state.theme).Button} text={languageContext.state.language.register} onPress={()=>signup({email,password})}/>
         <SimpleTextLogin/>
-        <SimpleTextLogin text={`Already have an acount?
-              Login here`} onPress={()=>navigation.navigate('Signin')} style={styles(themeContext.state.theme).NewAcc}/>
+        <SimpleTextLogin text={languageContext.state.language.registerScreenSimpleText1} onPress={()=>navigation.navigate('Signin')} style={styles(themeContext.state.theme).NewAcc}/>
       </ImageBackground>
   </View>
   )
