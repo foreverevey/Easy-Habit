@@ -29,7 +29,6 @@ const MyHeaderSecondary = (navigation, text, theme, language) => {
         borderBottomColor: 'black',
         height: screenHeight * 0.15,
       },
-      title: 'Hi',
       headerLeft: () => (
         <View style={styles.container}>
           <TouchableOpacity
@@ -62,7 +61,6 @@ const MyHeaderSecondary = (navigation, text, theme, language) => {
         borderBottomColor: 'black',
         height: screenHeight * 0.15,
       },
-      title: 'Hi',
       headerLeft: () => (
         <View style={styles.container}>
           <TouchableOpacity
@@ -86,7 +84,6 @@ const MyHeaderSecondary = (navigation, text, theme, language) => {
         borderBottomColor: 'black',
         height: screenHeight * 0.15,
       },
-      title: 'Hi',
       headerLeft: () => (
         <View style={styles.container}>
           <TouchableOpacity

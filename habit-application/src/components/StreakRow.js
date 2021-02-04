@@ -1,7 +1,7 @@
 import React, {useContext} from 'react';
 import {View, StyleSheet, Text} from 'react-native';
-import {MyContext as ThemeContext} from '../context/themeContext';
 import {FontAwesome5} from '@expo/vector-icons';
+import {MyContext as ThemeContext} from '../context/themeContext';
 
 const StreakRow = (props) => {
   const {state} = useContext(ThemeContext);
@@ -24,7 +24,6 @@ const styles = (props) => StyleSheet.create({
     marginBottom:5,
     paddingLeft:10,
     height:50,
-    // borderRadius:30,
   },
   Icon:{
     fontSize: 32,

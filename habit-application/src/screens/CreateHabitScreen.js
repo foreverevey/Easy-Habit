@@ -1,51 +1,36 @@
 import React, {useState, useContext} from 'react';
-import {
-  View,
-  Text,
-  TextInput,
-  StyleSheet,
-  TouchableOpacity,
-  AsyncStorage,
-  Platform,
-  StatusBar,
-  ImageBackground,
-} from 'react-native';
-import {MyContext} from '../context/authContext';
+import {View, Text, TextInput, StyleSheet, TouchableOpacity, ImageBackground} from 'react-native';
+import {FontAwesome} from '@expo/vector-icons';
+import CheckBox from '@react-native-community/checkbox';
 import Spacer from '../components/Spacer';
 import ButtonLogin from '../components/ButtonLogin';
+import MyHeaderSecondary from '../components/HeaderSecondary';
+import {MyContext} from '../context/authContext';
 import {MyContext as HabitContext} from '../context/habitContext';
 import {MyContext as ThemeContext} from '../context/themeContext';
 import {MyContext as LanguageContext} from '../context/languageContext';
-import {FontAwesome} from '@expo/vector-icons';
-import MyHeaderSecondary from '../components/HeaderSecondary';
-import CheckBox from '@react-native-community/checkbox';
 
 const CreateHabitScreen = ({navigation}) =>{
   const {state} = useContext(MyContext);
+  const {addHabit} = useContext(HabitContext);
+  const themeContext = useContext(ThemeContext);
+  const languageContext = useContext(LanguageContext);
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [privateBool, setPrivateBool] = useState(false);
   const [trackedDays, setTrackedDays] = useState({
     'Mon': true, 'Tue': true, 'Wed': true, 'Thu': true, 'Fri': true,
     'Sat': true, 'Sun': true})
-  const {addHabit} = useContext(HabitContext);
-  const themeContext = useContext(ThemeContext);
-  const languageContext = useContext(LanguageContext);
-  const [reload, setReload] = useState(true);
 
-  const createHabit = async (name,description,privateBool,trackedDays) => {
-    console.log(name,'\n', description,'\n', privateBool,'\n', trackedDays);
+  const createHabit = async (name, description, privateBool, trackedDays) => {
     await addHabit(name, privateBool, description, trackedDays);
-    navigation.navigate('Home');
+    navigation.navigate('Home', {language: languageContext.state.language});
   };
 
   const changeTrackedDays = (day) => {
-    console.log(day, trackedDays.Mon, trackedDays[day]);
     const newTracked = trackedDays;
     newTracked[day] = !trackedDays[day];
-    console.log(newTracked);
     setTrackedDays(newTracked);
-    setReload(!reload);
   };
 
   return (
@@ -58,6 +43,7 @@ const CreateHabitScreen = ({navigation}) =>{
             value={name}
             onChangeText={(newValue)=> setName(newValue)}
             placeholder={languageContext.state.language.habitNamePlaceholder}
+            placeholderTextColor={themeContext.state.theme.placeholderTextInBox}
             paddingLeft={15}/>
         </Spacer>
         <Spacer>
@@ -68,6 +54,7 @@ const CreateHabitScreen = ({navigation}) =>{
             value={description}
             onChangeText={(newValue)=> setDescription(newValue)}
             placeholder={languageContext.state.language.habitDescriptionPlaceholder}
+            placeholderTextColor={themeContext.state.theme.placeholderTextInBox}
             paddingLeft={15}
             paddingTop={15}/>
         </Spacer>
@@ -164,10 +151,8 @@ CreateHabitScreen.navigationOptions = ({navigation}) => {
 const styles = (props) => StyleSheet.create({
   MainParent:{
     flex: 1,
-    // paddingTop: Platform.OS === "android" ? StatusBar.currentHeight + 50: 0,
   },
   TextInputName:{
-    // marginTop: Platform.OS === "android" ? StatusBar.currentHeight + 20: 0,
     backgroundColor:'#fff',
     borderRadius: 15,
     height:50,

@@ -6,7 +6,6 @@ import AppNavigation from './navigation/AppNavigation';
 import RegisterScreen from './src/screens/RegisterScreen';
 import LoginScreen from './src/screens/LoginScreen';
 import HomeScreen from './src/screens/HomeScreen';
-import AuthLoadingScreen from './src/screens/AuthLoadingScreen';
 import CreateHabitScreen from './src/screens/CreateHabitScreen';
 import {Provider} from './src/context/authContext';
 import { setNavigator } from './src/navigationRef';
@@ -23,7 +22,6 @@ const SwitchNavigator = createSwitchNavigator({
   }),
   mainFlow: createStackNavigator({
     Home: HomeScreen,
-    Auth: AuthLoadingScreen,
     Create: CreateHabitScreen,
     Detail: HabitDetailScreen,
     Settings: SettingsScreen,

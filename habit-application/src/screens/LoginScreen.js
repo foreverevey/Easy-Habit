@@ -1,12 +1,15 @@
 import React, {useState, useContext, useEffect} from 'react';
-import {View, Text, TextInput, StyleSheet, TouchableOpacity, Image, AsyncStorage, ImageBackground} from 'react-native';
-import { MyContext } from '../context/authContext';
+import {View, Text, TextInput, StyleSheet, Image, AsyncStorage, ImageBackground} from 'react-native';
+import Spinner from 'react-native-loading-spinner-overlay';
+import {useNetInfo} from "@react-native-community/netinfo";
+import NetInfo from '@react-native-community/netinfo';
 import ButtonLogin from '../components/ButtonLogin';
 import PasswordLock from '../components/PasswordLock';
 import SimpleTextLogin from '../components/SimpleTextLogin';
+import ErrModal from '../components/ErrModal';
+import {MyContext} from '../context/authContext';
 import {MyContext as ThemeContext} from '../context/themeContext';
 import {MyContext as LanguageContext} from '../context/languageContext';
-import Spinner from 'react-native-loading-spinner-overlay';
 
 const LoginScreen = ({navigation}) => {
   const {state, signin, tryLocalSignin} = useContext(MyContext);
@@ -17,16 +20,54 @@ const LoginScreen = ({navigation}) => {
   const [hiddenState, setHiddenState] = useState(true)
   const [loading, setLoading] = useState(false);
   const [badAttempt, setBadAttempt] = useState(false);
+  const [loadingScreen, setLoadingScreen] = useState(true);
+  const [errModalMsg, setErrModalMsg] = useState('');
+  const netInfo = useNetInfo();
 
   useEffect(()=>{
-    // console.log('loginscreen effect');
+    //TODO: maybe use state to not show screen before this function runs?
+
     setUserSettings().then(()=>{
       navigation.setParams({ theme: themeContext.state });
       navigation.setParams({ language: languageContext.state });
     }).then(()=>{
-      tryLocalSignin();
+      NetInfo.fetch().then(state => {
+        if(state.isInternetReachable){
+          tryLocalSignin().then((res)=>{
+            if(res){
+              navigation.navigate('Home', {language: languageContext.state.language});
+            } else {
+              setLoadingScreen(false);
+            }
+          });
+        } else {
+          setErrModalMsg('Internet connection not found! Please connect to the internet');
+        }
+      });
+      // can fake errors with this code instead one above *****************
+      // const signedin = tryLocalSignin();
+      // if(signedin){
+      //   navigation.navigate('Home', {language: languageContext.state.language});
+      // } else {
+      //   setLoadingScreen(false);
+      // }
     });
   }, []);
+
+  useEffect(() => {
+    if(netInfo.isInternetReachable){
+      setErrModalMsg('');
+      tryLocalSignin().then((res)=>{
+        if(res){
+          navigation.navigate('Home', {language: languageContext.state.language});
+        } else {
+          setLoadingScreen(false);
+        }
+      });
+    } else {
+      setErrModalMsg('Internet connection not available!');
+    }
+  }, [netInfo]);
 
   useEffect(() => {
     navigation.setParams({ theme: themeContext.state });
@@ -37,6 +78,7 @@ const LoginScreen = ({navigation}) => {
   }, [languageContext.state]);
 
   const setUserSettings = async () =>{
+    // Load user selected theme and language from storage
     const userTheme = await AsyncStorage.getItem('theme');
     const userLanguage = await AsyncStorage.getItem('language');
     if(userTheme !== null){
@@ -48,19 +90,17 @@ const LoginScreen = ({navigation}) => {
   };
 
   const attemptSignIn = async (email,password) =>{
-    console.log('attemptSignIn', email, password);
-    setLoading(true);
+    // setLoading(true);
+    setLoadingScreen(true);
     const attempt = await signin({email,password});
     if(attempt){
-      // setBadAttempt(false);
-      navigation.navigate('Home');
+      navigation.navigate('Home', {language: languageContext.state.language});
     } else {
-      console.log('wrong pass');
       setBadAttempt(true);
       setPassword('');
-      setLoading(false);
+      // setLoading(false);
+      setLoadingScreen(false);
     }
-    // navigation.navigate('Home');
   };
 
   const navigateRegisterScreen = () => {
@@ -72,6 +112,11 @@ const LoginScreen = ({navigation}) => {
 
   return (
     <View style={styles(themeContext.state.theme).MainParent}>
+      <ErrModal isVisible={errModalMsg!==''?true:false} errMessage={errModalMsg} onPressOutside={()=>setErrModalMsg('')}/>
+      {loadingScreen && <View style = {styles(themeContext.state.theme).loadingScreen}>
+        <Image source={require('../../assets/movie-icon-11.png')} style={styles(themeContext.state.theme).LoadingImage}/>
+        <Text style={styles(themeContext.state.theme).LoadingText}>habitApp</Text>
+      </View>}
       <View>
         <Spinner
           visible={loading?true:false}
@@ -79,7 +124,7 @@ const LoginScreen = ({navigation}) => {
           textStyle={styles(themeContext.state.theme).spinnerTextStyle}
         />
       </View>
-      <ImageBackground source={{uri: themeContext.state.theme.backgroundImage}} style={styles(themeContext.state.theme).ImageBackground}>
+      {!loadingScreen && <ImageBackground source={{uri: themeContext.state.theme.backgroundImage}} style={styles(themeContext.state.theme).ImageBackground}>
         <Image source={require('../../assets/movie-icon-11.png')} style={styles(themeContext.state.theme).ImageStyle}/>
         <TextInput
           style = {styles(themeContext.state.theme).input}
@@ -111,7 +156,7 @@ const LoginScreen = ({navigation}) => {
         <ButtonLogin style={styles(themeContext.state.theme).Button} text={languageContext.state.language.login} onPress={()=>attemptSignIn(email,password)}/>
         <SimpleTextLogin text={languageContext.state.language.loginScreenSimpleText1}/>
         <SimpleTextLogin text={languageContext.state.language.loginScreenSimpleText2} onPress={()=>navigateRegisterScreen()}/>
-      </ImageBackground>
+      </ImageBackground>}
     </View>
   )
 };
@@ -148,8 +193,8 @@ const styles = (props) => StyleSheet.create({
     borderColor: props.text
   },
   MainParent:{
-    borderWidth: 1,
-    borderColor: 'black',
+    // borderWidth: 1,
+    // borderColor: 'black',
     flex: 1,
   },
   ImageStyle:{
@@ -178,6 +223,22 @@ const styles = (props) => StyleSheet.create({
     justifyContent: 'center',
     marginTop:50
   },
+  loadingScreen:{
+    backgroundColor:'#fff',
+    flex:1,
+    flexDirection: 'row',
+    justifyContent: 'center',
+  },
+  LoadingImage:{
+    width:100,
+    height: 100,
+    alignSelf: 'center',
+    marginRight:15,
+  },
+  LoadingText:{
+    alignSelf: 'center',
+    fontSize: 22,
+  }
 });
 
 export default LoginScreen;

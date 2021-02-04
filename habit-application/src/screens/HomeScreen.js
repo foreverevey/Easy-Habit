@@ -1,17 +1,18 @@
 import React, {useState, useEffect, useContext} from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, AsyncStorage,FlatList,Platform,
-StatusBar, ImageBackground} from 'react-native';
-import HabitRow from '../components/HabitRow';
-import { NavigationEvents} from 'react-navigation';
-import {MyContext as HabitContext} from '../context/habitContext';
+import {View, Text, StyleSheet, TouchableOpacity, FlatList, Platform, StatusBar, ImageBackground} from 'react-native';
+import {NavigationEvents} from 'react-navigation';
+import {FontAwesome5} from '@expo/vector-icons';
 import Spinner from 'react-native-loading-spinner-overlay';
-import MyHeader from '../components/Header';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
+import {useNetInfo} from "@react-native-community/netinfo";
+import MyHeader from '../components/Header';
+import HabitRow from '../components/HabitRow';
+import ErrModal from '../components/ErrModal';
+import {MyContext as HabitContext} from '../context/habitContext';
 import {MyContext as ThemeContext} from '../context/themeContext';
 import {MyContext as LanguageContext} from '../context/languageContext';
 
 const HomeScreen = ({navigation}) => {
-
   const getFormatedDay = (selectDate) => {
     const dd = String(selectDate.getDate()).padStart(2, '0');
     const mm = String(selectDate.getMonth() + 1).padStart(2, '0'); //January is 0!
@@ -28,9 +29,11 @@ const HomeScreen = ({navigation}) => {
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
   const [selectedDay, setSelectedDay] = useState(defaultDay);
   const [selectedHabit, setSelectedHabit] = useState(null);
+  const [errModalMsg, setErrModalMsg] = useState('');
+  const [reloadButton, setReloadButton] = useState(false);
+  const netInfo = useNetInfo();
 
   const showDatePicker = () => {
-    // console.log('ShowDatePicker');
     setDatePickerVisibility(true);
   };
 
@@ -43,18 +46,19 @@ const HomeScreen = ({navigation}) => {
   };
 
   const handleConfirm = (date) => {
-    // console.log("A date has been picked: ", date);
     const formatedDate = getFormatedDay(date);
     setSelectedDay(formatedDate);
     hideDatePicker();
   };
 
+  //TODO add error messages when del habit or new habit goes wrong
+
   const delHabit = async (id) => {
-    console.log('delHabit', id);
     try{
       await deleteHabit(id);
       setSelectedHabit(null);
     } catch(error){
+      setErrModalMsg(error);
       console.log(error);
       return false;
     }
@@ -65,6 +69,7 @@ const HomeScreen = ({navigation}) => {
       await addHabit();
     } catch (error){
       console.log(error);
+      setErrModalMsg(error);
       return false;
     }
   };
@@ -77,6 +82,7 @@ const HomeScreen = ({navigation}) => {
       });
     } catch(error){
       setLoading(false);
+      setErrModalMsg(error);
       console.log('Homescreen add date error', error);
     }
   };
@@ -89,6 +95,7 @@ const HomeScreen = ({navigation}) => {
       });
     } catch(error){
       setLoading(false);
+      setErrModalMsg(error);
       console.log('Homescreen remove date error', error);
     }
   };
@@ -109,40 +116,72 @@ const HomeScreen = ({navigation}) => {
     setSelectedDay(formatedDate);
   };
 
-  useEffect(() => {
-      console.log('language homsecreen', languageContext.state);
-      setLoading(true);
-      navigation.setParams({ getDatePicker: showDatePicker });
-      navigation.setParams({ selectNextDay: selectNextDay});
-      navigation.setParams({ selectPreviousDay: selectPreviousDay});
-      navigation.setParams({ selectedDay: selectedDay });
-      navigation.setParams({ theme: themeContext.state });
-      navigation.setParams({ language: languageContext.state });
-      navigation.setParams({ newHabit: newHabit });
-      navigation.setParams({ selectedHabit: selectedHabit });
-      navigation.setParams({ deleteHabit: delHabit });
-      getHabits().then(()=>{
+  const loadHabits = () =>{
+    console.log('loadhabits');
+    setLoading(true);
+    setErrModalMsg('');
+    getHabits().then((res)=>{
+      if(res){
         setLoading(false);
+        setReloadButton(false);
+        setErrModalMsg('');
+      } else{
+        setLoading(false);
+        setErrModalMsg("Unable to fetch habits from database!");
+        setReloadButton(true);
+      }
+    });
+  }
+
+  useEffect(() => {
+      setLoading(true);
+      navigation.setParams({
+        getDatePicker: showDatePicker,
+        selectNextDay: selectNextDay,
+        selectPreviousDay: selectPreviousDay,
+        selectedDay: selectedDay,
+        theme: themeContext.state,
+        language: languageContext.state.language,
+        newHabit: newHabit,
+        selectedHabit: selectedHabit,
+        deleteHabit: delHabit
+       });
+      getHabits().then((res)=>{
+        if(res){
+          setLoading(false);
+        } else{
+          setLoading(false);
+          setErrModalMsg("Unable to fetch habits from database!");
+          setReloadButton(true);
+        }
     });
   }, []);
 
   useEffect(() => {
+    if(!netInfo.isInternetReachable){
+      setErrModalMsg('Internet connection not available!');
+    } else {
+      setErrModalMsg('');
+    }
+  }, [netInfo]);
+
+  useEffect(() => {
     navigation.setParams({ theme: themeContext.state });
-    console.log('useEffect on theme state homescreen change');
   }, [themeContext.state]);
 
   useEffect(() => {
-    navigation.setParams({ language: languageContext.state });
+    navigation.setParams({ language: languageContext.state.language });
   }, [languageContext.state]);
 
   useEffect(() => {
-    navigation.setParams({ selectedDay: selectedDay });
-    navigation.setParams({ selectNextDay: selectNextDay});
-    navigation.setParams({ selectPreviousDay: selectPreviousDay});
+    navigation.setParams({
+      selectedDay: selectedDay,
+      selectNextDay: selectNextDay,
+      selectPreviousDay: selectPreviousDay
+     });
   }, [selectedDay]);
 
   const selectHabit = (id) => {
-    console.log('selectHabit', id);
     if(id === selectedHabit){
       setSelectedHabit(null);
     } else{
@@ -156,6 +195,7 @@ const HomeScreen = ({navigation}) => {
 
   return (
     <View style={styles(themeContext.state.theme).container}>
+      <ErrModal isVisible={errModalMsg!==''?true:false} errMessage={errModalMsg} onPressOutside={()=>setErrModalMsg('')}/>
       <View>
         <Spinner
           visible={loading?true:false}
@@ -173,6 +213,9 @@ const HomeScreen = ({navigation}) => {
         />
       </View>
       <ImageBackground source={{uri: themeContext.state.theme.backgroundImage}} style={styles(themeContext.state.theme).ImageBackground}>
+            {reloadButton && <TouchableOpacity style={styles(themeContext.state.theme).ReloadButton} onPress={()=>loadHabits()}>
+              <FontAwesome5 style={styles(themeContext.state.theme).Icon} name="sync-alt"/>
+            </TouchableOpacity>}
             <FlatList style={styles(themeContext.state.theme).flatList}
               data={state}
               keyExtractor={item => item._id}
@@ -200,7 +243,9 @@ const HomeScreen = ({navigation}) => {
 }
 
 HomeScreen.navigationOptions = ({navigation}) => {
-  return MyHeader(navigation);
+  const { params } = navigation.state;
+  const language = params.language;
+  return MyHeader(navigation, language);
 };
 
 const styles = (props) => StyleSheet.create({
@@ -209,12 +254,9 @@ const styles = (props) => StyleSheet.create({
   },
   container:{
     justifyContent: 'space-around',
-    // alignItems: "center",
     flex: 1,
-    // paddingTop: Platform.OS === "android" ? StatusBar.currentHeight: 0,
   },
   ImageBackground:{
-    // paddingTop: 130,
     paddingTop: Platform.OS === "android" ? StatusBar.currentHeight: 0,
     flex:1
   },
@@ -233,9 +275,7 @@ const styles = (props) => StyleSheet.create({
     marginTop: 66,
   },
   modalView: {
-    // margin: 20,
     backgroundColor: "white",
-    // borderRadius: 20,
     padding: 35,
     height:300,
     alignItems: "center",
@@ -262,7 +302,17 @@ const styles = (props) => StyleSheet.create({
   modalText: {
     marginBottom: 15,
     textAlign: "center"
-  }
+  },
+  ReloadButton:{
+    alignItems: 'center',
+    justifyContent: 'center',
+    flex:1,
+  },
+  Icon:{
+    fontSize: 34,
+    color: props.headerPlus,
+  },
+
 })
 
 export default HomeScreen;

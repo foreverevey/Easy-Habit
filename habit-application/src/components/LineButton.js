@@ -1,7 +1,7 @@
 import React, {useContext} from 'react';
 import {View, StyleSheet, Text, TouchableOpacity} from 'react-native';
-import {MyContext as ThemeContext} from '../context/themeContext';
 import {FontAwesome5} from '@expo/vector-icons';
+import {MyContext as ThemeContext} from '../context/themeContext';
 
 const LineButton = (props) => {
   const {state} = useContext(ThemeContext);
@@ -17,7 +17,6 @@ const LineButton = (props) => {
 const styles = (props) => StyleSheet.create({
   Row:{
     flexDirection: 'row',
-    // flex: 1,
     justifyContent: 'space-between',
     alignItems: 'center',
     backgroundColor: props.habitRowBackground,
@@ -28,7 +27,6 @@ const styles = (props) => StyleSheet.create({
   },
   Icon:{
     fontSize: 26,
-    // flex:3,
     marginRight: 30,
     color: props.streak,
   },

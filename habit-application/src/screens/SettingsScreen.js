@@ -1,25 +1,23 @@
 import React, {useState, useContext, useEffect} from 'react';
-import {View, Text, StyleSheet, TouchableOpacity, ImageBackground, StatusBar,
-  AsyncStorage, Picker} from 'react-native';
-import {MyContext as ThemeContext} from '../context/themeContext';
-import {MyContext as LanguageContext} from '../context/languageContext';
+import {View, Text, StyleSheet, TouchableOpacity, ImageBackground, AsyncStorage, Picker} from 'react-native';
+import habitApi from '../api/habitApi';
+import translations from '../translation/Translations';
+import Spacer from '../components/Spacer';
 import ThemeSwitch from '../components/ThemeSwitch';
 import ButtonLogin from '../components/ButtonLogin';
-import MyHeaderSecondary from '../components/HeaderSecondary';
-import habitApi from '../api/habitApi';
 import LineButton from '../components/LineButton';
 import CustomModal from '../components/CustomModal';
-import Spacer from '../components/Spacer';
-import translations from '../translation/Translations';
+import MyHeaderSecondary from '../components/HeaderSecondary';
+import {MyContext as ThemeContext} from '../context/themeContext';
+import {MyContext as LanguageContext} from '../context/languageContext';
 
 const SettingsScreen = ({navigation}) =>{
   const {state, changeTheme} = useContext(ThemeContext);
+  const languageContext = useContext(LanguageContext);
   const [bugModal, setBugModal] = useState(false);
   const [feedbackModal, setFeedbackModal] = useState(false);
-  const languageContext = useContext(LanguageContext);
 
   const _changeThemeCheerful = () =>{
-    console.log('changeThemeCheerful', state.theme.name);
     if(state.theme.name === 'cheerful'){
       changeTheme('clean');
     } else {
@@ -28,7 +26,6 @@ const SettingsScreen = ({navigation}) =>{
   };
 
   const _changeThemeClean = () =>{
-    console.log('changeThemeClean', state.theme.name);
     if(state.theme.name === 'clean'){
       changeTheme('cheerful');
     } else {
@@ -37,7 +34,6 @@ const SettingsScreen = ({navigation}) =>{
   };
 
   const _changeThemeDark = () =>{
-    console.log('changeThemeDark', state.theme.name);
     if(state.theme.name === 'dark'){
       changeTheme('cheerful');
     } else {
@@ -88,8 +84,8 @@ const SettingsScreen = ({navigation}) =>{
   return (
     <View style={styles(state.theme).container}>
       <ImageBackground source={{uri: state.theme.backgroundImage}} style={styles(state.theme).ImageBackground}>
-        <CustomModal isVisible={bugModal} type='bug' title={languageContext.state.language.bugModalTitle} onPressOutside={()=>setBugModal(!bugModal)} sendEmail={sendEmail}/>
-        <CustomModal isVisible={feedbackModal} type='feedback' title={languageContext.state.language.feedbackModalTitle} onPressOutside={()=>setFeedbackModal(!feedbackModal)} sendEmail={sendEmail}/>
+        <CustomModal modalPlaceholder={languageContext.state.language.modalPlaceholder} isVisible={bugModal} type='bug' title={languageContext.state.language.bugModalTitle} onPressOutside={()=>setBugModal(!bugModal)} sendEmail={sendEmail}/>
+        <CustomModal modalPlaceholder={languageContext.state.language.modalPlaceholder} isVisible={feedbackModal} type='feedback' title={languageContext.state.language.feedbackModalTitle} onPressOutside={()=>setFeedbackModal(!feedbackModal)} sendEmail={sendEmail}/>
         <Text style={styles(state.theme).Header}>{languageContext.state.language.themeOptions}</Text>
         <ThemeSwitch Value={state.theme.name === 'cheerful'?true:false} OnValueChange={()=>{_changeThemeCheerful()}} Text={languageContext.state.language.cheerful}/>
         <ThemeSwitch Value={state.theme.name === 'clean'?true:false} OnValueChange={()=>{_changeThemeClean()}} Text={languageContext.state.language.clean}/>
@@ -97,13 +93,16 @@ const SettingsScreen = ({navigation}) =>{
         <Spacer/>
         <LineButton text={languageContext.state.language.bugReportText} onPress={()=>openModal('bug')} type='bug'/>
         <LineButton text={languageContext.state.language.feedbackSimpleText} onPress={()=>openModal('feedback')} type='paper-plane'/>
-        <Picker
-          selectedValue={languageContext.state.language.label}
-          onValueChange={(itemValue, itemIndex) => languageContext.changeLanguage(itemValue)}>
-          {Object.keys(translations).map((langItem) => {
-            return <Picker.Item key={langItem} value={langItem} label={translations[langItem].label}/>
-          })}
-        </Picker>
+        <View style={styles(state.theme).Picker}>
+          <Picker
+            style={styles(state.theme).PickerText}
+            selectedValue={languageContext.state.language.label}
+            onValueChange={(itemValue, itemIndex) => languageContext.changeLanguage(itemValue)}>
+            {Object.keys(translations).map((langItem) => {
+              return <Picker.Item color='black' key={langItem} value={langItem} label={translations[langItem].label}/>
+            })}
+          </Picker>
+        </View>
         <ButtonLogin style={styles(state.theme).ButtonSave} text={languageContext.state.language.logout} onPress={async()=>{
             await clearStorage();
             navigation.navigate('Signin');}
@@ -113,10 +112,6 @@ const SettingsScreen = ({navigation}) =>{
     </View>
   )
 };
-// {translations.map((languageItem, i) => {
-//   return <Picker.Item key={i} value={languageItem.label} label={languageItem.label}/>
-// })}
-// <ButtonLogin style={styles(state.theme).ButtonSave} text='Test Email' onPress={()=>sendEmail()}/>
 
 SettingsScreen.navigationOptions = ({navigation}) => {
   const text = 'Settings';
@@ -149,6 +144,19 @@ const styles = (props) =>StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  Picker:{
+    backgroundColor: props.habitRowBackground,
+    // paddingTop: 5,
+    // paddingBottom: 5,
+    marginBottom: 5,
+    height:40,
+    justifyContent: 'center',
+  },
+  PickerText:{
+    marginLeft: 10,
+    marginRight: 10,
+    color: props.buttonText,
+  }
 });
 
 export default SettingsScreen;

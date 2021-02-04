@@ -1,7 +1,7 @@
 import React, {useState, useContext} from 'react';
 import {View, StyleSheet, Text, TouchableOpacity, Modal, TextInput} from 'react-native';
-import {MyContext as ThemeContext} from '../context/themeContext';
 import {FontAwesome5} from '@expo/vector-icons';
+import {MyContext as ThemeContext} from '../context/themeContext';
 
 const CustomModal = (props) => {
   const {state} = useContext(ThemeContext);
@@ -28,7 +28,7 @@ const CustomModal = (props) => {
             autoCorrect={false}
             value={text}
             onChangeText={(newValue)=> setText(newValue)}
-            placeholder="Type here..."
+            placeholder={props.modalPlaceholder}
             placeholderTextColor={state.theme.buttonText}
             paddingLeft={15}/>
           <TouchableOpacity style={styles(state.theme).modalSend} onPress={()=>handleEmail()}>

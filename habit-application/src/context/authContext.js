@@ -10,7 +10,7 @@ const authReducer = (state, action) => {
     //LOGGING IN
     case 'signin':
       return {errorMessage: '', token: action.payload}
-    // REGISGER
+    // REGISTER
     case 'signup':
       return {errorMessage: '', token: action.payload}
     default:
@@ -22,9 +22,9 @@ const tryLocalSignin = dispatch => async () =>{
   const token = await AsyncStorage.getItem('token');
   if(token){
     dispatch({ type: 'signin', payload: token});
-    navigate('Home');
+    return true;
   } else {
-    navigate('Signin');
+    return false;
   }
 };
 
@@ -33,14 +33,11 @@ const signin = dispatch => {
     //make api request to sign up with that email and password
     try{
       const response = await habitApi.post('/signin', {email, password});
-      // await AsyncStorage.setItem('isSignedIn', 'yes');
       await AsyncStorage.setItem('token', response.data.token);
       await AsyncStorage.setItem('email', email);
       dispatch({ type: 'signin', payload: response.data.token});
       return true
-      // navigate('Home');
     }catch(err){
-      console.log('signing error', err);
       dispatch({type: 'add_error', payload: 'Something Went wrong'});
       return false;
     }
@@ -54,17 +51,14 @@ const signup = (dispatch) =>{
       await AsyncStorage.setItem('token', response.data.token);
       await AsyncStorage.setItem('email', email);
       dispatch({type:'signup', payload: response.data.token});
-      navigate('Home');
+      return true;
     }catch(err){
       dispatch({type: 'add_error', payload: 'Something Went wrong'});
+      return false;
     }
   };
 };
-//
-// const signout = (dispatch) => {
-//   return () =>{
-//   };
-// };
+
 
 export const { MyContext , Provider} = createDataContext(
   authReducer,

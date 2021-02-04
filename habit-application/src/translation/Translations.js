@@ -7,12 +7,11 @@ export default {
     'passwordInputPlaceholder': 'Password',
     'login': 'Login',
     'loginScreenSimpleText1': 'Forgot Password?',
-    'loginScreenSimpleText2': `Don't have an acount?
-      Register here`,
+    'loginScreenSimpleText2': `Don't have an acount?\nRegister here`,
     'loginScreenWrong': 'Wrong email or password!',
     'register': 'Register',
-    'registerScreenSimpleText1': `Already have an acount?
-          Login here`,
+    'registerScreenSimpleText1': `Already have an acount?\nLogin here`,
+    'registerScreenWrong': 'Account with this Email already exists',
     'bugModalTitle': 'Report a Bug!',
     'feedbackModalTitle': 'Provide your feedback!',
     'themeOptions': 'Theme Options',
@@ -43,6 +42,9 @@ export default {
     'contributionGraph': 'Contribution Graph',
     'monthlyLineChart': 'Monthly Line Chart',
     'calendarOverview': 'Calendar Overview',
+    'monthNames': ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+      "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+    'modalPlaceholder': 'Type here..',
   },
   'Dansk': {
     'label': 'Dansk',
@@ -52,12 +54,11 @@ export default {
     'passwordInputPlaceholder': 'Password',
     'login': 'Login',
     'loginScreenSimpleText1': 'Forgot Password?',
-    'loginScreenSimpleText2': `Don't have an acount?
-      Register here`,
+    'loginScreenSimpleText2': `Don't have an acount?\nRegister here`,
     'loginScreenWrong': 'Wrong email or password!',
     'register': 'Register',
-    'registerScreenSimpleText1': `Already have an acount?
-          Login here`,
+    'registerScreenSimpleText1': `Already have an acount?\nLogin here`,
+    'registerScreenWrong': 'Account with this Email already exists',
     'bugModalTitle': 'Report a Bug!',
     'feedbackModalTitle': 'Provide your feedback!',
     'themeOptions': 'Theme Options den',
@@ -88,6 +89,9 @@ export default {
     'contributionGraph': 'Contribution Graph',
     'monthlyLineChart': 'Monthly Line Chart',
     'calendarOverview': 'Calendar Overview',
+    'monthNames': ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+      "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+    'modalPlaceholder': 'Type here..',
   },
   'Lietuvių':{
     'label': 'Lietuvių',
@@ -101,6 +105,7 @@ export default {
     'loginScreenWrong': 'Neteisingi prisijungimo duomenys!',
     'register': 'Registruotis',
     'registerScreenSimpleText1': `Jau turite paskyrą?\nPrisijunkite čia`,
+    'registerScreenWrong': 'Account with this Email already exists',
     'bugModalTitle': 'Praneškite apie Problemą!',
     'feedbackModalTitle': 'Palikite atsiliepimą!',
     'themeOptions': 'Temų valdymas',
@@ -131,5 +136,8 @@ export default {
     'contributionGraph': 'Dieninė diagrama',
     'monthlyLineChart': 'Linijinė diagrama',
     'calendarOverview': 'Kalendorius',
+    'monthNames': ["Sau", "Vas", "Kov", "Bal", "Geg", "Bir",
+      "Lie", "Rugp", "Rugs", "Spa", "Lap", "Gru"],
+    'modalPlaceholder': 'Type here..',
   }
 }

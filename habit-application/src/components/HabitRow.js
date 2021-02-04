@@ -1,12 +1,11 @@
 import React, {useState, useEffect, useContext} from 'react';
 import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
-import {MyContext as ThemeContext} from '../context/themeContext';
 import {FontAwesome} from '@expo/vector-icons';
-import mainStyle from '../styles/mainStyle';
+import {MyContext as ThemeContext} from '../context/themeContext';
 
 const HabitRow = (props) =>{
-  const [selected, setSelected] = useState(false);
   const {state, changeTheme} = useContext(ThemeContext);
+  const [selected, setSelected] = useState(false);
 
   useEffect(() => {
     const splitDay = props.SelectedDate.split('/');
@@ -46,7 +45,6 @@ const HabitRow = (props) =>{
             <FontAwesome style={styles(state.theme).CheckboxPlus} name="check"/>}
           {!selected &&
             <FontAwesome style={styles(state.theme).Checkbox} name='close'/>}
-
         </TouchableOpacity>
       </View>
     </TouchableOpacity>
@@ -75,7 +73,6 @@ const styles = (props) => StyleSheet.create({
     borderWidth: 2,
     borderBottomWidth: 3,
     borderColor: props.checkPlus,
-    // elevation: 10,
     marginBottom:10,
     marginLeft: 10,
     marginRight: 10,

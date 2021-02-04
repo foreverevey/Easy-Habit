@@ -1,9 +1,10 @@
 import React, {useContext, useState} from 'react';
-import {View, Text, TextInput, StyleSheet, TouchableOpacity, Image, AsyncStorage, ImageBackground} from 'react-native';
-import { MyContext } from '../context/authContext';
+import {View, Text, TextInput, StyleSheet, Image, ImageBackground} from 'react-native';
+import Spinner from 'react-native-loading-spinner-overlay';
 import ButtonLogin from '../components/ButtonLogin';
 import PasswordLock from '../components/PasswordLock';
 import SimpleTextLogin from '../components/SimpleTextLogin';
+import {MyContext} from '../context/authContext';
 import {MyContext as ThemeContext} from '../context/themeContext';
 import {MyContext as LanguageContext} from '../context/languageContext';
 
@@ -13,10 +14,32 @@ const RegisterScreen = ({navigation}) => {
   const languageContext = useContext(LanguageContext);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [hiddenState, setHiddenState] = useState(true)
+  const [hiddenState, setHiddenState] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const [badAttempt, setBadAttempt] = useState(false);
+
+  const attemptSignUp = async (email,password) =>{
+    setLoading(true);
+    const attempt = await signup({email,password});
+    if(attempt){
+      navigation.navigate('Home', {language: languageContext.state.language});
+    } else {
+      setBadAttempt(true);
+      setPassword('');
+      setEmail('');
+      setLoading(false);
+    }
+  };
 
   return (
     <View style={styles(themeContext.state.theme).MainParent}>
+      <View>
+        <Spinner
+          visible={loading?true:false}
+          textContent={languageContext.state.language.spinnerLoading}
+          textStyle={styles(themeContext.state.theme).spinnerTextStyle}
+        />
+      </View>
       <ImageBackground source={{uri: themeContext.state.theme.backgroundImage}} style={styles(themeContext.state.theme).ImageBackground}>
         <Image source={require('../../assets/movie-icon-11.png')} style={styles(themeContext.state.theme).ImageStyle}/>
         <TextInput
@@ -38,10 +61,14 @@ const RegisterScreen = ({navigation}) => {
             placeholder={languageContext.state.language.passwordInputPlaceholder}
             placeholderTextColor={themeContext.state.theme.placeholderText}
             secureTextEntry={hiddenState ? true : false}
+            onSubmitEditing={(e)=>{attemptSignUp(email,password)}}
           />
           <PasswordLock onPress={()=>{setHiddenState(hiddenState => !hiddenState)}} name={hiddenState? "unlock" : "lock"}/>
         </View>
-        <ButtonLogin style={styles(themeContext.state.theme).Button} text={languageContext.state.language.register} onPress={()=>signup({email,password})}/>
+        {badAttempt && <View>
+          <Text style={styles(themeContext.state.theme).errorMessage}>{languageContext.state.language.registerScreenWrong}</Text>
+        </View>}
+        <ButtonLogin style={styles(themeContext.state.theme).Button} text={languageContext.state.language.register} onPress={()=>attemptSignUp(email,password)}/>
         <SimpleTextLogin/>
         <SimpleTextLogin text={languageContext.state.language.registerScreenSimpleText1} onPress={()=>navigation.navigate('Signin')} style={styles(themeContext.state.theme).NewAcc}/>
       </ImageBackground>
@@ -108,6 +135,14 @@ const styles = (props) => StyleSheet.create({
   },
   ImageBackground:{
     flex: 1,
+  },
+  errorMessage: {
+    paddingLeft:40,
+    marginTop:10,
+    color: props.text,
+  },
+  spinnerTextStyle: {
+    color: '#FFF'
   },
 });
 

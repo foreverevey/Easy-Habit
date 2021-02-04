@@ -1,19 +1,18 @@
 import React, {useState, useContext, useEffect} from 'react';
-import { View, Text, StyleSheet, StatusBar, AsyncStorage, ScrollView, ImageBackground, TextInput, TouchableOpacity } from 'react-native';
-import { MyContext as HabitContext } from '../context/habitContext';
+import { View, Text, StyleSheet, StatusBar, AsyncStorage, ScrollView, ImageBackground, TextInput, TouchableOpacity, Dimensions } from 'react-native';
 import habitApi from '../api/habitApi';
 import {Calendar, CalendarList, Agenda} from 'react-native-calendars';
 import {ContributionGraph, BarChart, LineChart} from 'react-native-chart-kit';
-import { Dimensions } from "react-native";
-import {MyContext as ThemeContext} from '../context/themeContext';
-import {MyContext as LanguageContext} from '../context/languageContext';
 import moment from 'moment';
-import StreakRow from '../components/StreakRow';
 import {FontAwesome} from '@expo/vector-icons';
-import ButtonLogin from '../components/ButtonLogin';
-import MyHeaderSecondary from '../components/HeaderSecondary';
 import CheckBox from '@react-native-community/checkbox';
 import Spinner from 'react-native-loading-spinner-overlay';
+import StreakRow from '../components/StreakRow';
+import ButtonLogin from '../components/ButtonLogin';
+import MyHeaderSecondary from '../components/HeaderSecondary';
+import { MyContext as HabitContext } from '../context/habitContext';
+import {MyContext as ThemeContext} from '../context/themeContext';
+import {MyContext as LanguageContext} from '../context/languageContext';
 
 const HabitDetailScreen = ({navigation}) => {
   const {state, editHabit} = useContext(HabitContext);
@@ -26,7 +25,6 @@ const HabitDetailScreen = ({navigation}) => {
   const [result, setResult] = useState(data);
 
   const getData = (data) =>{
-    console.log('getData detail screen', data);
     const trackedHabitDays = data.trackedDays;
     const formatDates = data.dates;
     var datesArray = [];
@@ -41,7 +39,6 @@ const HabitDetailScreen = ({navigation}) => {
     var contributionDays = getContributionGraphDays(datesArray);
     var [longestStreak, currentStreak] = getStreak(datesArray, trackedHabitDays);
     var barData = getBarData(datesArray);
-    console.log('streaks', longestStreak, currentStreak);
     return [markedDates, contributionDays, longestStreak, currentStreak, barData];
   };
 
@@ -179,7 +176,6 @@ const HabitDetailScreen = ({navigation}) => {
         continue;
       };
       var daysDiff = currentDay.diff(startingDay, 'days');
-      // console.log('tttttt', daysTrackObj[startingDay.format('dddd').slice(0,3)], daysDiff, startingDay.format('dddd').slice(0,3), currentDay.format('dddd').slice(0,3));
       var startingDayFormat = startingDay.format('dddd').slice(0,3);
       startingDay = currentDay;
       if(daysDiff === daysTrackObj[startingDayFormat]){
@@ -253,8 +249,6 @@ const HabitDetailScreen = ({navigation}) => {
   const [description, setDescription] = useState(result.description);
   const [trackedDays, setTrackedDays] = useState(result.trackedDays);
   const [edit, setEdit] = useState(false);
-  const [repeat, setRepeat] = useState('daily');
-  const [reload, setReload] = useState(true);
   const [loading, setLoading] = useState(false);
 
   const getGraphEndDay = () => {
@@ -265,9 +259,6 @@ const HabitDetailScreen = ({navigation}) => {
   };
 
   const graphEndDay = getGraphEndDay();
-
-  // const rgba = themeContext.state.theme.chartRgba;
-  // console.log('rgba', rgba, themeContext.state.theme);
 
   const chartConfig = {
     backgroundGradientFrom: themeContext.state.theme.chartBackground,
@@ -296,10 +287,6 @@ const HabitDetailScreen = ({navigation}) => {
   };
 
   useEffect(()=>{
-    console.log('Habit detail screen state', result);
-  }, [result]);
-
-  useEffect(()=>{
     navigation.setParams({ editHabit: editHab });
     navigation.setParams({ edit: edit });
   }, []);
@@ -310,29 +297,26 @@ const HabitDetailScreen = ({navigation}) => {
   }, [edit]);
 
   const editHab = () => {
-    console.log('edit habi', edit);
+    if(edit){
+      setPrivateBool(result.private_bool);
+      setName(result.name);
+      setDescription(result.description);
+      setTrackedDays(result.trackedDays);
+    }
     setEdit(!edit);
   };
 
   const saveEditHabit = async () => {
-    console.log(id, '\n', name,'\n', description,'\n', privateBool,'\n', trackedDays);
     setLoading(true);
     await editHabit(id, name, privateBool, description, trackedDays);
     setLoading(false);
     setEdit(false);
   };
 
-  // useEffect(() => {
-  //     navigation.setParams({ theme: themeContext.state });
-  // }, []);
-
   const changeTrackedDays = (day) => {
-    console.log(day, trackedDays.Mon, trackedDays[day]);
     const newTracked = trackedDays;
     newTracked[day] = !trackedDays[day];
-    console.log(newTracked);
     setTrackedDays(newTracked);
-    setReload(!reload);
   };
 
   return(
@@ -607,7 +591,6 @@ const styles = (props) => StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    // marginBottom: 10,
     marginLeft: 20,
   },
   Schedule1Item:{

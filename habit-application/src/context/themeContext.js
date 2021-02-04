@@ -30,6 +30,7 @@ const themeOptions = {
     text: '#fff',
     buttonText: '#051e22',
     placeholderText: '#d4d4d3',
+    placeholderTextInBox: '#051e22',
     checkPlus: '#e91e63',
     check: '#051e22',
     streak: '#e91e63',
@@ -58,6 +59,7 @@ const themeOptions = {
     text: '#303c6c',
     buttonText: '#fff',
     placeholderText: '#555251',
+    placeholderTextInBox: '#bebebd',
     checkPlus: '#e91e63',
     check: '#b4dfe5',
     streak: '#f58a42',
@@ -86,6 +88,7 @@ const themeOptions = {
     text: '#cfd8dd',
     buttonText: '#cfd8dd',
     placeholderText: '#d4d4d3',
+    placeholderTextInBox: '#bebebd',
     checkPlus: '#e91e63',
     check: '#272b36',
     streak: '#e91e63',
@@ -108,7 +111,6 @@ const themeReducer = (state, action) => {
 };
 
 const changeTheme = dispatch => async (theme) =>{
-  console.log('changeTheme', theme, themeOptions[theme]);
   await AsyncStorage.setItem('theme', theme);
   dispatch({ type: 'change_theme', payload: themeOptions[theme]});
 };

@@ -22,7 +22,6 @@ const ThemeSwitch = (props) => {
 const styles = (props) => StyleSheet.create({
   Row:{
     flexDirection: 'row',
-    // flex: 1,
     justifyContent: 'space-between',
     alignItems: 'center',
     backgroundColor: props.habitRowBackground,

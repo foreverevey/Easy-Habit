@@ -2,20 +2,25 @@ import React from 'react';
 import {StyleSheet, Text, View, TouchableOpacity, Dimensions} from 'react-native';
 import {FontAwesome} from '@expo/vector-icons';
 
-const MyHeader = (navigation) => {
-  const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
-    "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
-  ];
+const MyHeader = (navigation, language) => {
+
+  const languageParam = navigation.getParam('language');
+
+  if(languageParam !== undefined){
+    language = languageParam;
+  }
+
+  const monthNamesLanguage = language.monthNames;
 
   const screenHeight = Dimensions.get('window').height;
 
   const getDate = () => {
     const selectedDate = navigation.getParam('selectedDay');
     const day = new Date(selectedDate);
-    const monthName = monthNames[day.getMonth()];
+    const monthByLanguage = monthNamesLanguage[day.getMonth()];
     const dd = String(day.getDate()).padStart(2, '0');
     const yyyy = day.getFullYear();
-    const formatedDate = monthName + '/' + dd + '/' + yyyy;
+    const formatedDate = monthByLanguage + '/' + dd + '/' + yyyy;
     if(selectedDate === undefined){
       return '';
     } else {
@@ -24,18 +29,11 @@ const MyHeader = (navigation) => {
   };
 
   const monthName = getDate();
-
   const theme = navigation.getParam('theme');
-  const language = navigation.getParam('language');
 
   var themeOptions;
   if(theme !== undefined){
     themeOptions = theme.theme;
-  }
-
-  var languageOptions;
-  if(language !== undefined){
-    languageOptions = language.language;
   }
 
   return {
@@ -49,7 +47,7 @@ const MyHeader = (navigation) => {
       <View style={styles.container}>
         {navigation.getParam('selectedHabit') === null && <TouchableOpacity
           style={{marginLeft:30,}}
-          onPress={()=>navigation.navigate('Create', {theme: themeOptions, language: languageOptions})}>
+          onPress={()=>navigation.navigate('Create', {theme: themeOptions, language: language})}>
           <FontAwesome style={{color:themeOptions?themeOptions.headerPlus:'#fff',fontSize:30}} name="plus"/>
         </TouchableOpacity>}
         {navigation.getParam('selectedHabit') !== null && <TouchableOpacity
@@ -63,7 +61,7 @@ const MyHeader = (navigation) => {
       <View style={styles.container}>
         <TouchableOpacity
           style={{marginRight:30}}
-          onPress={()=>navigation.navigate('Settings', {theme: themeOptions, language: languageOptions})}>
+          onPress={()=>navigation.navigate('Settings', {theme: themeOptions, language: language})}>
           <FontAwesome style={{color:themeOptions?themeOptions.headerPlus:'#fff',fontSize:30}} name="cog"/>
         </TouchableOpacity>
       </View>
