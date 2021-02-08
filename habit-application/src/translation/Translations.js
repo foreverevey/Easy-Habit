@@ -1,7 +1,7 @@
 export default {
   'English': {
     'label': 'English',
-    'code': 'en-gb',
+    'code': 'en',
     'spinnerLoading': 'Loading...',
     'userNameInputPlaceholder': 'Email',
     'passwordInputPlaceholder': 'Password',
@@ -45,6 +45,12 @@ export default {
     'monthNames': ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
       "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
     'modalPlaceholder': 'Type here..',
+    'modalSend': 'Send!',
+    'errorReachingDB': 'Encountered error trying to update database',
+    'errorUnableToFetch': 'Unable to fetch habits from database!',
+    'errorNoInternet': 'Internet connection not available!',
+    'errorEmailNotSent': 'Problem sending email, try again!',
+    'successEmailSent': 'Email Sent Succesfully!',
   },
   'Dansk': {
     'label': 'Dansk',
@@ -92,6 +98,12 @@ export default {
     'monthNames': ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
       "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
     'modalPlaceholder': 'Type here..',
+    'modalSend': 'Siųsti!',
+    'errorReachingDB': 'Encountered error trying to update database',
+    'errorUnableToFetch': 'Unable to fetch habits from database!',
+    'errorNoInternet': 'Internet connection not available!',
+    'errorEmailNotSent': 'Problem sending email, try again!',
+    'successEmailSent': 'Email Sent Succesfully!',
   },
   'Lietuvių':{
     'label': 'Lietuvių',
@@ -105,7 +117,7 @@ export default {
     'loginScreenWrong': 'Neteisingi prisijungimo duomenys!',
     'register': 'Registruotis',
     'registerScreenSimpleText1': `Jau turite paskyrą?\nPrisijunkite čia`,
-    'registerScreenWrong': 'Account with this Email already exists',
+    'registerScreenWrong': 'Vartotojas su tokiu el.paštu jau egzistuoja',
     'bugModalTitle': 'Praneškite apie Problemą!',
     'feedbackModalTitle': 'Palikite atsiliepimą!',
     'themeOptions': 'Temų valdymas',
@@ -138,6 +150,12 @@ export default {
     'calendarOverview': 'Kalendorius',
     'monthNames': ["Sau", "Vas", "Kov", "Bal", "Geg", "Bir",
       "Lie", "Rugp", "Rugs", "Spa", "Lap", "Gru"],
-    'modalPlaceholder': 'Type here..',
+    'modalPlaceholder': 'Rašyti čia..',
+    'modalSend': 'Siųsti!',
+    'errorReachingDB': 'Problema jungiantis prie duomenų bazės',
+    'errorUnableToFetch': 'Problema kraunant įpročius iš duomenų bazės!',
+    'errorNoInternet': 'Interneto ryšys nerastas!',
+    'errorEmailNotSent': 'Problema siunčiant atsiliepimą, bandykite iš naujo!',
+    'successEmailSent': 'Atsiliepimas išsiūstas sėkmingai!',
   }
 }

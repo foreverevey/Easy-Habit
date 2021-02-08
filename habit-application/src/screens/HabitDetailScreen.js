@@ -1,16 +1,30 @@
 import React, {useState, useContext, useEffect} from 'react';
-import { View, Text, StyleSheet, StatusBar, AsyncStorage, ScrollView, ImageBackground, TextInput, TouchableOpacity, Dimensions } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  StatusBar,
+  AsyncStorage,
+  ScrollView,
+  ImageBackground,
+  TextInput,
+  TouchableOpacity,
+  Dimensions
+} from 'react-native';
 import habitApi from '../api/habitApi';
-import {Calendar, CalendarList, Agenda} from 'react-native-calendars';
+import {Calendar, CalendarList, Agenda, LocaleConfig} from 'react-native-calendars';
 import {ContributionGraph, BarChart, LineChart} from 'react-native-chart-kit';
 import moment from 'moment';
+import 'moment/min/locales.min'
 import {FontAwesome} from '@expo/vector-icons';
 import CheckBox from '@react-native-community/checkbox';
 import Spinner from 'react-native-loading-spinner-overlay';
+import calendarTranslations from '../translation/CalendarTranslations';
 import StreakRow from '../components/StreakRow';
 import ButtonLogin from '../components/ButtonLogin';
+import TrackedDaysList from '../components/TrackedDaysList';
 import MyHeaderSecondary from '../components/HeaderSecondary';
-import { MyContext as HabitContext } from '../context/habitContext';
+import {MyContext as HabitContext} from '../context/habitContext';
 import {MyContext as ThemeContext} from '../context/themeContext';
 import {MyContext as LanguageContext} from '../context/languageContext';
 
@@ -24,6 +38,10 @@ const HabitDetailScreen = ({navigation}) => {
   const screenHeight = Dimensions.get('window').height;
   const [result, setResult] = useState(data);
 
+  LocaleConfig.locales[languageContext.state.language.code] = calendarTranslations[languageContext.state.language.code]
+  LocaleConfig.defaultLocale = languageContext.state.language.code;
+  moment.locale('en');
+
   const getData = (data) =>{
     const trackedHabitDays = data.trackedDays;
     const formatDates = data.dates;
@@ -36,7 +54,6 @@ const HabitDetailScreen = ({navigation}) => {
     var markedDates = datesArray.reduce((c, v) => Object.assign(c, {[v]: {selected: true,marked: true,textColor: 'gray'}}), {});
     datesArray.sort((a, b) => a - b);
     var markedDates = getMarkedDates(datesArray);
-    var contributionDays = getContributionGraphDays(datesArray);
     var [longestStreak, currentStreak] = getStreak(datesArray, trackedHabitDays);
     var barData = getBarData(datesArray);
     return [markedDates, contributionDays, longestStreak, currentStreak, barData];
@@ -90,12 +107,25 @@ const HabitDetailScreen = ({navigation}) => {
   const getMarkedDates = (datesArray) =>{
     var markedDates = {};
     var startingDay = {startingDay: true, selected: true, marked: true, textColor: themeContext.state.theme.text, color: themeContext.state.theme.calendarText,};
+    var onlyDay = {startingDay: true, endingDay: true, selected: true, marked: true, textColor: themeContext.state.theme.text, color: themeContext.state.theme.calendarText,};
     var endingDay = {endingDay: true, selected: true, marked: true, textColor: themeContext.state.theme.text, color: themeContext.state.theme.calendarText,};
     var middleDay = {selected: true, marked: true, textColor: themeContext.state.theme.text, color: themeContext.state.theme.calendarText,};
     for ( var i=0; i < datesArray.length; i++){
       var formatedDate = datesArray[i].getFullYear()+'-' + ('0' + (datesArray[i].getMonth()+1)).slice(-2) + '-'+ ('0' + datesArray[i].getDate()).slice(-2);
       if(i===0){
         markedDates[formatedDate] = startingDay;
+        var current = datesArray[i];
+        var next = datesArray[i+1];
+        if(next===undefined){
+          // means its last one
+          markedDates[formatedDate] = onlyDay;
+        }else{
+          const diffTimeNext = Math.abs(next - current);
+          const diffDaysNext = Math.ceil(diffTimeNext / (1000 * 60 * 60 * 24));
+          if(diffDaysNext !== 1){
+            markedDates[formatedDate] = onlyDay;
+          }
+        };
       } else {
         var previous = datesArray[i-1];
         var current = datesArray[i];
@@ -118,23 +148,12 @@ const HabitDetailScreen = ({navigation}) => {
             markedDates[formatedDate] = startingDay;
           };
           if(diffDaysPrev !== 1 && diffDaysNext !== 1){
-            markedDates[formatedDate] = startingDay;
+            markedDates[formatedDate] = onlyDay;
           };
         };
       };
     };
     return markedDates;
-  };
-
-  const getContributionGraphDays = (datesArray) =>{
-    const ContributionGraphDays = [];
-    for ( var i=0; i < datesArray.length; i++){
-      var formatedDate = datesArray[i].getFullYear()+'-' + ('0' + (datesArray[i].getMonth()+1)).slice(-2) + '-'+ ('0' + datesArray[i].getDate()).slice(-2);
-      ContributionGraphDays.push({'date': formatedDate, 'count': 3})
-    };
-    // Doing this because setting all days with count 1 throws error in color function regarding opacity
-    ContributionGraphDays.push({'date': "2019-01-01", 'count': 1});
-    return ContributionGraphDays;
   };
 
   const getDifferenceInDays = (date1, date2) => {
@@ -212,6 +231,7 @@ const HabitDetailScreen = ({navigation}) => {
   };
 
   const getBarData = (datesArray) =>{
+    moment.locale(languageContext.state.language.code);
     const labelMonths = [];
     const data = [];
     var momentDates = datesArray.map(date => {
@@ -219,13 +239,13 @@ const HabitDetailScreen = ({navigation}) => {
     });
     var today = moment();
     var firstMonth = today.format('MMM');
-    labelMonths.unshift(firstMonth);
+    labelMonths.unshift(firstMonth[0].toUpperCase() +  firstMonth.slice(1));
     var filteredList = momentDates.filter((date) => date.format('MMM') === firstMonth);
     data.unshift(filteredList.length);
 
     for(var i=0; i < 11; i++){
       var monthName = today.subtract(1, 'month').format('MMM');
-      labelMonths.unshift(monthName);
+      labelMonths.unshift(monthName[0].toUpperCase() +  monthName.slice(1));
       var filteredList = momentDates.filter((date) => date.format('MMM') === monthName);
       data.unshift(filteredList.length);
     };
@@ -243,34 +263,12 @@ const HabitDetailScreen = ({navigation}) => {
 
   const [markedDays, contributionDays, longestStreak, currentStreak, barData] = getData(data);
   const [dates, setDates] = useState(markedDays);
-  const [contributionGraphDays, setContributionGraphDays] = useState(contributionDays);
   const [privateBool, setPrivateBool] = useState(result.private_bool);
   const [name, setName] = useState(result.name);
   const [description, setDescription] = useState(result.description);
   const [trackedDays, setTrackedDays] = useState(result.trackedDays);
   const [edit, setEdit] = useState(false);
   const [loading, setLoading] = useState(false);
-
-  const getGraphEndDay = () => {
-    const currentDay = new Date();
-    const endDayAdd = currentDay.setDate(currentDay.getDate() + 31);
-    const endDay = new Date(endDayAdd);
-    return endDay;
-  };
-
-  const graphEndDay = getGraphEndDay();
-
-  const chartConfig = {
-    backgroundGradientFrom: themeContext.state.theme.chartBackground,
-    // backgroundGradientFromOpacity: 0,
-    backgroundGradientTo: themeContext.state.theme.chartBackground,
-    // backgroundGradientToOpacity: 0.5,
-    backgroundColor: '#fff',
-    color: (opacity = 1) => `rgba(${themeContext.state.theme.chartRgba}, ${opacity})`,
-    strokeWidth: 3, // optional, default 3
-    barPercentage: 0.5,
-    useShadowColorFromDataset: false, // optional
-  };
 
   const barChartConfig = {
     backgroundGradientFrom: themeContext.state.theme.chartBackground,
@@ -314,7 +312,7 @@ const HabitDetailScreen = ({navigation}) => {
   };
 
   const changeTrackedDays = (day) => {
-    const newTracked = trackedDays;
+    let newTracked = Object.assign({}, trackedDays);
     newTracked[day] = !trackedDays[day];
     setTrackedDays(newTracked);
   };
@@ -359,73 +357,7 @@ const HabitDetailScreen = ({navigation}) => {
                   tintColors={{true:themeContext.state.theme.checkPlus, false:themeContext.state.theme.habitRowBackground}}
                   />
               </View>
-              <View style={styles(themeContext.state.theme).Schedule1}>
-                <Text style={styles(themeContext.state.theme).Schedule1Item}>{languageContext.state.language.mon}</Text>
-                <Text style={styles(themeContext.state.theme).Schedule1Item}>{languageContext.state.language.tue}</Text>
-                <Text style={styles(themeContext.state.theme).Schedule1Item}>{languageContext.state.language.wen}</Text>
-                <Text style={styles(themeContext.state.theme).Schedule1Item}>{languageContext.state.language.thu}</Text>
-                <Text style={styles(themeContext.state.theme).Schedule1Item}>{languageContext.state.language.fri}</Text>
-                <Text style={styles(themeContext.state.theme).Schedule1Item}>{languageContext.state.language.sat}</Text>
-                <Text style={styles(themeContext.state.theme).Schedule1Item}>{languageContext.state.language.sun}</Text>
-              </View>
-              <View style={styles(themeContext.state.theme).Schedule2}>
-                <View style={styles(themeContext.state.theme).CheckboxView}>
-                  <TouchableOpacity disabled={edit?false:true} onPress={()=>changeTrackedDays('Mon')}>
-                    {trackedDays.Mon &&
-                      <FontAwesome style={styles(themeContext.state.theme).CheckboxPlus} name="check"/>}
-                    {!trackedDays.Mon &&
-                      <FontAwesome style={styles(themeContext.state.theme).Checkbox} name='close'/>}
-                  </TouchableOpacity>
-                </View>
-                <View style={styles(themeContext.state.theme).CheckboxView}>
-                  <TouchableOpacity disabled={edit?false:true} onPress={()=>changeTrackedDays('Tue')}>
-                    {trackedDays.Tue &&
-                      <FontAwesome style={styles(themeContext.state.theme).CheckboxPlus} name="check"/>}
-                    {!trackedDays.Tue &&
-                      <FontAwesome style={styles(themeContext.state.theme).Checkbox} name='close'/>}
-                  </TouchableOpacity>
-                </View>
-                <View style={styles(themeContext.state.theme).CheckboxView}>
-                  <TouchableOpacity disabled={edit?false:true} onPress={()=>changeTrackedDays('Wed')}>
-                    {trackedDays.Wed &&
-                      <FontAwesome style={styles(themeContext.state.theme).CheckboxPlus} name="check"/>}
-                    {!trackedDays.Wed &&
-                      <FontAwesome style={styles(themeContext.state.theme).Checkbox} name='close'/>}
-                  </TouchableOpacity>
-                </View>
-                <View style={styles(themeContext.state.theme).CheckboxView}>
-                  <TouchableOpacity disabled={edit?false:true} onPress={()=>changeTrackedDays('Thu')}>
-                    {trackedDays.Thu &&
-                      <FontAwesome style={styles(themeContext.state.theme).CheckboxPlus} name="check"/>}
-                    {!trackedDays.Thu &&
-                      <FontAwesome style={styles(themeContext.state.theme).Checkbox} name='close'/>}
-                  </TouchableOpacity>
-                </View>
-                <View style={styles(themeContext.state.theme).CheckboxView}>
-                  <TouchableOpacity disabled={edit?false:true} onPress={()=>changeTrackedDays('Fri')}>
-                    {trackedDays.Fri &&
-                      <FontAwesome style={styles(themeContext.state.theme).CheckboxPlus} name="check"/>}
-                    {!trackedDays.Fri &&
-                      <FontAwesome style={styles(themeContext.state.theme).Checkbox} name='close'/>}
-                  </TouchableOpacity>
-                </View>
-                <View style={styles(themeContext.state.theme).CheckboxView}>
-                  <TouchableOpacity disabled={edit?false:true} onPress={()=>changeTrackedDays('Sat')}>
-                    {trackedDays.Sat &&
-                      <FontAwesome style={styles(themeContext.state.theme).CheckboxPlus} name="check"/>}
-                    {!trackedDays.Sat &&
-                      <FontAwesome style={styles(themeContext.state.theme).Checkbox} name='close'/>}
-                  </TouchableOpacity>
-                </View>
-                <View style={styles(themeContext.state.theme).CheckboxView}>
-                  <TouchableOpacity disabled={edit?false:true} onPress={()=>changeTrackedDays('Sun')}>
-                    {trackedDays.Sun &&
-                      <FontAwesome style={styles(themeContext.state.theme).CheckboxPlus} name="check"/>}
-                    {!trackedDays.Sun &&
-                      <FontAwesome style={styles(themeContext.state.theme).Checkbox} name='close'/>}
-                  </TouchableOpacity>
-                </View>
-              </View>
+              <TrackedDaysList changeTrackedDays={changeTrackedDays} disabled={edit?false:true} trackedDays={trackedDays}/>
               {edit && <ButtonLogin style={styles(themeContext.state.theme).ButtonSave} text={languageContext.state.language.save} onPress={()=>{
                   saveEditHabit();
                 }
@@ -433,30 +365,6 @@ const HabitDetailScreen = ({navigation}) => {
             </View>
             <StreakRow StreakText={languageContext.state.language.longestStreak + `${longestStreak}`}/>
             <StreakRow StreakText={languageContext.state.language.currentStreak + `${currentStreak}`}/>
-            <View style={styles(themeContext.state.theme).GraphView}>
-              <Text style={styles(themeContext.state.theme).GraphText}>{languageContext.state.language.contributionGraph}</Text>
-              <ContributionGraph
-                values={contributionGraphDays}
-                endDate={graphEndDay}
-                numDays={105}
-                width={screenWidth}
-                height={220}
-                chartConfig={chartConfig}
-                style={styles(themeContext.state.theme).ContributionGraph}
-                showWeekdayLabels={true}
-              />
-            </View>
-
-            {false && <BarChart
-              style={styles(themeContext.state.theme).BarGraph}
-              data={barData}
-              width={screenWidth}
-              height={250}
-              yAxisLabel=""
-              chartConfig={barChartConfig}
-              verticalLabelRotation={30}
-              fromZero={true}
-            />}
             <View style={styles(themeContext.state.theme).GraphView}>
               <Text style={styles(themeContext.state.theme).GraphText}>{languageContext.state.language.monthlyLineChart}</Text>
               <LineChart
@@ -480,6 +388,14 @@ const HabitDetailScreen = ({navigation}) => {
                   arrowColor: themeContext.state.theme.calendarText,
                   monthTextColor: themeContext.state.theme.calendarText,
                   dayTextColor:themeContext.state.theme.calendarText,
+                  'stylesheet.day.period': {
+                      base: {
+                        overflow: 'hidden',
+                        height: 34,
+                        alignItems: 'center',
+                        width: 38,
+                      },
+                  },
                 }}
               />
             </View>

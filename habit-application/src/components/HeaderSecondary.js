@@ -22,6 +22,8 @@ const MyHeaderSecondary = (navigation, text, theme, language) => {
     language = languageParam;
   };
 
+  console.log('language.createScreenHeaderText', language.createScreenHeaderText, language.settingScreenHeaderText, text);
+
   if(text === 'Habit details'){
     return {
       headerStyle: {

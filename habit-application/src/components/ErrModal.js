@@ -26,7 +26,7 @@ const styles = (props) => StyleSheet.create({
   },
   modalView: {
     margin: 20,
-    backgroundColor: props.white,
+    backgroundColor: props.habitRowBackground,
     borderRadius: 20,
     alignItems: "center",
     shadowColor: "#000",
@@ -47,7 +47,7 @@ const styles = (props) => StyleSheet.create({
     flex:1,
     textAlignVertical: "center",
     fontSize: 16,
-    color: props.headerPlus,
+    color: props.buttonText,
   },
 });
 

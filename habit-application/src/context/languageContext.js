@@ -15,6 +15,7 @@ const languageReducer = (state, action) => {
 const changeLanguage = dispatch => async (language) =>{
   await AsyncStorage.setItem('language', language);
   dispatch({ type: 'change_language', payload: translations[language]});
+  return translations[language];
 };
 
 export const { MyContext , Provider} = createDataContext(

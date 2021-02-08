@@ -14,6 +14,7 @@ const CustomModal = (props) => {
     if(props.type === 'feedback'){
       props.sendEmail(text, 'Feedback Report');
     }
+    setText('');
     props.onPressOutside();
   };
 
@@ -32,7 +33,7 @@ const CustomModal = (props) => {
             placeholderTextColor={state.theme.buttonText}
             paddingLeft={15}/>
           <TouchableOpacity style={styles(state.theme).modalSend} onPress={()=>handleEmail()}>
-            <Text style={styles(state.theme).modalSendText}>Send!</Text>
+            <Text style={styles(state.theme).modalSendText}>{props.modalSend}</Text>
           </TouchableOpacity>
         </View>
       </TouchableOpacity>

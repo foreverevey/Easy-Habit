@@ -1,10 +1,13 @@
-import React, {useState, useContext} from 'react';
+import React, {useState, useEffect, useContext} from 'react';
 import {View, Text, TextInput, StyleSheet, TouchableOpacity, ImageBackground} from 'react-native';
 import {FontAwesome} from '@expo/vector-icons';
 import CheckBox from '@react-native-community/checkbox';
+import {useNetInfo} from "@react-native-community/netinfo";
 import Spacer from '../components/Spacer';
 import ButtonLogin from '../components/ButtonLogin';
 import MyHeaderSecondary from '../components/HeaderSecondary';
+import TrackedDaysList from '../components/TrackedDaysList';
+import ErrModal from '../components/ErrModal';
 import {MyContext} from '../context/authContext';
 import {MyContext as HabitContext} from '../context/habitContext';
 import {MyContext as ThemeContext} from '../context/themeContext';
@@ -20,7 +23,17 @@ const CreateHabitScreen = ({navigation}) =>{
   const [privateBool, setPrivateBool] = useState(false);
   const [trackedDays, setTrackedDays] = useState({
     'Mon': true, 'Tue': true, 'Wed': true, 'Thu': true, 'Fri': true,
-    'Sat': true, 'Sun': true})
+    'Sat': true, 'Sun': true});
+  const [errModalMsg, setErrModalMsg] = useState('');
+  const netInfo = useNetInfo();
+
+  useEffect(() => {
+    if(!netInfo.isInternetReachable){
+      setErrModalMsg(languageContext.state.language.errorNoInternet);
+    } else {
+      setErrModalMsg('');
+    }
+  }, [netInfo]);
 
   const createHabit = async (name, description, privateBool, trackedDays) => {
     await addHabit(name, privateBool, description, trackedDays);
@@ -28,13 +41,14 @@ const CreateHabitScreen = ({navigation}) =>{
   };
 
   const changeTrackedDays = (day) => {
-    const newTracked = trackedDays;
+    let newTracked = Object.assign({}, trackedDays);
     newTracked[day] = !trackedDays[day];
     setTrackedDays(newTracked);
   };
 
   return (
     <View style={styles(themeContext.state.theme).MainParent}>
+      <ErrModal isVisible={errModalMsg!==''?true:false} errMessage={errModalMsg} onPressOutside={()=>setErrModalMsg('')}/>
       <ImageBackground source={{uri: themeContext.state.theme.backgroundImage}} style={styles(themeContext.state.theme).ImageBackground}>
         <Spacer>
           <TextInput style={styles(themeContext.state.theme).TextInputName}
@@ -64,76 +78,7 @@ const CreateHabitScreen = ({navigation}) =>{
             <CheckBox value={privateBool} onValueChange={()=>{setPrivateBool(!privateBool)}}/>
           </View>
         </Spacer>
-        <View style={styles(themeContext.state.theme).trackDays}>
-          <View style={styles(themeContext.state.theme).Schedule1}>
-            <Text style={styles(themeContext.state.theme).Schedule1Item}>{languageContext.state.language.mon}</Text>
-            <Text style={styles(themeContext.state.theme).Schedule1Item}>{languageContext.state.language.tue}</Text>
-            <Text style={styles(themeContext.state.theme).Schedule1Item}>{languageContext.state.language.wen}</Text>
-            <Text style={styles(themeContext.state.theme).Schedule1Item}>{languageContext.state.language.thu}</Text>
-            <Text style={styles(themeContext.state.theme).Schedule1Item}>{languageContext.state.language.fri}</Text>
-            <Text style={styles(themeContext.state.theme).Schedule1Item}>{languageContext.state.language.sat}</Text>
-            <Text style={styles(themeContext.state.theme).Schedule1Item}>{languageContext.state.language.sun}</Text>
-          </View>
-          <View style={styles(themeContext.state.theme).Schedule2}>
-            <View style={styles(themeContext.state.theme).CheckboxView}>
-              <TouchableOpacity onPress={()=>changeTrackedDays('Mon')}>
-                {trackedDays.Mon &&
-                  <FontAwesome style={styles(themeContext.state.theme).CheckboxPlus} name="check"/>}
-                {!trackedDays.Mon &&
-                  <FontAwesome style={styles(themeContext.state.theme).Checkbox} name='close'/>}
-              </TouchableOpacity>
-            </View>
-            <View style={styles(themeContext.state.theme).CheckboxView}>
-              <TouchableOpacity onPress={()=>changeTrackedDays('Tue')}>
-                {trackedDays.Tue &&
-                  <FontAwesome style={styles(themeContext.state.theme).CheckboxPlus} name="check"/>}
-                {!trackedDays.Tue &&
-                  <FontAwesome style={styles(themeContext.state.theme).Checkbox} name='close'/>}
-              </TouchableOpacity>
-            </View>
-            <View style={styles(themeContext.state.theme).CheckboxView}>
-              <TouchableOpacity onPress={()=>changeTrackedDays('Wed')}>
-                {trackedDays.Wed &&
-                  <FontAwesome style={styles(themeContext.state.theme).CheckboxPlus} name="check"/>}
-                {!trackedDays.Wed &&
-                  <FontAwesome style={styles(themeContext.state.theme).Checkbox} name='close'/>}
-              </TouchableOpacity>
-            </View>
-            <View style={styles(themeContext.state.theme).CheckboxView}>
-              <TouchableOpacity onPress={()=>changeTrackedDays('Thu')}>
-                {trackedDays.Thu &&
-                  <FontAwesome style={styles(themeContext.state.theme).CheckboxPlus} name="check"/>}
-                {!trackedDays.Thu &&
-                  <FontAwesome style={styles(themeContext.state.theme).Checkbox} name='close'/>}
-              </TouchableOpacity>
-            </View>
-            <View style={styles(themeContext.state.theme).CheckboxView}>
-              <TouchableOpacity onPress={()=>changeTrackedDays('Fri')}>
-                {trackedDays.Fri &&
-                  <FontAwesome style={styles(themeContext.state.theme).CheckboxPlus} name="check"/>}
-                {!trackedDays.Fri &&
-                  <FontAwesome style={styles(themeContext.state.theme).Checkbox} name='close'/>}
-              </TouchableOpacity>
-            </View>
-            <View style={styles(themeContext.state.theme).CheckboxView}>
-              <TouchableOpacity onPress={()=>changeTrackedDays('Sat')}>
-                {trackedDays.Sat &&
-                  <FontAwesome style={styles(themeContext.state.theme).CheckboxPlus} name="check"/>}
-                {!trackedDays.Sat &&
-                  <FontAwesome style={styles(themeContext.state.theme).Checkbox} name='close'/>}
-              </TouchableOpacity>
-            </View>
-            <View style={styles(themeContext.state.theme).CheckboxView}>
-              <TouchableOpacity onPress={()=>changeTrackedDays('Sun')}>
-                {trackedDays.Sun &&
-                  <FontAwesome style={styles(themeContext.state.theme).CheckboxPlus} name="check"/>}
-                {!trackedDays.Sun &&
-                  <FontAwesome style={styles(themeContext.state.theme).Checkbox} name='close'/>}
-              </TouchableOpacity>
-            </View>
-          </View>
-        </View>
-
+        <TrackedDaysList changeTrackedDays={changeTrackedDays} disabled={false} trackedDays={trackedDays}/>
         <ButtonLogin style={styles(themeContext.state.theme).ButtonSave} text={languageContext.state.language.create} onPress={()=>createHabit(name,description, privateBool, trackedDays)}/>
       </ImageBackground>
     </View>

@@ -58,8 +58,7 @@ const HomeScreen = ({navigation}) => {
       await deleteHabit(id);
       setSelectedHabit(null);
     } catch(error){
-      setErrModalMsg(error);
-      console.log(error);
+      setErrModalMsg(languageContext.state.language.errorReachingDB);
       return false;
     }
   };
@@ -68,8 +67,7 @@ const HomeScreen = ({navigation}) => {
     try{
       await addHabit();
     } catch (error){
-      console.log(error);
-      setErrModalMsg(error);
+      setErrModalMsg(languageContext.state.language.errorReachingDB);
       return false;
     }
   };
@@ -82,8 +80,7 @@ const HomeScreen = ({navigation}) => {
       });
     } catch(error){
       setLoading(false);
-      setErrModalMsg(error);
-      console.log('Homescreen add date error', error);
+      setErrModalMsg(languageContext.state.language.errorReachingDB);
     }
   };
 
@@ -95,8 +92,7 @@ const HomeScreen = ({navigation}) => {
       });
     } catch(error){
       setLoading(false);
-      setErrModalMsg(error);
-      console.log('Homescreen remove date error', error);
+      setErrModalMsg(languageContext.state.language.errorReachingDB);
     }
   };
 
@@ -117,7 +113,6 @@ const HomeScreen = ({navigation}) => {
   };
 
   const loadHabits = () =>{
-    console.log('loadhabits');
     setLoading(true);
     setErrModalMsg('');
     getHabits().then((res)=>{
@@ -127,7 +122,7 @@ const HomeScreen = ({navigation}) => {
         setErrModalMsg('');
       } else{
         setLoading(false);
-        setErrModalMsg("Unable to fetch habits from database!");
+        setErrModalMsg(languageContext.state.language.errorUnableToFetch);
         setReloadButton(true);
       }
     });
@@ -151,7 +146,7 @@ const HomeScreen = ({navigation}) => {
           setLoading(false);
         } else{
           setLoading(false);
-          setErrModalMsg("Unable to fetch habits from database!");
+          setErrModalMsg(languageContext.state.language.errorUnableToFetch);
           setReloadButton(true);
         }
     });
@@ -159,7 +154,7 @@ const HomeScreen = ({navigation}) => {
 
   useEffect(() => {
     if(!netInfo.isInternetReachable){
-      setErrModalMsg('Internet connection not available!');
+      setErrModalMsg(languageContext.state.language.errorNoInternet);
     } else {
       setErrModalMsg('');
     }
@@ -205,6 +200,7 @@ const HomeScreen = ({navigation}) => {
       </View>
       <View>
         <DateTimePickerModal
+          locale="lt"
           isVisible={isDatePickerVisible}
           mode="date"
           date={new Date(selectedDay)}

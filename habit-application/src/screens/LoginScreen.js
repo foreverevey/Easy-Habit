@@ -25,32 +25,24 @@ const LoginScreen = ({navigation}) => {
   const netInfo = useNetInfo();
 
   useEffect(()=>{
-    //TODO: maybe use state to not show screen before this function runs?
-
-    setUserSettings().then(()=>{
+    setUserSettings().then((languageCtx)=>{
       navigation.setParams({ theme: themeContext.state });
       navigation.setParams({ language: languageContext.state });
-    }).then(()=>{
+      return languageCtx;
+    }).then((languageCtx)=>{
       NetInfo.fetch().then(state => {
         if(state.isInternetReachable){
           tryLocalSignin().then((res)=>{
             if(res){
-              navigation.navigate('Home', {language: languageContext.state.language});
+              navigation.navigate('Home', {language: languageCtx});
             } else {
               setLoadingScreen(false);
             }
           });
         } else {
-          setErrModalMsg('Internet connection not found! Please connect to the internet');
+          setErrModalMsg(languageContext.state.language.errorNoInternet);
         }
       });
-      // can fake errors with this code instead one above *****************
-      // const signedin = tryLocalSignin();
-      // if(signedin){
-      //   navigation.navigate('Home', {language: languageContext.state.language});
-      // } else {
-      //   setLoadingScreen(false);
-      // }
     });
   }, []);
 
@@ -65,7 +57,7 @@ const LoginScreen = ({navigation}) => {
         }
       });
     } else {
-      setErrModalMsg('Internet connection not available!');
+      setErrModalMsg(languageContext.state.language.errorNoInternet);
     }
   }, [netInfo]);
 
@@ -85,8 +77,9 @@ const LoginScreen = ({navigation}) => {
       themeContext.changeTheme(userTheme);
     }
     if(userLanguage !== null){
-      languageContext.changeLanguage(userLanguage);
+      languageCtx = languageContext.changeLanguage(userLanguage);
     }
+    return languageCtx;
   };
 
   const attemptSignIn = async (email,password) =>{
