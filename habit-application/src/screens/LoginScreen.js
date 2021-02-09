@@ -73,12 +73,15 @@ const LoginScreen = ({navigation}) => {
     // Load user selected theme and language from storage
     const userTheme = await AsyncStorage.getItem('theme');
     const userLanguage = await AsyncStorage.getItem('language');
+    const showNotChosenDays = await AsyncStorage.getItem('showNotChosenDays');
+    const longClickHabit = await AsyncStorage.getItem('longClickHabit');
     if(userTheme !== null){
       themeContext.changeTheme(userTheme);
     }
-    if(userLanguage !== null){
-      languageCtx = languageContext.changeLanguage(userLanguage);
-    }
+    // if(userLanguage !== null){
+    //   languageCtx = languageContext.changeLanguage(userLanguage);
+    // }
+    languageCtx = languageContext.loadSettings(userLanguage, showNotChosenDays, longClickHabit);
     return languageCtx;
   };
 

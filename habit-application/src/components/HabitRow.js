@@ -40,12 +40,19 @@ const HabitRow = (props) =>{
     <TouchableOpacity style={props.Selected?styles(state.theme).RowSelected:styles(state.theme).Row} onPress={props.onPress} onLongPress={props.onLongPress}>
       <Text style={styles(state.theme).TextElem}>{props.Text}</Text>
       <View style={styles(state.theme).CheckboxView}>
-        <TouchableOpacity onLongPress={()=>addRemoveDate()}>
+        {props.longPressSetting === 'true' && <TouchableOpacity onLongPress={()=>addRemoveDate()}>
           {selected &&
             <FontAwesome style={styles(state.theme).CheckboxPlus} name="check"/>}
           {!selected &&
             <FontAwesome style={styles(state.theme).Checkbox} name='close'/>}
-        </TouchableOpacity>
+        </TouchableOpacity>}
+        {props.longPressSetting === 'false' && <TouchableOpacity onPress={()=>addRemoveDate()}>
+          {selected &&
+            <FontAwesome style={styles(state.theme).CheckboxPlus} name="check"/>}
+          {!selected &&
+            <FontAwesome style={styles(state.theme).Checkbox} name='close'/>}
+        </TouchableOpacity>}
+
       </View>
     </TouchableOpacity>
   )

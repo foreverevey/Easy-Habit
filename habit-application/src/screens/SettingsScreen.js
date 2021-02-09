@@ -51,10 +51,28 @@ const SettingsScreen = ({navigation}) => {
     }
   };
 
+  const _changeShowNotChosenDays = () => {
+    if (languageContext.state.showNotChosenDays === 'true') {
+      languageContext.changeShowDays('false');
+    } else {
+      languageContext.changeShowDays('true');
+    }
+  };
+
+  const _changeLongClickHabit = () =>{
+    if (languageContext.state.longClickHabit === 'true') {
+      languageContext.changeLongClick('false');
+    } else {
+      languageContext.changeLongClick('true');
+    }
+  };
+
   const clearStorage = async () => {
     try {
       await AsyncStorage.removeItem('token');
-      const item = await AsyncStorage.getItem('token');
+      await AsyncStorage.removeItem('theme');
+      await AsyncStorage.removeItem('showNotChosenDays');
+      await AsyncStorage.removeItem('longClickHabit');
       return true;
     } catch (error) {
       console.log(error);
@@ -142,6 +160,7 @@ const SettingsScreen = ({navigation}) => {
         OnValueChange={() => {
         _changeThemeDark()
       }} Text={languageContext.state.language.dark}/>
+
     <Spacer/>
     <LineButton
       text={languageContext.state.language.bugReportText}
@@ -165,6 +184,19 @@ const SettingsScreen = ({navigation}) => {
         }
       </Picker>
     </View>
+    <Spacer/>
+    <ThemeSwitch Value={languageContext.state.showNotChosenDays === 'true'
+        ? true
+        : false}
+        OnValueChange={() => {
+          _changeShowNotChosenDays()
+      }} Text={languageContext.state.language.showNotChosenDays}/>
+    <ThemeSwitch Value={languageContext.state.longClickHabit === 'true'
+        ? true
+        : false}
+        OnValueChange={() => {
+          _changeLongClickHabit()
+      }} Text={languageContext.state.language.longClickHabit}/>
     <ButtonLogin style={styles(state.theme).ButtonSave}
       text={languageContext.state.language.logout}
       onPress={async () => {

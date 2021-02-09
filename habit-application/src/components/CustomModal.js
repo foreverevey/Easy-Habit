@@ -31,6 +31,7 @@ const CustomModal = (props) => {
             onChangeText={(newValue)=> setText(newValue)}
             placeholder={props.modalPlaceholder}
             placeholderTextColor={state.theme.buttonText}
+            multiline={true}
             paddingLeft={15}/>
           <TouchableOpacity style={styles(state.theme).modalSend} onPress={()=>handleEmail()}>
             <Text style={styles(state.theme).modalSendText}>{props.modalSend}</Text>

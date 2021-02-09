@@ -144,6 +144,7 @@ const HomeScreen = ({navigation}) => {
       getHabits().then((res)=>{
         if(res){
           setLoading(false);
+          console.log(state);
         } else{
           setLoading(false);
           setErrModalMsg(languageContext.state.language.errorUnableToFetch);
@@ -212,26 +213,62 @@ const HomeScreen = ({navigation}) => {
             {reloadButton && <TouchableOpacity style={styles(themeContext.state.theme).ReloadButton} onPress={()=>loadHabits()}>
               <FontAwesome5 style={styles(themeContext.state.theme).Icon} name="sync-alt"/>
             </TouchableOpacity>}
+            {state.length === 0 && <TouchableOpacity style={styles(themeContext.state.theme).FirstCreate}
+              onPress={()=>navigation.navigate('Create', {theme: themeContext.state.theme, language: languageContext.state.language})}>
+              <Text style={styles(themeContext.state.theme).FirstText}>
+                Create your first habbit!
+              </Text>
+              <FontAwesome5 style={styles(themeContext.state.theme).Icon} name="plus"/>
+            </TouchableOpacity>}
             <FlatList style={styles(themeContext.state.theme).flatList}
               data={state}
               keyExtractor={item => item._id}
               extraData={selectedHabit}
               renderItem= {({item}) => {
-                return (
-                  <>
-                    <HabitRow
-                      Text={item.name}
-                      Dates={item.dates}
-                      ID={item._id}
-                      SelectedDate={selectedDay}
-                      Selected={selectedHabit === item._id?true:false}
-                      onPress={()=>{navigation.navigate('Detail', {item: item._id, data: item, theme: themeContext.state.theme, language: languageContext.state.language})}}
-                      onLongPress={()=>{selectHabit(item._id)}}
-                      addDate={()=>{addDate(item._id)}}
-                      removeDate={()=>{removeDate(item._id)}}>
-                    </HabitRow>
-                  </>
-                  );
+                console.log('selectedDay', selectedDay, item);
+                const selDay = new Date(selectedDay);
+                //item.trackedDays['mon'] == false then if selected day == mon and our settings
+                // is not show then not show
+                if(languageContext.state.showNotChosenDays === 'false'){
+                  const dayList = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+                  var dayName = dayList[selDay.getDay()];
+                  console.log('dayname', dayName);
+                  if(item.trackedDays[dayName]){
+                    return (
+                      <>
+                        <HabitRow
+                          Text={item.name}
+                          Dates={item.dates}
+                          ID={item._id}
+                          SelectedDate={selectedDay}
+                          Selected={selectedHabit === item._id?true:false}
+                          onPress={()=>{navigation.navigate('Detail', {item: item._id, data: item, theme: themeContext.state.theme, language: languageContext.state.language})}}
+                          onLongPress={()=>{selectHabit(item._id)}}
+                          addDate={()=>{addDate(item._id)}}
+                          longPressSetting={languageContext.state.longClickHabit}
+                          removeDate={()=>{removeDate(item._id)}}>
+                        </HabitRow>
+                      </>
+                      );
+                  }
+                } else {
+                  return (
+                    <>
+                      <HabitRow
+                        Text={item.name}
+                        Dates={item.dates}
+                        ID={item._id}
+                        SelectedDate={selectedDay}
+                        Selected={selectedHabit === item._id?true:false}
+                        onPress={()=>{navigation.navigate('Detail', {item: item._id, data: item, theme: themeContext.state.theme, language: languageContext.state.language})}}
+                        onLongPress={()=>{selectHabit(item._id)}}
+                        addDate={()=>{addDate(item._id)}}
+                        longPressSetting={languageContext.state.longClickHabit}
+                        removeDate={()=>{removeDate(item._id)}}>
+                      </HabitRow>
+                    </>
+                    );
+                }
                 }}/>
       </ImageBackground>
     </View>
@@ -308,6 +345,17 @@ const styles = (props) => StyleSheet.create({
     fontSize: 34,
     color: props.headerPlus,
   },
+  FirstCreate:{
+    alignItems: 'center',
+    justifyContent: 'center',
+    flex:1,
+  },
+  FirstText:{
+    fontSize: 22,
+    margin:20,
+    textAlign: "center",
+    color: props.headerPlus,
+  }
 
 })
 
