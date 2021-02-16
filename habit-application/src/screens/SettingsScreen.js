@@ -6,9 +6,11 @@ import {
   TouchableOpacity,
   ImageBackground,
   AsyncStorage,
-  Picker
+  Picker,
+  ScrollView
 } from 'react-native';
 import habitApi from '../api/habitApi';
+import NetInfo from '@react-native-community/netinfo';
 import translations from '../translation/Translations';
 import Spacer from '../components/Spacer';
 import ThemeSwitch from '../components/ThemeSwitch';
@@ -26,6 +28,7 @@ const SettingsScreen = ({navigation}) => {
   const [bugModal, setBugModal] = useState(false);
   const [feedbackModal, setFeedbackModal] = useState(false);
   const [errModalMsg, setErrModalMsg] = useState('');
+  const [email, setEmail] = useState('');
 
   const _changeThemeCheerful = () => {
     if (state.theme.name === 'cheerful') {
@@ -81,20 +84,26 @@ const SettingsScreen = ({navigation}) => {
   };
 
   const sendEmail = async (body, subject) => {
-    try {
-      const to = "patkppDev@gmail.com";
-      const from = "patkppDev@gmail.com";
-      const response = await habitApi.post('/email', {to, from, body, subject});
-      setErrModalMsg(languageContext.state.language.successEmailSent);
-      setTimeout(() => {
-        setErrModalMsg('');
-      }, 1500);
-    } catch (error) {
-      setErrModalMsg(languageContext.state.language.errorEmailNotSent);
-      setTimeout(() => {
-        setErrModalMsg('');
-      }, 1500);
-    }
+    NetInfo.fetch().then(async state => {
+      if(state.isInternetReachable){
+        try {
+          const to = "patkppDev@gmail.com";
+          const from = "patkppDev@gmail.com";
+          const response = await habitApi.post('/email', {to, from, body, subject});
+          setErrModalMsg(languageContext.state.language.successEmailSent);
+          setTimeout(() => {
+            setErrModalMsg('');
+          }, 1500);
+        } catch (error) {
+          setErrModalMsg(languageContext.state.language.errorEmailNotSent);
+          setTimeout(() => {
+            setErrModalMsg('');
+          }, 1500);
+        }
+      } else {
+        setErrModalMsg(languageContext.state.language.errorNoInternet);
+      }
+    });
   };
 
   const openModal = (modalType) => {
@@ -105,6 +114,12 @@ const SettingsScreen = ({navigation}) => {
       setFeedbackModal(true);
     };
   };
+
+  useEffect(() => {
+    AsyncStorage.getItem('email').then((email)=>{
+      setEmail(email);
+    });
+  }, []);
 
   useEffect(() => {
     navigation.setParams({theme: state.theme});
@@ -120,91 +135,104 @@ const SettingsScreen = ({navigation}) => {
       : false}
       errMessage={errModalMsg}
       onPressOutside={() => setErrModalMsg('')}/>
-  <ImageBackground source={{
-      uri: state.theme.backgroundImage
-    }} style={styles(state.theme).ImageBackground}>
-    <CustomModal
-      modalSend={languageContext.state.language.modalSend}
-      modalPlaceholder={languageContext.state.language.modalPlaceholder}
-      isVisible={bugModal}
-      type='bug'
-      title={languageContext.state.language.bugModalTitle}
-      onPressOutside={() => setBugModal(!bugModal)}
-      sendEmail={sendEmail}/>
-    <CustomModal
-      modalSend={languageContext.state.language.modalSend}
-      modalPlaceholder={languageContext.state.language.modalPlaceholder}
-      isVisible={feedbackModal}
-      type='feedback'
-      title={languageContext.state.language.feedbackModalTitle}
-      onPressOutside={() => setFeedbackModal(!feedbackModal)}
-      sendEmail={sendEmail}/>
-    <Text style={styles(state.theme).Header}>
-      {languageContext.state.language.themeOptions}
-    </Text>
-    <ThemeSwitch Value={state.theme.name === 'cheerful'
-        ? true
-        : false}
-        OnValueChange={() => {
-        _changeThemeCheerful()
-      }} Text={languageContext.state.language.cheerful}/>
-    <ThemeSwitch Value={state.theme.name === 'clean'
-        ? true
-        : false}
-        OnValueChange={() => {
-        _changeThemeClean()
-      }} Text={languageContext.state.language.clean}/>
-    <ThemeSwitch Value={state.theme.name === 'dark'
-        ? true
-        : false}
-        OnValueChange={() => {
-        _changeThemeDark()
-      }} Text={languageContext.state.language.dark}/>
+  <ScrollView>
+    <ImageBackground source={{
+        uri: state.theme.backgroundImage
+      }} style={styles(state.theme).ImageBackground}>
+      <CustomModal
+        modalSend={languageContext.state.language.modalSend}
+        modalPlaceholder={languageContext.state.language.modalPlaceholder}
+        isVisible={bugModal}
+        type='bug'
+        title={languageContext.state.language.bugModalTitle}
+        onPressOutside={() => setBugModal(!bugModal)}
+        sendEmail={sendEmail}/>
+      <CustomModal
+        modalSend={languageContext.state.language.modalSend}
+        modalPlaceholder={languageContext.state.language.modalPlaceholder}
+        isVisible={feedbackModal}
+        type='feedback'
+        title={languageContext.state.language.feedbackModalTitle}
+        onPressOutside={() => setFeedbackModal(!feedbackModal)}
+        sendEmail={sendEmail}/>
+      <Text style={styles(state.theme).Header}>
+        {languageContext.state.language.themeOptions}
+      </Text>
+      <ThemeSwitch Value={state.theme.name === 'cheerful'
+          ? true
+          : false}
+          OnValueChange={() => {
+          _changeThemeCheerful()
+        }} Text={languageContext.state.language.cheerful}/>
+      <ThemeSwitch Value={state.theme.name === 'clean'
+          ? true
+          : false}
+          OnValueChange={() => {
+          _changeThemeClean()
+        }} Text={languageContext.state.language.clean}/>
+      <ThemeSwitch Value={state.theme.name === 'dark'
+          ? true
+          : false}
+          OnValueChange={() => {
+          _changeThemeDark()
+        }} Text={languageContext.state.language.dark}/>
+      <Text style={styles(state.theme).Header}>
+        {languageContext.state.language.userSettings}
+      </Text>
+      <ThemeSwitch Value={languageContext.state.showNotChosenDays === 'true'
+          ? true
+          : false}
+          OnValueChange={() => {
+            _changeShowNotChosenDays()
+        }} Text={languageContext.state.language.showNotChosenDays}/>
+      <ThemeSwitch Value={languageContext.state.longClickHabit === 'true'
+          ? true
+          : false}
+          OnValueChange={() => {
+            _changeLongClickHabit()
+        }} Text={languageContext.state.language.longClickHabit}/>
+      <View style={styles(state.theme).Picker}>
+        <Picker
+          style={styles(state.theme).PickerText}
+          selectedValue={languageContext.state.language.label}
+          onValueChange={(itemValue, itemIndex) =>
+            languageContext.changeLanguage(itemValue)}>
+          {
+            Object.keys(translations).map((langItem) => {
+              return <Picker.Item
+                color='black' key={langItem}
+                value={langItem}
+                label={translations[langItem].label}/>
+            })
+          }
+        </Picker>
+      </View>
+      <Text style={styles(state.theme).Header}>
+        {languageContext.state.language.letUsKnow}
+      </Text>
+      <LineButton
+        text={languageContext.state.language.bugReportText}
+        onPress={() => openModal('bug')} type='bug'/>
+      <LineButton
+        text={languageContext.state.language.feedbackSimpleText}
+        onPress={() => openModal('feedback')} type='paper-plane'/>
+      <Spacer/>
+      <View style={styles(state.theme).Username}>
+        <Text style={styles(state.theme).UsernameLabel}>{languageContext.state.language.usernameLabel}</Text>
+        <Text style={styles(state.theme).UsernameText}>
+          {email}
+        </Text>
+      </View>
 
-    <Spacer/>
-    <LineButton
-      text={languageContext.state.language.bugReportText}
-      onPress={() => openModal('bug')} type='bug'/>
-    <LineButton
-      text={languageContext.state.language.feedbackSimpleText}
-      onPress={() => openModal('feedback')} type='paper-plane'/>
-    <View style={styles(state.theme).Picker}>
-      <Picker
-        style={styles(state.theme).PickerText}
-        selectedValue={languageContext.state.language.label}
-        onValueChange={(itemValue, itemIndex) =>
-          languageContext.changeLanguage(itemValue)}>
-        {
-          Object.keys(translations).map((langItem) => {
-            return <Picker.Item
-              color='black' key={langItem}
-              value={langItem}
-              label={translations[langItem].label}/>
-          })
+      <ButtonLogin style={styles(state.theme).ButtonSave}
+        text={languageContext.state.language.logout}
+        onPress={async () => {
+          await clearStorage();
+          navigation.navigate('Signin');
         }
-      </Picker>
-    </View>
-    <Spacer/>
-    <ThemeSwitch Value={languageContext.state.showNotChosenDays === 'true'
-        ? true
-        : false}
-        OnValueChange={() => {
-          _changeShowNotChosenDays()
-      }} Text={languageContext.state.language.showNotChosenDays}/>
-    <ThemeSwitch Value={languageContext.state.longClickHabit === 'true'
-        ? true
-        : false}
-        OnValueChange={() => {
-          _changeLongClickHabit()
-      }} Text={languageContext.state.language.longClickHabit}/>
-    <ButtonLogin style={styles(state.theme).ButtonSave}
-      text={languageContext.state.language.logout}
-      onPress={async () => {
-        await clearStorage();
-        navigation.navigate('Signin');
-      }
-    }/>
-  </ImageBackground>
+      }/>
+    </ImageBackground>
+  </ScrollView>
 </View>)
 };
 
@@ -227,6 +255,7 @@ const styles = (props) => StyleSheet.create({
   Header: {
     fontSize: 18,
     margin: 10,
+    marginBottom: 5,
     marginLeft: 20,
     alignSelf: 'center',
     color: props.headerPlus
@@ -243,8 +272,9 @@ const styles = (props) => StyleSheet.create({
     backgroundColor: props.habitRowBackground,
     // paddingTop: 5,
     // paddingBottom: 5,
-    marginBottom: 5,
-    height: 40,
+    marginBottom: 0,
+    marginTop: 5,
+    height: 37,
     justifyContent: 'center'
   },
   PickerText: {
@@ -258,6 +288,27 @@ const styles = (props) => StyleSheet.create({
         scaleY: 0.9
       }
     ]
+  },
+  Username:{
+    flexDirection: 'row',
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: props.habitRowBackground,
+    marginTop: 5,
+    height: 37,
+  },
+  UsernameLabel:{
+    flex: 4,
+    marginLeft: 20,
+    fontSize: 16,
+    color: props.buttonText,
+  },
+  UsernameText:{
+    flex: 8,
+    fontSize: 16,
+    color: props.buttonText,
+    textAlign: 'left',
   }
 });
 

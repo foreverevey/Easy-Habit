@@ -1,5 +1,6 @@
 import React from 'react';
 import {StyleSheet, Text, View, TouchableOpacity, Dimensions} from 'react-native';
+import { throttle } from "lodash";
 import {FontAwesome} from '@expo/vector-icons';
 
 const MyHeader = (navigation, language) => {
@@ -36,6 +37,17 @@ const MyHeader = (navigation, language) => {
     themeOptions = theme.theme;
   }
 
+  const navigateSettings = () => {
+    navigation.navigate('Settings', {theme: themeOptions, language: language})
+  }
+
+  const navigateCreate = () => {
+    navigation.navigate('Create', {theme: themeOptions, language: language})
+  }
+
+  const handlerSettings = throttle(navigateSettings, 500);
+  const handlerCreate = throttle(navigateCreate, 500);
+
   return {
     headerStyle: {
       backgroundColor: themeOptions?themeOptions.headerBackground:'#ffaf7a',
@@ -47,7 +59,7 @@ const MyHeader = (navigation, language) => {
       <View style={styles.container}>
         {navigation.getParam('selectedHabit') === null && <TouchableOpacity
           style={{marginLeft:30,}}
-          onPress={()=>navigation.navigate('Create', {theme: themeOptions, language: language})}>
+          onPress={()=>handlerCreate()}>
           <FontAwesome style={{color:themeOptions?themeOptions.headerPlus:'#fff',fontSize:30}} name="plus"/>
         </TouchableOpacity>}
         {navigation.getParam('selectedHabit') !== null && <TouchableOpacity
@@ -61,7 +73,7 @@ const MyHeader = (navigation, language) => {
       <View style={styles.container}>
         <TouchableOpacity
           style={{marginRight:30}}
-          onPress={()=>navigation.navigate('Settings', {theme: themeOptions, language: language})}>
+          onPress={()=>handlerSettings()}>
           <FontAwesome style={{color:themeOptions?themeOptions.headerPlus:'#fff',fontSize:30}} name="cog"/>
         </TouchableOpacity>
       </View>

@@ -3,6 +3,7 @@ import {View, Text, TextInput, StyleSheet, TouchableOpacity, ImageBackground} fr
 import {FontAwesome} from '@expo/vector-icons';
 import CheckBox from '@react-native-community/checkbox';
 import {useNetInfo} from "@react-native-community/netinfo";
+import NetInfo from '@react-native-community/netinfo';
 import Spacer from '../components/Spacer';
 import ButtonLogin from '../components/ButtonLogin';
 import MyHeaderSecondary from '../components/HeaderSecondary';
@@ -36,8 +37,14 @@ const CreateHabitScreen = ({navigation}) =>{
   }, [netInfo]);
 
   const createHabit = async (name, description, privateBool, trackedDays) => {
-    await addHabit(name, privateBool, description, trackedDays);
-    navigation.navigate('Home', {language: languageContext.state.language});
+    NetInfo.fetch().then(async state => {
+      if(state.isInternetReachable){
+        await addHabit(name, privateBool, description, trackedDays);
+        navigation.navigate('Home', {language: languageContext.state.language});
+      } else {
+        setErrModalMsg(languageContext.state.language.errorNoInternet);
+      }
+    });
   };
 
   const changeTrackedDays = (day) => {
@@ -52,7 +59,7 @@ const CreateHabitScreen = ({navigation}) =>{
       <ImageBackground source={{uri: themeContext.state.theme.backgroundImage}} style={styles(themeContext.state.theme).ImageBackground}>
         <Spacer>
           <TextInput style={styles(themeContext.state.theme).TextInputName}
-            autoCapitalize="none"
+            autoCapitalize="sentences"
             autoCorrect={false}
             value={name}
             onChangeText={(newValue)=> setName(newValue)}
@@ -63,7 +70,7 @@ const CreateHabitScreen = ({navigation}) =>{
         <Spacer>
           <TextInput style={styles(themeContext.state.theme).TextInputDescription}
             multiline
-            autoCapitalize="none"
+            autoCapitalize="sentences"
             autoCorrect={false}
             value={description}
             onChangeText={(newValue)=> setDescription(newValue)}

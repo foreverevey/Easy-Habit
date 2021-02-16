@@ -1,5 +1,7 @@
 import React from 'react';
 import {StyleSheet, Text, View, TouchableOpacity, Dimensions} from 'react-native';
+import { debounce } from "lodash";
+import { throttle } from "lodash";
 import {FontAwesome} from '@expo/vector-icons';
 
 const MyHeaderSecondary = (navigation, text, theme, language) => {
@@ -22,6 +24,12 @@ const MyHeaderSecondary = (navigation, text, theme, language) => {
     language = languageParam;
   };
 
+  const editNav = () =>{
+    navigation.getParam('editHabit')()
+  }
+
+  const handlerEdit = throttle(editNav, 500);
+
   if(text === 'Habit details'){
     return {
       headerStyle: {
@@ -42,7 +50,7 @@ const MyHeaderSecondary = (navigation, text, theme, language) => {
         <View style={styles.container}>
           <TouchableOpacity
             style={{marginRight:30}}
-            onPress={()=>navigation.getParam('editHabit')()}>
+            onPress={()=>handlerEdit()}>
             <FontAwesome style={{color:theme.headerPlus,fontSize:30}} name={editValue?"times":"edit"}/>
           </TouchableOpacity>
         </View>

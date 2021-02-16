@@ -5,6 +5,7 @@ import {FontAwesome5} from '@expo/vector-icons';
 import Spinner from 'react-native-loading-spinner-overlay';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import {useNetInfo} from "@react-native-community/netinfo";
+import NetInfo from '@react-native-community/netinfo';
 import MyHeader from '../components/Header';
 import HabitRow from '../components/HabitRow';
 import ErrModal from '../components/ErrModal';
@@ -54,46 +55,70 @@ const HomeScreen = ({navigation}) => {
   //TODO add error messages when del habit or new habit goes wrong
 
   const delHabit = async (id) => {
-    try{
-      await deleteHabit(id);
-      setSelectedHabit(null);
-    } catch(error){
-      setErrModalMsg(languageContext.state.language.errorReachingDB);
-      return false;
-    }
+    NetInfo.fetch().then(async state => {
+      if(state.isInternetReachable){
+        try{
+          await deleteHabit(id);
+          setSelectedHabit(null);
+        } catch(error){
+          setErrModalMsg(languageContext.state.language.errorReachingDB);
+          return false;
+        }
+      } else {
+        setErrModalMsg(languageContext.state.language.errorNoInternet);
+      }
+    });
   };
 
   const newHabit = async () => {
-    try{
-      await addHabit();
-    } catch (error){
-      setErrModalMsg(languageContext.state.language.errorReachingDB);
-      return false;
-    }
+    NetInfo.fetch().then(async state => {
+      if(state.isInternetReachable){
+        try{
+          await addHabit();
+        } catch (error){
+          setErrModalMsg(languageContext.state.language.errorReachingDB);
+          return false;
+        }
+      } else {
+        setErrModalMsg(languageContext.state.language.errorNoInternet);
+      }
+    });
   };
 
   const addDate = async (id) =>{
-    try{
-      setLoading(true);
-      await addDateHabit(id, selectedDay).then(()=>{
-        setLoading(false);
-      });
-    } catch(error){
-      setLoading(false);
-      setErrModalMsg(languageContext.state.language.errorReachingDB);
-    }
+    NetInfo.fetch().then(async state => {
+      if(state.isInternetReachable){
+        try{
+          setLoading(true);
+          await addDateHabit(id, selectedDay).then(()=>{
+            setLoading(false);
+          });
+        } catch(error){
+          setLoading(false);
+          setErrModalMsg(languageContext.state.language.errorReachingDB);
+        }
+      } else {
+        setErrModalMsg(languageContext.state.language.errorNoInternet);
+      }
+    });
   };
 
   const removeDate = async (id) =>{
-    try{
-      setLoading(true);
-      await removeDateHabit(id, selectedDay).then(()=>{
-        setLoading(false);
-      });
-    } catch(error){
-      setLoading(false);
-      setErrModalMsg(languageContext.state.language.errorReachingDB);
-    }
+    NetInfo.fetch().then(async state => {
+      if(state.isInternetReachable){
+        try{
+          setLoading(true);
+          await removeDateHabit(id, selectedDay).then(()=>{
+            setLoading(false);
+          });
+        } catch(error){
+          setLoading(false);
+          setErrModalMsg(languageContext.state.language.errorReachingDB);
+        }
+      } else {
+        setErrModalMsg(languageContext.state.language.errorNoInternet);
+      }
+    });
   };
 
   const selectNextDay = () => {
@@ -113,17 +138,23 @@ const HomeScreen = ({navigation}) => {
   };
 
   const loadHabits = () =>{
-    setLoading(true);
-    setErrModalMsg('');
-    getHabits().then((res)=>{
-      if(res){
-        setLoading(false);
-        setReloadButton(false);
+    NetInfo.fetch().then(async state => {
+      if(state.isInternetReachable){
+        setLoading(true);
         setErrModalMsg('');
-      } else{
-        setLoading(false);
-        setErrModalMsg(languageContext.state.language.errorUnableToFetch);
-        setReloadButton(true);
+        getHabits().then((res)=>{
+          if(res){
+            setLoading(false);
+            setReloadButton(false);
+            setErrModalMsg('');
+          } else{
+            setLoading(false);
+            setErrModalMsg(languageContext.state.language.errorUnableToFetch);
+            setReloadButton(true);
+          }
+        });
+      } else {
+        setErrModalMsg(languageContext.state.language.errorNoInternet);
       }
     });
   }
@@ -140,17 +171,28 @@ const HomeScreen = ({navigation}) => {
         newHabit: newHabit,
         selectedHabit: selectedHabit,
         deleteHabit: delHabit
-       });
-      getHabits().then((res)=>{
-        if(res){
-          setLoading(false);
-          console.log(state);
-        } else{
+      });
+      NetInfo.fetch().then(async state => {
+        if(state.isInternetReachable){
+          getHabits().then((res)=>{
+            if(res){
+              setLoading(false);
+              setReloadButton(false);
+              setErrModalMsg('');
+            } else{
+              setLoading(false);
+              setErrModalMsg(languageContext.state.language.errorUnableToFetch);
+              setReloadButton(true);
+            }
+        });
+        } else {
+          setErrModalMsg(languageContext.state.language.errorNoInternet);
           setLoading(false);
           setErrModalMsg(languageContext.state.language.errorUnableToFetch);
           setReloadButton(true);
         }
-    });
+      });
+
   }, []);
 
   useEffect(() => {
@@ -213,7 +255,7 @@ const HomeScreen = ({navigation}) => {
             {reloadButton && <TouchableOpacity style={styles(themeContext.state.theme).ReloadButton} onPress={()=>loadHabits()}>
               <FontAwesome5 style={styles(themeContext.state.theme).Icon} name="sync-alt"/>
             </TouchableOpacity>}
-            {state.length === 0 && <TouchableOpacity style={styles(themeContext.state.theme).FirstCreate}
+            {state.length === 0 && !loading && <TouchableOpacity style={styles(themeContext.state.theme).FirstCreate}
               onPress={()=>navigation.navigate('Create', {theme: themeContext.state.theme, language: languageContext.state.language})}>
               <Text style={styles(themeContext.state.theme).FirstText}>
                 Create your first habbit!
@@ -225,14 +267,12 @@ const HomeScreen = ({navigation}) => {
               keyExtractor={item => item._id}
               extraData={selectedHabit}
               renderItem= {({item}) => {
-                console.log('selectedDay', selectedDay, item);
                 const selDay = new Date(selectedDay);
                 //item.trackedDays['mon'] == false then if selected day == mon and our settings
                 // is not show then not show
                 if(languageContext.state.showNotChosenDays === 'false'){
                   const dayList = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
                   var dayName = dayList[selDay.getDay()];
-                  console.log('dayname', dayName);
                   if(item.trackedDays[dayName]){
                     return (
                       <>

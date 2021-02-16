@@ -53,6 +53,9 @@ export default {
     'successEmailSent': 'Email Sent Succesfully!',
     'showNotChosenDays': 'Show habit on unselected days',
     'longClickHabit': 'Long click to select habit day',
+    'userSettings': 'User Settings',
+    'letUsKnow': 'Feedback',
+    'usernameLabel': 'Username: '
   },
   'Dansk': {
     'label': 'Dansk',
@@ -108,6 +111,9 @@ export default {
     'successEmailSent': 'E-mail sendt med succes!',
     'showNotChosenDays': 'Vis vane på ikke-valgte dage',
     'longClickHabit': 'Langt klik for at vælge vanedag',
+    'userSettings': 'Brugerindstillinger',
+    'letUsKnow': 'Feedback',
+    'usernameLabel': 'Brugernavn: '
   },
   'Lietuvių':{
     'label': 'Lietuvių',
@@ -163,5 +169,8 @@ export default {
     'successEmailSent': 'Atsiliepimas išsiūstas sėkmingai!',
     'showNotChosenDays': 'Rodyti įproti nepasirinktomis dienomis',
     'longClickHabit': 'Ilgas paspaudimas įpročio žymėjimui',
+    'userSettings': 'Vartotojo nustatymai',
+    'letUsKnow': 'Atsiliepimas',
+    'usernameLabel': 'Vartotojas: '
   }
 }

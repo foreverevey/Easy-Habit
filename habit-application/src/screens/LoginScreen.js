@@ -23,41 +23,28 @@ const LoginScreen = ({navigation}) => {
   const [loadingScreen, setLoadingScreen] = useState(true);
   const [errModalMsg, setErrModalMsg] = useState('');
   const netInfo = useNetInfo();
+  const [readyNavigate, setReadyNavigate] = useState(false);
 
   useEffect(()=>{
-    setUserSettings().then((languageCtx)=>{
+    setUserSettings().then(()=>{
       navigation.setParams({ theme: themeContext.state });
       navigation.setParams({ language: languageContext.state });
-      return languageCtx;
-    }).then((languageCtx)=>{
-      NetInfo.fetch().then(state => {
-        if(state.isInternetReachable){
-          tryLocalSignin().then((res)=>{
-            if(res){
-              navigation.navigate('Home', {language: languageCtx});
-            } else {
-              setLoadingScreen(false);
-            }
-          });
-        } else {
-          setErrModalMsg(languageContext.state.language.errorNoInternet);
-        }
-      });
+    }).then(()=>{
+      console.log('loading settings');
+      setReadyNavigate(true);
     });
   }, []);
 
   useEffect(() => {
-    if(netInfo.isInternetReachable){
-      setErrModalMsg('');
-      tryLocalSignin().then((res)=>{
-        if(res){
-          navigation.navigate('Home', {language: languageContext.state.language});
-        } else {
-          setLoadingScreen(false);
-        }
-      });
-    } else {
-      setErrModalMsg(languageContext.state.language.errorNoInternet);
+    if(netInfo.type !== 'unknown' && readyNavigate){
+      console.log('this shit is annoying');
+      if(netInfo.isInternetReachable){
+        setErrModalMsg('');
+        setLoadingScreen(false);
+      } else {
+        // setLoadingScreen(true);
+        setErrModalMsg(languageContext.state.language.errorNoInternet);
+      }
     }
   }, [netInfo]);
 
@@ -69,6 +56,24 @@ const LoginScreen = ({navigation}) => {
     navigation.setParams({ language: languageContext.state });
   }, [languageContext.state]);
 
+  useEffect(() => {
+    if(readyNavigate){
+      NetInfo.fetch().then(state => {
+        if(state.isInternetReachable){
+          tryLocalSignin().then((res)=>{
+            if(res){
+              navigation.navigate('Home', {language: languageContext.state.language});
+            } else {
+              setLoadingScreen(false);
+            }
+          });
+        } else {
+          setErrModalMsg(languageContext.state.language.errorNoInternet);
+        }
+      });
+    };
+  }, [readyNavigate]);
+
   const setUserSettings = async () =>{
     // Load user selected theme and language from storage
     const userTheme = await AsyncStorage.getItem('theme');
@@ -78,25 +83,26 @@ const LoginScreen = ({navigation}) => {
     if(userTheme !== null){
       themeContext.changeTheme(userTheme);
     }
-    // if(userLanguage !== null){
-    //   languageCtx = languageContext.changeLanguage(userLanguage);
-    // }
-    languageCtx = languageContext.loadSettings(userLanguage, showNotChosenDays, longClickHabit);
-    return languageCtx;
+    await languageContext.loadSettings(userLanguage, showNotChosenDays, longClickHabit);
   };
 
   const attemptSignIn = async (email,password) =>{
-    // setLoading(true);
     setLoadingScreen(true);
-    const attempt = await signin({email,password});
-    if(attempt){
-      navigation.navigate('Home', {language: languageContext.state.language});
-    } else {
-      setBadAttempt(true);
-      setPassword('');
-      // setLoading(false);
-      setLoadingScreen(false);
-    }
+    NetInfo.fetch().then(async state => {
+      if(state.isInternetReachable){
+        const attempt = await signin({email,password});
+        if(attempt){
+          navigation.navigate('Home', {language: languageContext.state.language});
+        } else {
+          setBadAttempt(true);
+          setPassword('');
+          // setLoading(false);
+          setLoadingScreen(false);
+        }
+      } else {
+        setErrModalMsg(languageContext.state.language.errorNoInternet);
+      }
+    });
   };
 
   const navigateRegisterScreen = () => {
@@ -111,7 +117,7 @@ const LoginScreen = ({navigation}) => {
       <ErrModal isVisible={errModalMsg!==''?true:false} errMessage={errModalMsg} onPressOutside={()=>setErrModalMsg('')}/>
       {loadingScreen && <View style = {styles(themeContext.state.theme).loadingScreen}>
         <Image source={require('../../assets/movie-icon-11.png')} style={styles(themeContext.state.theme).LoadingImage}/>
-        <Text style={styles(themeContext.state.theme).LoadingText}>habitApp</Text>
+        <Text style={styles(themeContext.state.theme).LoadingText}>Easy Habit</Text>
       </View>}
       <View>
         <Spinner

@@ -22,7 +22,8 @@ const styles = (props) => StyleSheet.create({
     backgroundColor: props.habitRowBackground,
     paddingTop: 5,
     paddingBottom: 5,
-    marginBottom: 5,
+    marginBottom: 0,
+    marginTop: 5,
     elevation: 3,
   },
   Icon:{

@@ -18,6 +18,7 @@ import moment from 'moment';
 import 'moment/min/locales.min'
 import {FontAwesome} from '@expo/vector-icons';
 import CheckBox from '@react-native-community/checkbox';
+import NetInfo from '@react-native-community/netinfo';
 import Spinner from 'react-native-loading-spinner-overlay';
 import calendarTranslations from '../translation/CalendarTranslations';
 import StreakRow from '../components/StreakRow';
@@ -304,11 +305,21 @@ const HabitDetailScreen = ({navigation}) => {
     setEdit(!edit);
   };
 
+
+
   const saveEditHabit = async () => {
     setLoading(true);
-    await editHabit(id, name, privateBool, description, trackedDays);
-    setLoading(false);
-    setEdit(false);
+    NetInfo.fetch().then(async state => {
+      if(state.isInternetReachable){
+        await editHabit(id, name, privateBool, description, trackedDays);
+        setLoading(false);
+        setEdit(false);
+      } else {
+        setErrModalMsg(languageContext.state.language.errorNoInternet);
+        setLoading(false);
+        setEdit(false);
+      }
+    });
   };
 
   const changeTrackedDays = (day) => {

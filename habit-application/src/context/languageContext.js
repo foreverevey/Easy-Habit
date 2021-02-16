@@ -53,7 +53,6 @@ const loadSettings = dispatch => async (language, showNotChosenDays, longClickHa
       longClickHabit
     }
   });
-  return translations[language];
 };
 
 const changeLanguage = dispatch => async (language) =>{
