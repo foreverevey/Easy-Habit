@@ -41,7 +41,7 @@ const RegisterScreen = ({navigation}) => {
         />
       </View>
       <ImageBackground source={{uri: themeContext.state.theme.backgroundImage}} style={styles(themeContext.state.theme).ImageBackground}>
-        <Image source={require('../../assets/movie-icon-11.png')} style={styles(themeContext.state.theme).ImageStyle}/>
+        <Image source={require('../../assets/appLogo.png')} style={styles(themeContext.state.theme).ImageStyle}/>
         <TextInput
           style = {styles(themeContext.state.theme).input}
           autoCapitalize="none"

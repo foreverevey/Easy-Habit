@@ -116,8 +116,7 @@ const LoginScreen = ({navigation}) => {
     <View style={styles(themeContext.state.theme).MainParent}>
       <ErrModal isVisible={errModalMsg!==''?true:false} errMessage={errModalMsg} onPressOutside={()=>setErrModalMsg('')}/>
       {loadingScreen && <View style = {styles(themeContext.state.theme).loadingScreen}>
-        <Image source={require('../../assets/movie-icon-11.png')} style={styles(themeContext.state.theme).LoadingImage}/>
-        <Text style={styles(themeContext.state.theme).LoadingText}>Easy Habit</Text>
+        <Image source={require('../../assets/appLogo.png')} style={styles(themeContext.state.theme).LoadingImage}/>
       </View>}
       <View>
         <Spinner
@@ -127,7 +126,7 @@ const LoginScreen = ({navigation}) => {
         />
       </View>
       {!loadingScreen && <ImageBackground source={{uri: themeContext.state.theme.backgroundImage}} style={styles(themeContext.state.theme).ImageBackground}>
-        <Image source={require('../../assets/movie-icon-11.png')} style={styles(themeContext.state.theme).ImageStyle}/>
+        <Image source={require('../../assets/appLogo.png')} style={styles(themeContext.state.theme).ImageStyle}/>
         <TextInput
           style = {styles(themeContext.state.theme).input}
           autoCapitalize="none"
@@ -235,7 +234,6 @@ const styles = (props) => StyleSheet.create({
     width:100,
     height: 100,
     alignSelf: 'center',
-    marginRight:15,
   },
   LoadingText:{
     alignSelf: 'center',

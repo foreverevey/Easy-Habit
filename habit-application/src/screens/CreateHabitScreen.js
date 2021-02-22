@@ -80,10 +80,10 @@ const CreateHabitScreen = ({navigation}) =>{
             paddingTop={15}/>
         </Spacer>
         <Spacer>
-          <View style={styles(themeContext.state.theme).Grouped}>
+          {false && <View style={styles(themeContext.state.theme).Grouped}>
             <Text style={styles(themeContext.state.theme).Text}>{languageContext.state.language.privateText}</Text>
             <CheckBox value={privateBool} onValueChange={()=>{setPrivateBool(!privateBool)}}/>
-          </View>
+          </View>}
         </Spacer>
         <TrackedDaysList changeTrackedDays={changeTrackedDays} disabled={false} trackedDays={trackedDays}/>
         <ButtonLogin style={styles(themeContext.state.theme).ButtonSave} text={languageContext.state.language.create} onPress={()=>createHabit(name,description, privateBool, trackedDays)}/>

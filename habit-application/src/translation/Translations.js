@@ -24,6 +24,8 @@ export default {
     'settingScreenHeaderText': 'Settings',
     'detailScreenHeaderText': 'Habit details',
     'createScreenHeaderText': 'Create Habit',
+    'aboutScreenHeaderText': 'About',
+    'about': 'About',
     'habitNamePlaceholder': 'Name',
     'habitDescriptionPlaceholder': 'Description',
     'privateText': 'Private',
@@ -55,7 +57,26 @@ export default {
     'longClickHabit': 'Long click to select habit day',
     'userSettings': 'User Settings',
     'letUsKnow': 'Feedback',
-    'usernameLabel': 'Username: '
+    'usernameLabel': 'Username: ',
+    'accordionTitle1': 'About',
+    'accordionContent1': 'This App was developed for educational purposes,'+
+      'for me as a developer to learn, grow and challenge myself with new things.\n'+
+      'Habits and intricacies of cultivating them was always something that interested me.\n'+
+      'Main purpose of this project is to help track your habits, and check daily progress.',
+    'accordionTitle2': 'Technologies',
+    'accordionContent2': 'React Native\n'+
+      'Expo\n'+
+      'AWS lambda\n'+
+      'AWS SES\n'+
+      'MongoDB + Mongoose\n'+
+      'Express.js\n'+
+      'react-native-modal-datetime-picker\n'+
+      'react-native-loading-spinner-overlay\n'+
+      'react-native-community/netinfo\n'+
+      'react-native-collapsible/Accordion\n'+
+      'react-native-chart-kit\n'+
+      'react-native-calendars\n'+
+      'moment.js',
   },
   'Dansk': {
     'label': 'Dansk',
@@ -82,6 +103,8 @@ export default {
     'settingScreenHeaderText': 'Indstillinger',
     'detailScreenHeaderText': 'Vaneoplysninger',
     'createScreenHeaderText': 'Opret vane',
+    'aboutScreenHeaderText': 'Om',
+    'about': 'Om',
     'habitNamePlaceholder': 'Navn',
     'habitDescriptionPlaceholder': 'Beskrivelse',
     'privateText': 'Privat',
@@ -113,7 +136,26 @@ export default {
     'longClickHabit': 'Langt klik for at vælge vanedag',
     'userSettings': 'Brugerindstillinger',
     'letUsKnow': 'Feedback',
-    'usernameLabel': 'Brugernavn: '
+    'usernameLabel': 'Brugernavn: ',
+    'accordionTitle1': 'About',
+    'accordionContent1': 'This App was developed for educational purposes,'+
+    'for me as a developer to learn, grow and challenge myself with new things.'+
+    'Habits and intricacies of cultivating them was always something that interested me.'+
+    'Main purpose of this project is to help track your habits, and check daily progress.',
+    'accordionTitle2': 'Technologies',
+    'accordionContent2': 'React Native\n'+
+      'Expo\n'+
+      'AWS lambda\n'+
+      'AWS SES\n'+
+      'MongoDB + Mongoose\n'+
+      'Express.js\n'+
+      'react-native-modal-datetime-picker\n'+
+      'react-native-loading-spinner-overlay\n'+
+      'react-native-community/netinfo\n'+
+      'react-native-collapsible/Accordion\n'+
+      'react-native-chart-kit\n'+
+      'react-native-calendars\n'+
+      'moment.js',
   },
   'Lietuvių':{
     'label': 'Lietuvių',
@@ -140,6 +182,8 @@ export default {
     'settingScreenHeaderText': 'Nustatymai',
     'detailScreenHeaderText': 'Įpročio detalės',
     'createScreenHeaderText': 'Sukurti Įprotį',
+    'aboutScreenHeaderText': 'Apie',
+    'about': 'Apie',
     'habitNamePlaceholder': 'Pavadinimas',
     'habitDescriptionPlaceholder': 'Aprašymas',
     'privateText': 'Privatus',
@@ -171,6 +215,25 @@ export default {
     'longClickHabit': 'Ilgas paspaudimas įpročio žymėjimui',
     'userSettings': 'Vartotojo nustatymai',
     'letUsKnow': 'Atsiliepimas',
-    'usernameLabel': 'Vartotojas: '
+    'usernameLabel': 'Vartotojas: ',
+    'accordionTitle1': 'About',
+    'accordionContent1': 'This App was developed for educational purposes,'+
+    'for me as a developer to learn, grow and challenge myself with new things.'+
+    'Habits and intricacies of cultivating them was always something that interested me.'+
+    'Main purpose of this project is to help track your habits, and check daily progress.',
+    'accordionTitle2': 'Technologies',
+    'accordionContent2': 'React Native\n'+
+      'Expo\n'+
+      'AWS lambda\n'+
+      'AWS SES\n'+
+      'MongoDB + Mongoose\n'+
+      'Express.js\n'+
+      'react-native-modal-datetime-picker\n'+
+      'react-native-loading-spinner-overlay\n'+
+      'react-native-community/netinfo\n'+
+      'react-native-collapsible/Accordion\n'+
+      'react-native-chart-kit\n'+
+      'react-native-calendars\n'+
+      'moment.js',
   }
 }

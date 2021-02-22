@@ -358,7 +358,7 @@ const HabitDetailScreen = ({navigation}) => {
                 placeholder={languageContext.state.language.habitDescriptionPlaceholder}
                 paddingLeft={15}
                 paddingTop={15}/>
-              <View style={styles(themeContext.state.theme).Grouped}>
+              {false && <View style={styles(themeContext.state.theme).Grouped}>
                 <Text style={styles(themeContext.state.theme).Text}>{languageContext.state.language.privateText}</Text>
                 <CheckBox
                   style={styles(themeContext.state.theme).CheckboxPrivate}
@@ -367,7 +367,7 @@ const HabitDetailScreen = ({navigation}) => {
                   onValueChange={setPrivateBool}
                   tintColors={{true:themeContext.state.theme.checkPlus, false:themeContext.state.theme.habitRowBackground}}
                   />
-              </View>
+              </View>}
               <TrackedDaysList changeTrackedDays={changeTrackedDays} disabled={edit?false:true} trackedDays={trackedDays}/>
               {edit && <ButtonLogin style={styles(themeContext.state.theme).ButtonSave} text={languageContext.state.language.save} onPress={()=>{
                   saveEditHabit();

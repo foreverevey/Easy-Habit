@@ -223,7 +223,9 @@ const SettingsScreen = ({navigation}) => {
           {email}
         </Text>
       </View>
-
+      <LineButton
+        text={languageContext.state.language.about}
+        onPress={() => navigation.navigate('About', {theme: state.theme, language: languageContext.state.language})} type='info'/>
       <ButtonLogin style={styles(state.theme).ButtonSave}
         text={languageContext.state.language.logout}
         onPress={async () => {

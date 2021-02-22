@@ -7,6 +7,7 @@ import RegisterScreen from './src/screens/RegisterScreen';
 import LoginScreen from './src/screens/LoginScreen';
 import HomeScreen from './src/screens/HomeScreen';
 import CreateHabitScreen from './src/screens/CreateHabitScreen';
+import AboutScreen from './src/screens/AboutScreen.js';
 import {Provider} from './src/context/authContext';
 import { setNavigator } from './src/navigationRef';
 import {Provider as HabitProvider} from './src/context/habitContext';
@@ -25,6 +26,7 @@ const SwitchNavigator = createSwitchNavigator({
     Create: CreateHabitScreen,
     Detail: HabitDetailScreen,
     Settings: SettingsScreen,
+    About: AboutScreen,
   })
     // initialRouteName:  'AuthLoading',
 });

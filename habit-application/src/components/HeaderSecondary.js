@@ -108,8 +108,30 @@ const MyHeaderSecondary = (navigation, text, theme, language) => {
       ),
       headerTitleAlign: 'center',
     };
+  } else if(text === 'About Screen') {
+    return {
+      headerStyle: {
+        backgroundColor: theme.headerBackground,
+        borderBottomColor: 'black',
+        height: screenHeight * 0.15,
+      },
+      headerLeft: () => (
+        <View style={styles.container}>
+          <TouchableOpacity
+            style={{alignItems: 'center', marginLeft:10, width:60, textAlign:'center', textAlignVertical:'center'}}
+            onPress={()=>navigation.goBack()}>
+            <FontAwesome style={{color:theme.headerPlus,fontSize:30}} name="angle-left"/>
+          </TouchableOpacity>
+        </View>
+      ),
+      headerTitle: () => (
+        <View style={styles.container}>
+          <Text style={{color:theme.headerPlus,fontSize:30}}>{language.aboutScreenHeaderText}</Text>
+        </View>
+      ),
+      headerTitleAlign: 'center',
+    };
   }
-
 };
 
 const styles = StyleSheet.create({
