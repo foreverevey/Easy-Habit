@@ -15,11 +15,13 @@ import {Provider as ThemeProvider} from './src/context/themeContext';
 import {Provider as LanguageProvider} from './src/context/languageContext';
 import HabitDetailScreen from './src/screens/HabitDetailScreen';
 import SettingsScreen from './src/screens/SettingsScreen';
+import ForgotPasswordScreen from './src/screens/ForgotPassword';
 
 const SwitchNavigator = createSwitchNavigator({
   loginFlow: createStackNavigator({
     Signin: LoginScreen,
     Signup: RegisterScreen,
+    Forgot: ForgotPasswordScreen,
   }),
   mainFlow: createStackNavigator({
     Home: HomeScreen,

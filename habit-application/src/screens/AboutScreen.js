@@ -1,5 +1,5 @@
 import React, {useState, useEffect, useContext} from 'react';
-import {View, Text, TextInput, StyleSheet, TouchableOpacity, ImageBackground, Image} from 'react-native';
+import {View, Text, TextInput, StyleSheet, TouchableOpacity, ImageBackground, Image, ScrollView, Dimensions} from 'react-native';
 import {FontAwesome} from '@expo/vector-icons';
 import MyHeaderSecondary from '../components/HeaderSecondary';
 import {MyContext as ThemeContext} from '../context/themeContext';
@@ -10,6 +10,7 @@ const AboutScreen = ({navigation}) =>{
   const themeContext = useContext(ThemeContext);
   const languageContext = useContext(LanguageContext);
   const [activeSections, setActiveSections] = useState([0]);
+  const screenHeight = Dimensions.get('window').height;
 
   const SECTIONS = [
     {
@@ -20,6 +21,10 @@ const AboutScreen = ({navigation}) =>{
       title: languageContext.state.language.accordionTitle2,
       content: languageContext.state.language.accordionContent2,
     },
+    {
+      title: languageContext.state.language.accordionTitle3,
+      content: languageContext.state.language.accordionContent3,
+    }
   ];
 
   _renderHeader = section => {
@@ -36,7 +41,7 @@ const AboutScreen = ({navigation}) =>{
     // console.log('index', index, activeSections.includes(index), activeSections);
     return (
       <View style={styles(themeContext.state.theme).content}>
-        <Text>{section.content}</Text>
+        <Text style={styles(themeContext.state.theme).headerContentText}>{section.content}</Text>
       </View>
     );
   };
@@ -47,20 +52,21 @@ const AboutScreen = ({navigation}) =>{
 
   return (
     <View style={styles(themeContext.state.theme).MainParent}>
-      <ImageBackground source={{uri: themeContext.state.theme.backgroundImage}} style={styles(themeContext.state.theme).ImageBackground}>
-
-        <Accordion
-          sections={SECTIONS}
-          activeSections={activeSections}
-          renderHeader={(item)=>_renderHeader(item)}
-          renderContent={(item)=>_renderContent(item)}
-          onChange={(item)=>_updateSections(item)}
-          expandMultiple={true}
-        />
-        <Image source={require('../../assets/appLogo.png')} style={styles(themeContext.state.theme).ImageStyle}/>
-        <Text style={styles(themeContext.state.theme).Text}>Version 0.0.1</Text>
-        <Text style={styles(themeContext.state.theme).Text}>Created by Simonas Kralikas</Text>
-      </ImageBackground>
+      <ScrollView contentContainerStyle={{ flex: 1 }}>
+        <ImageBackground source={{uri: themeContext.state.theme.backgroundImage}} style={styles(themeContext.state.theme).ImageBackground}>
+          <Accordion
+            sections={SECTIONS}
+            activeSections={activeSections}
+            renderHeader={(item)=>_renderHeader(item)}
+            renderContent={(item)=>_renderContent(item)}
+            onChange={(item)=>_updateSections(item)}
+            expandMultiple={true}
+          />
+          <Image source={require('../../assets/appLogo.png')} style={styles(themeContext.state.theme).ImageStyle}/>
+          <Text style={styles(themeContext.state.theme).Text}>{languageContext.state.language.version}</Text>
+          <Text style={styles(themeContext.state.theme).Text}>{languageContext.state.language.createdBy}</Text>
+        </ImageBackground>
+      </ScrollView>
     </View>
   )
 };
@@ -106,6 +112,10 @@ const styles = (props) => StyleSheet.create({
     color: props.buttonText,
     marginLeft: 15,
     marginBottom:5,
+  },
+  headerContentText:{
+    lineHeight: 20,
+    textAlign: 'left',
   }
 });
 

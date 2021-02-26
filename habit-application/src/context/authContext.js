@@ -13,6 +13,12 @@ const authReducer = (state, action) => {
     // REGISTER
     case 'signup':
       return {errorMessage: '', token: action.payload}
+    case 'forgot':
+      return state
+    case 'submit':
+      return state
+    case 'change':
+      return state
     default:
       return state;
   }
@@ -47,7 +53,7 @@ const signin = dispatch => {
 const signup = (dispatch) =>{
   return async ({email, password})=>{
     try{
-      const response = await habitApi.post('signup', {email, password});
+      const response = await habitApi.post('/signup', {email, password});
       await AsyncStorage.setItem('token', response.data.token);
       await AsyncStorage.setItem('email', email);
       dispatch({type:'signup', payload: response.data.token});
@@ -59,9 +65,52 @@ const signup = (dispatch) =>{
   };
 };
 
+const forgotPassword = (dispatch) => async ({email}) => {
+  try{
+    console.log('is this working');
+    const response = await habitApi.post('/signin/forgot', {email});
+    console.log('resp', response);
+    console.log('hi');
+    dispatch({type:'forgot', payload: null});
+    return true;
+  }catch(err){
+    console.log('err', err, err.response);
+    dispatch({type: 'add_error', payload: err.response.data.error});
+    return false;
+  }
+};
+
+const submitCode = (dispatch) => {
+  return async ({email, code})=>{
+    try{
+      const response = await habitApi.post('/signin/submit', {email, code});
+      console.log('resp', response);
+      dispatch({type:'submit', payload: null});
+      return true;
+    }catch(err){
+      dispatch({type: 'add_error', payload: err.response.data.error});
+      return false;
+    }
+  };
+};
+
+const submitPassword = (dispatch) => {
+  return async ({email, password})=>{
+    try{
+      const response = await habitApi.post('/signin/change', {email, password});
+      console.log('resp', response);
+      dispatch({type:'change', payload: null});
+      return true;
+    }catch(err){
+      dispatch({type: 'add_error', payload: err.response.data.error});
+      return false;
+    }
+  };
+};
+
 
 export const { MyContext , Provider} = createDataContext(
   authReducer,
-  {signin, signup, tryLocalSignin},
+  {signin, signup, tryLocalSignin, forgotPassword, submitCode, submitPassword},
   { token: null, errorMessage: ''}
 );

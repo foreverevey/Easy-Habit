@@ -4,6 +4,7 @@ import {FontAwesome} from '@expo/vector-icons';
 import CheckBox from '@react-native-community/checkbox';
 import {useNetInfo} from "@react-native-community/netinfo";
 import NetInfo from '@react-native-community/netinfo';
+import Spinner from 'react-native-loading-spinner-overlay';
 import Spacer from '../components/Spacer';
 import ButtonLogin from '../components/ButtonLogin';
 import MyHeaderSecondary from '../components/HeaderSecondary';
@@ -27,6 +28,7 @@ const CreateHabitScreen = ({navigation}) =>{
     'Sat': true, 'Sun': true});
   const [errModalMsg, setErrModalMsg] = useState('');
   const netInfo = useNetInfo();
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if(!netInfo.isInternetReachable){
@@ -39,10 +41,14 @@ const CreateHabitScreen = ({navigation}) =>{
   const createHabit = async (name, description, privateBool, trackedDays) => {
     NetInfo.fetch().then(async state => {
       if(state.isInternetReachable){
-        await addHabit(name, privateBool, description, trackedDays);
-        navigation.navigate('Home', {language: languageContext.state.language});
+        setLoading(true);
+        await addHabit(name, privateBool, description, trackedDays).then(()=>{
+          setLoading(false);
+          navigation.navigate('Home', {language: languageContext.state.language});
+        });
       } else {
         setErrModalMsg(languageContext.state.language.errorNoInternet);
+        setLoading(false);
       }
     });
   };
@@ -56,6 +62,13 @@ const CreateHabitScreen = ({navigation}) =>{
   return (
     <View style={styles(themeContext.state.theme).MainParent}>
       <ErrModal isVisible={errModalMsg!==''?true:false} errMessage={errModalMsg} onPressOutside={()=>setErrModalMsg('')}/>
+      <View>
+        <Spinner
+          visible={loading?true:false}
+          textContent={languageContext.state.language.spinnerLoading}
+          textStyle={styles(themeContext.state.theme).spinnerTextStyle}
+        />
+      </View>
       <ImageBackground source={{uri: themeContext.state.theme.backgroundImage}} style={styles(themeContext.state.theme).ImageBackground}>
         <Spacer>
           <TextInput style={styles(themeContext.state.theme).TextInputName}
@@ -174,6 +187,9 @@ const styles = (props) => StyleSheet.create({
     height: 45,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  spinnerTextStyle: {
+    color: '#FFF'
   },
 });
 

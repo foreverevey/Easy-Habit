@@ -10,7 +10,11 @@ const userSchema = new mongoose.Schema({
   password:{
     type: String,
     required: true
-  }
+  },
+  code:{
+    type: String,
+    required: false,
+  },
 });
 //hashing and salting process
 userSchema.pre('save', function(next){
@@ -28,7 +32,31 @@ userSchema.pre('save', function(next){
       if (err){
         return next(err);
       }
+      console.log('hashing user password');
       user.password = hash;
+      next();
+    });
+  });
+});
+
+userSchema.pre('findOneAndUpdate', function(next){
+  const password = this.getUpdate().$set.password;
+  console.log('update user pass', password);
+  if (!password) {
+      return next();
+  }
+
+  bcrypt.genSalt(10, (err, salt)=>{
+    if(err){
+      return next(err);
+    }
+
+    bcrypt.hash(password, salt, (err, hash)=>{
+      if (err){
+        return next(err);
+      }
+      console.log('hashing user password on update', hash);
+      this.getUpdate().$set.password = hash;
       next();
     });
   });

@@ -58,10 +58,14 @@ const HomeScreen = ({navigation}) => {
     NetInfo.fetch().then(async state => {
       if(state.isInternetReachable){
         try{
-          await deleteHabit(id);
+          setLoading(true);
+          await deleteHabit(id).then(()=>{
+            setLoading(false);
+          });
           setSelectedHabit(null);
         } catch(error){
           setErrModalMsg(languageContext.state.language.errorReachingDB);
+          setLoading(false);
           return false;
         }
       } else {
@@ -395,8 +399,7 @@ const styles = (props) => StyleSheet.create({
     margin:20,
     textAlign: "center",
     color: props.headerPlus,
-  }
-
-})
+  },
+});
 
 export default HomeScreen;

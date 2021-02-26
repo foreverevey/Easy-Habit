@@ -1,6 +1,7 @@
 import React, {useContext, useState} from 'react';
 import {View, Text, TextInput, StyleSheet, Image, ImageBackground} from 'react-native';
 import Spinner from 'react-native-loading-spinner-overlay';
+import isEmail from 'validator/lib/isEmail';
 import ButtonLogin from '../components/ButtonLogin';
 import PasswordLock from '../components/PasswordLock';
 import SimpleTextLogin from '../components/SimpleTextLogin';
@@ -17,17 +18,24 @@ const RegisterScreen = ({navigation}) => {
   const [hiddenState, setHiddenState] = useState(true);
   const [loading, setLoading] = useState(false);
   const [badAttempt, setBadAttempt] = useState(false);
+  const [emailValidate, setEmailValidate] = useState(true);
 
   const attemptSignUp = async (email,password) =>{
-    setLoading(true);
-    const attempt = await signup({email,password});
-    if(attempt){
-      navigation.navigate('Home', {language: languageContext.state.language});
+    const validateEmail = isEmail(email);
+    if(validateEmail){
+      setLoading(true);
+      setEmailValidate(true);
+      const attempt = await signup({email,password});
+      if(attempt){
+        navigation.navigate('Home', {language: languageContext.state.language});
+      } else {
+        setBadAttempt(true);
+        setPassword('');
+        setEmail('');
+        setLoading(false);
+      }
     } else {
-      setBadAttempt(true);
-      setPassword('');
-      setEmail('');
-      setLoading(false);
+      setEmailValidate(false);
     }
   };
 
@@ -67,6 +75,9 @@ const RegisterScreen = ({navigation}) => {
         </View>
         {badAttempt && <View>
           <Text style={styles(themeContext.state.theme).errorMessage}>{languageContext.state.language.registerScreenWrong}</Text>
+        </View>}
+        {!emailValidate && <View>
+          <Text style={styles(themeContext.state.theme).errorMessage}>{languageContext.state.language.registerScreenValidate}</Text>
         </View>}
         <ButtonLogin style={styles(themeContext.state.theme).Button} text={languageContext.state.language.register} onPress={()=>attemptSignUp(email,password)}/>
         <SimpleTextLogin/>

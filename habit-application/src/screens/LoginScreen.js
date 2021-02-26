@@ -112,6 +112,13 @@ const LoginScreen = ({navigation}) => {
     navigation.navigate('Signup');
   };
 
+  const navigateForgotPasswordScreen = () => {
+    setBadAttempt(false);
+    setPassword('');
+    setEmail('');
+    navigation.navigate('Forgot', {theme: themeContext.state.theme, language: languageContext.state.language});
+  };
+
   return (
     <View style={styles(themeContext.state.theme).MainParent}>
       <ErrModal isVisible={errModalMsg!==''?true:false} errMessage={errModalMsg} onPressOutside={()=>setErrModalMsg('')}/>
@@ -155,7 +162,7 @@ const LoginScreen = ({navigation}) => {
           <Text style={styles(themeContext.state.theme).errorMessage}>{languageContext.state.language.loginScreenWrong}</Text>
         </View>}
         <ButtonLogin style={styles(themeContext.state.theme).Button} text={languageContext.state.language.login} onPress={()=>attemptSignIn(email,password)}/>
-        <SimpleTextLogin text={languageContext.state.language.loginScreenSimpleText1}/>
+        <SimpleTextLogin text={languageContext.state.language.loginScreenSimpleText1} onPress={()=>navigateForgotPasswordScreen()}/>
         <SimpleTextLogin text={languageContext.state.language.loginScreenSimpleText2} onPress={()=>navigateRegisterScreen()}/>
       </ImageBackground>}
     </View>

@@ -5,6 +5,7 @@ export default {
     'spinnerLoading': 'Loading...',
     'userNameInputPlaceholder': 'Email',
     'passwordInputPlaceholder': 'Password',
+    'CodeInputPlaceholder': 'Code',
     'login': 'Login',
     'loginScreenSimpleText1': 'Forgot Password?',
     'loginScreenSimpleText2': `Don't have an acount?\nRegister here`,
@@ -12,6 +13,7 @@ export default {
     'register': 'Register',
     'registerScreenSimpleText1': `Already have an acount?\nLogin here`,
     'registerScreenWrong': 'Account with this Email already exists',
+    'registerScreenValidate': 'Not a valid Email, try again!',
     'bugModalTitle': 'Report a Bug!',
     'feedbackModalTitle': 'Provide your feedback!',
     'themeOptions': 'Theme Options',
@@ -25,6 +27,7 @@ export default {
     'detailScreenHeaderText': 'Habit details',
     'createScreenHeaderText': 'Create Habit',
     'aboutScreenHeaderText': 'About',
+    'forgotPasswordHeaderText': 'Forgot Password',
     'about': 'About',
     'habitNamePlaceholder': 'Name',
     'habitDescriptionPlaceholder': 'Description',
@@ -39,6 +42,7 @@ export default {
     'sun': 'Sun',
     'create': 'Create',
     'save': 'Save',
+    'submit': 'Submit',
     'longestStreak': 'Longest Streak ',
     'currentStreak': 'Current Streak ',
     'contributionGraph': 'Contribution Graph',
@@ -77,13 +81,19 @@ export default {
       'react-native-chart-kit\n'+
       'react-native-calendars\n'+
       'moment.js',
-  },
+    'accordionTitle3': 'Changelog',
+    'accordionContent3': 'Added loading spinner when deleting or creating habits\n'+
+      'Changed error message background for better visibility',
+    'version': 'Version 0.0.1',
+    'createdBy': 'Created by Simonas Kralikas'
+    },
   'Dansk': {
     'label': 'Dansk',
     'code': 'da',
     'spinnerLoading': 'Indlæser...',
     'userNameInputPlaceholder': 'E-mail',
     'passwordInputPlaceholder': 'Adgangskode',
+    'CodeInputPlaceholder': 'Code',
     'login': 'Log på',
     'loginScreenSimpleText1': 'Glemt kodeord?',
     'loginScreenSimpleText2': `Har du ikke en konto?\nTilmeld dig her`,
@@ -91,6 +101,7 @@ export default {
     'register': 'Tilmeld',
     'registerScreenSimpleText1': `Har du allerede en konto?\nLog ind her`,
     'registerScreenWrong': 'Konto med denne e-mail findes allerede',
+    'registerScreenValidate': 'Ikke en gyldig e-mail, prøv igen!',
     'bugModalTitle': 'Anmeld en fejl!',
     'feedbackModalTitle': 'Giv din feedback!',
     'themeOptions': 'Temaindstillinger',
@@ -104,6 +115,7 @@ export default {
     'detailScreenHeaderText': 'Vaneoplysninger',
     'createScreenHeaderText': 'Opret vane',
     'aboutScreenHeaderText': 'Om',
+    'forgotPasswordHeaderText': 'Glemt adgangskode',
     'about': 'Om',
     'habitNamePlaceholder': 'Navn',
     'habitDescriptionPlaceholder': 'Beskrivelse',
@@ -118,6 +130,7 @@ export default {
     'sun': 'Søn',
     'create': 'Skab',
     'save': 'Gemme',
+    'submit': 'Send',
     'longestStreak': 'Længste række ',
     'currentStreak': 'Nuværende streg ',
     'contributionGraph': 'Bidrag graf',
@@ -137,12 +150,12 @@ export default {
     'userSettings': 'Brugerindstillinger',
     'letUsKnow': 'Feedback',
     'usernameLabel': 'Brugernavn: ',
-    'accordionTitle1': 'About',
-    'accordionContent1': 'This App was developed for educational purposes,'+
-    'for me as a developer to learn, grow and challenge myself with new things.'+
-    'Habits and intricacies of cultivating them was always something that interested me.'+
-    'Main purpose of this project is to help track your habits, and check daily progress.',
-    'accordionTitle2': 'Technologies',
+    'accordionTitle1': 'Om',
+    'accordionContent1': 'Denne app er udviklet til uddannelsesmæssige formål,'+
+    'for mig som udvikler at lære, vokse og udfordre mig selv med nye ting.'+
+    'Vaner og vanskeligheder ved at dyrke dem var altid noget, der interesserede mig.'+
+    'Hovedformålet med dette projekt er at hjælpe med at spore dine vaner og kontrollere daglige fremskridt.',
+    'accordionTitle2': 'Teknologier',
     'accordionContent2': 'React Native\n'+
       'Expo\n'+
       'AWS lambda\n'+
@@ -156,6 +169,11 @@ export default {
       'react-native-chart-kit\n'+
       'react-native-calendars\n'+
       'moment.js',
+    'accordionTitle3': 'Changelog',
+    'accordionContent3': 'Tilføjet loading spinner, når du sletter eller skaber vaner\n'+
+      'Ændret baggrund for fejlmeddelelse for bedre synlighed',
+    'version': 'Version 0.0.1',
+    'createdBy': 'Lavet af Simonas Kralikas'
   },
   'Lietuvių':{
     'label': 'Lietuvių',
@@ -163,6 +181,7 @@ export default {
     'spinnerLoading': 'Atnaujinama...',
     'userNameInputPlaceholder': 'El. paštas',
     'passwordInputPlaceholder': 'Slaptažodis',
+    'CodeInputPlaceholder': 'Kodas',
     'login': 'Prisijungti',
     'loginScreenSimpleText1': 'Pamiršote slaptažodį?',
     'loginScreenSimpleText2': `Neturite paskyros?\nRegistruokitės čia`,
@@ -170,6 +189,7 @@ export default {
     'register': 'Registruotis',
     'registerScreenSimpleText1': `Jau turite paskyrą?\nPrisijunkite čia`,
     'registerScreenWrong': 'Vartotojas su tokiu el.paštu jau egzistuoja',
+    'registerScreenValidate': 'Netinkamas el. Pašto adresas, bandykite dar kartą!',
     'bugModalTitle': 'Praneškite apie Problemą!',
     'feedbackModalTitle': 'Palikite atsiliepimą!',
     'themeOptions': 'Temų valdymas',
@@ -183,6 +203,7 @@ export default {
     'detailScreenHeaderText': 'Įpročio detalės',
     'createScreenHeaderText': 'Sukurti Įprotį',
     'aboutScreenHeaderText': 'Apie',
+    'forgotPasswordHeaderText': 'Pamiršau slaptažodį',
     'about': 'Apie',
     'habitNamePlaceholder': 'Pavadinimas',
     'habitDescriptionPlaceholder': 'Aprašymas',
@@ -197,6 +218,7 @@ export default {
     'sun': 'Sek',
     'create': 'Sukurti',
     'save': 'Išsaugoti',
+    'submit': 'Pateikti',
     'longestStreak': 'Ilgiausias Periodas ',
     'currentStreak': 'Dabartinis Periodas ',
     'contributionGraph': 'Dieninė diagrama',
@@ -216,12 +238,12 @@ export default {
     'userSettings': 'Vartotojo nustatymai',
     'letUsKnow': 'Atsiliepimas',
     'usernameLabel': 'Vartotojas: ',
-    'accordionTitle1': 'About',
-    'accordionContent1': 'This App was developed for educational purposes,'+
-    'for me as a developer to learn, grow and challenge myself with new things.'+
-    'Habits and intricacies of cultivating them was always something that interested me.'+
-    'Main purpose of this project is to help track your habits, and check daily progress.',
-    'accordionTitle2': 'Technologies',
+    'accordionTitle1': 'Apie',
+    'accordionContent1': 'Ši aplikacija sukurta mokymosi tikslais,'+
+    'man kaip programuotojui mokytis, augti ir kurti naujus dalykus.'+
+    'Įpročiai ir jų ugdymas visada mane domino ir įkvėpė sukurti šią programelę.'+
+    'Pagrindinis aplikacijos tikslas sekti kasdienius įpročius ir padėti juos išsiugdyti.',
+    'accordionTitle2': 'Technologijos',
     'accordionContent2': 'React Native\n'+
       'Expo\n'+
       'AWS lambda\n'+
@@ -235,5 +257,10 @@ export default {
       'react-native-chart-kit\n'+
       'react-native-calendars\n'+
       'moment.js',
+    'accordionTitle3': 'Pakeitimų žurnalas',
+    'accordionContent3': 'Pridedamas suktuko įkėlimas ištrinant ar kuriant įpročius\n'+
+      'Pakeistas klaidos pranešimo fonas, kad būtų geriau matomas',
+    'version': 'Versija 0.0.1',
+    'createdBy': 'Kūrėjas - Simonas Kralikas'
   }
 }

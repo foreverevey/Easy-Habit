@@ -131,6 +131,29 @@ const MyHeaderSecondary = (navigation, text, theme, language) => {
       ),
       headerTitleAlign: 'center',
     };
+  } else if(text === 'Forgot Password') {
+    return {
+      headerStyle: {
+        backgroundColor: theme.headerBackground,
+        borderBottomColor: 'black',
+        height: screenHeight * 0.15,
+      },
+      headerLeft: () => (
+        <View style={styles.container}>
+          <TouchableOpacity
+            style={{alignItems: 'center', marginLeft:10, width:60, textAlign:'center', textAlignVertical:'center'}}
+            onPress={()=>navigation.goBack()}>
+            <FontAwesome style={{color:theme.headerPlus,fontSize:30}} name="angle-left"/>
+          </TouchableOpacity>
+        </View>
+      ),
+      headerTitle: () => (
+        <View>
+          <Text style={{color:theme.headerPlus,fontSize:20}}>{language.forgotPasswordHeaderText}</Text>
+        </View>
+      ),
+      headerTitleAlign: 'center',
+    };
   }
 };
 
