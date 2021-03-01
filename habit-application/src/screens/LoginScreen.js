@@ -2,6 +2,10 @@ import React, {useState, useContext, useEffect} from 'react';
 import {View, Text, TextInput, StyleSheet, Image, AsyncStorage, ImageBackground} from 'react-native';
 import Spinner from 'react-native-loading-spinner-overlay';
 import {useNetInfo} from "@react-native-community/netinfo";
+import changeNavigationBarColor, {
+  hideNavigationBar,
+  showNavigationBar,
+} from 'react-native-navigation-bar-color';
 import NetInfo from '@react-native-community/netinfo';
 import ButtonLogin from '../components/ButtonLogin';
 import PasswordLock from '../components/PasswordLock';
@@ -37,7 +41,6 @@ const LoginScreen = ({navigation}) => {
 
   useEffect(() => {
     if(netInfo.type !== 'unknown' && readyNavigate){
-      console.log('this shit is annoying');
       if(netInfo.isInternetReachable){
         setErrModalMsg('');
         setLoadingScreen(false);
@@ -80,6 +83,12 @@ const LoginScreen = ({navigation}) => {
     const userLanguage = await AsyncStorage.getItem('language');
     const showNotChosenDays = await AsyncStorage.getItem('showNotChosenDays');
     const longClickHabit = await AsyncStorage.getItem('longClickHabit');
+    // try{
+    //   changeNavigationBarColor('black');
+    //   // hideNavigationBar();
+    // } catch(e){
+    //   console.log('navigationcolor problem');
+    // }
     if(userTheme !== null){
       themeContext.changeTheme(userTheme);
     }

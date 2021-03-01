@@ -65,6 +65,7 @@ const AboutScreen = ({navigation}) =>{
           <Image source={require('../../assets/appLogo.png')} style={styles(themeContext.state.theme).ImageStyle}/>
           <Text style={styles(themeContext.state.theme).Text}>{languageContext.state.language.version}</Text>
           <Text style={styles(themeContext.state.theme).Text}>{languageContext.state.language.createdBy}</Text>
+          <Text style={styles(themeContext.state.theme).Text}>{languageContext.state.language.contact}</Text>
         </ImageBackground>
       </ScrollView>
     </View>

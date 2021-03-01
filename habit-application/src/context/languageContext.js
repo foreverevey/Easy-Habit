@@ -64,5 +64,5 @@ const changeLanguage = dispatch => async (language) =>{
 export const { MyContext , Provider} = createDataContext(
   languageReducer,
   {changeLanguage, loadSettings, changeShowDays, changeLongClick},
-  { language: translations['English'], showNotChosenDays: 'true', longClickHabit: 'true'}
+  { language: translations['English'], showNotChosenDays: 'true', longClickHabit: 'false'}
 );

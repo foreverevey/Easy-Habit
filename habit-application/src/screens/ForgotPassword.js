@@ -21,6 +21,8 @@ const ForgotPasswordScreen = ({navigation}) => {
   const [changePassword, setChangePassword] = useState(false);
   const [password, setPassword] = useState('');
   const [emailValidate, setEmailValidate] = useState(true);
+  const [emailExist, setEmailExist] = useState(true);
+  const [codeValidate, setCodeValidate] = useState(true);
 
   const submitEmail = async (email) => {
     const validateEmail = isEmail(email);
@@ -34,7 +36,8 @@ const ForgotPasswordScreen = ({navigation}) => {
         setEnterCode(true);
         setLoading(false);
       } else {
-        setEmail('');
+        // setEmail('');
+        setEmailExist(false);
         setLoading(false);
       }
     } else {
@@ -46,12 +49,15 @@ const ForgotPasswordScreen = ({navigation}) => {
     setLoading(true);
     const attempt = await submitCode({email, code});
     // const attempt = true;
+    console.log('sendcode attempt', attempt);
     if(attempt){
       setEnterCode(false);
       setChangePassword(true);
       setLoading(false);
     } else {
-      setEmail('');
+      setCodeValidate(false);
+      setCode('');
+      // setEmail('');
       setLoading(false);
     }
   }
@@ -93,6 +99,9 @@ const ForgotPasswordScreen = ({navigation}) => {
           {!emailValidate && <View>
             <Text style={styles(themeContext.state.theme).errorMessage}>{languageContext.state.language.registerScreenValidate}</Text>
           </View>}
+          {!emailExist && <View>
+            <Text style={styles(themeContext.state.theme).errorMessage}>{languageContext.state.language.forgotScreenEmailExist}</Text>
+          </View>}
           <ButtonLogin style={styles(themeContext.state.theme).Button} text={languageContext.state.language.submit} onPress={()=>submitEmail(email)}/>
       </View>}
       {enterCode && !changePassword && <View>
@@ -105,8 +114,8 @@ const ForgotPasswordScreen = ({navigation}) => {
           placeholder={languageContext.state.language.CodeInputPlaceholder}
           placeholderTextColor={themeContext.state.theme.placeholderText}
         />
-        {!emailValidate && <View>
-          <Text style={styles(themeContext.state.theme).errorMessage}>{languageContext.state.language.registerScreenValidate}</Text>
+      {!codeValidate && <View>
+          <Text style={styles(themeContext.state.theme).errorMessage}>{languageContext.state.language.forgotScreenWrongCode}</Text>
         </View>}
         <ButtonLogin style={styles(themeContext.state.theme).Button} text={languageContext.state.language.submit} onPress={()=>sendCode(code)}/>
       </View>}
@@ -117,7 +126,7 @@ const ForgotPasswordScreen = ({navigation}) => {
           autoCorrect={false}
           value={password}
           onChangeText={(newValue) => setPassword(newValue)}
-          placeholder={languageContext.state.language.passwordInputPlaceholder}
+          placeholder={languageContext.state.language.newPasswordInputPlaceholder}
           placeholderTextColor={themeContext.state.theme.placeholderText}
         />
         {!emailValidate && <View>
@@ -151,6 +160,11 @@ const styles = (props) => StyleSheet.create({
     borderBottomWidth:1,
     borderRadius:30,
     borderColor: props.text,
+    color: props.text,
+  },
+  errorMessage: {
+    paddingLeft:40,
+    marginTop:10,
     color: props.text,
   },
   ImageBackground:{

@@ -5,6 +5,7 @@ export default {
     'spinnerLoading': 'Loading...',
     'userNameInputPlaceholder': 'Email',
     'passwordInputPlaceholder': 'Password',
+    'newPasswordInputPlaceholder': 'New Password',
     'CodeInputPlaceholder': 'Code',
     'login': 'Login',
     'loginScreenSimpleText1': 'Forgot Password?',
@@ -14,6 +15,8 @@ export default {
     'registerScreenSimpleText1': `Already have an acount?\nLogin here`,
     'registerScreenWrong': 'Account with this Email already exists',
     'registerScreenValidate': 'Not a valid Email, try again!',
+    'forgotScreenWrongCode': 'Invalid code, please try again',
+    'forgotScreenEmailExist': 'Email not found',
     'bugModalTitle': 'Report a Bug!',
     'feedbackModalTitle': 'Provide your feedback!',
     'themeOptions': 'Theme Options',
@@ -57,6 +60,8 @@ export default {
     'errorNoInternet': 'Internet connection not available!',
     'errorEmailNotSent': 'Problem sending email, try again!',
     'successEmailSent': 'Email Sent Succesfully!',
+    'successBugSent': 'Bug report Sent Succesfully!',
+    'successFeedbackSent': 'Feedback report Sent Succesfully!',
     'showNotChosenDays': 'Show habit on unselected days',
     'longClickHabit': 'Long click to select habit day',
     'userSettings': 'User Settings',
@@ -80,12 +85,16 @@ export default {
       'react-native-collapsible/Accordion\n'+
       'react-native-chart-kit\n'+
       'react-native-calendars\n'+
+      'react-native-swipe-gestures\n'+
       'moment.js',
     'accordionTitle3': 'Changelog',
-    'accordionContent3': 'Added loading spinner when deleting or creating habits\n'+
-      'Changed error message background for better visibility',
-    'version': 'Version 0.0.1',
-    'createdBy': 'Created by Simonas Kralikas'
+    'accordionContent3': 'Added gesture swipe left and right for easier date change in main screen\n'+
+      'Added password recovery option\n'+
+      'Added different error messages\n'+
+      'Acounts can only be created with valid email address',
+    'version': 'Version 0.0.2',
+    'createdBy': 'Created by Simonas Kralikas',
+    'contact': 'patkppDev@gmail.com',
     },
   'Dansk': {
     'label': 'Dansk',
@@ -93,6 +102,7 @@ export default {
     'spinnerLoading': 'Indlæser...',
     'userNameInputPlaceholder': 'E-mail',
     'passwordInputPlaceholder': 'Adgangskode',
+    'newPasswordInputPlaceholder': 'Nyt kodeord',
     'CodeInputPlaceholder': 'Code',
     'login': 'Log på',
     'loginScreenSimpleText1': 'Glemt kodeord?',
@@ -102,6 +112,8 @@ export default {
     'registerScreenSimpleText1': `Har du allerede en konto?\nLog ind her`,
     'registerScreenWrong': 'Konto med denne e-mail findes allerede',
     'registerScreenValidate': 'Ikke en gyldig e-mail, prøv igen!',
+    'forgotScreenWrongCode': 'Ugyldig kode, prøv igen',
+    'forgotScreenEmailExist': 'E-mail ikke fundet',
     'bugModalTitle': 'Anmeld en fejl!',
     'feedbackModalTitle': 'Giv din feedback!',
     'themeOptions': 'Temaindstillinger',
@@ -145,6 +157,8 @@ export default {
     'errorNoInternet': 'Internetforbindelse ikke tilgængelig!',
     'errorEmailNotSent': 'Problemer med at sende e-mail, prøv igen!',
     'successEmailSent': 'E-mail sendt med succes!',
+    'successBugSent': 'Fejlrapport sendt med succes!',
+    'successFeedbackSent': 'Feedbackrapport sendt med succes!',
     'showNotChosenDays': 'Vis vane på ikke-valgte dage',
     'longClickHabit': 'Langt klik for at vælge vanedag',
     'userSettings': 'Brugerindstillinger',
@@ -168,12 +182,16 @@ export default {
       'react-native-collapsible/Accordion\n'+
       'react-native-chart-kit\n'+
       'react-native-calendars\n'+
+      'react-native-swipe-gestures\n'+
       'moment.js',
     'accordionTitle3': 'Changelog',
-    'accordionContent3': 'Tilføjet loading spinner, når du sletter eller skaber vaner\n'+
-      'Ændret baggrund for fejlmeddelelse for bedre synlighed',
-    'version': 'Version 0.0.1',
-    'createdBy': 'Lavet af Simonas Kralikas'
+    'accordionContent3': 'Tilføjet gestus stryg til venstre og højre for lettere datoændring på hovedskærmen\n'+
+      'Tilføjet mulighed for gendannelse af adgangskode\n'+
+      'Tilføjet forskellige fejlmeddelelser\n'+
+      'Konti kan kun oprettes med gyldig e-mail-adresse',
+    'version': 'Version 0.0.2',
+    'createdBy': 'Lavet af Simonas Kralikas',
+    'contact': 'patkppDev@gmail.com',
   },
   'Lietuvių':{
     'label': 'Lietuvių',
@@ -181,6 +199,7 @@ export default {
     'spinnerLoading': 'Atnaujinama...',
     'userNameInputPlaceholder': 'El. paštas',
     'passwordInputPlaceholder': 'Slaptažodis',
+    'newPasswordInputPlaceholder': 'Naujas Slaptažodis',
     'CodeInputPlaceholder': 'Kodas',
     'login': 'Prisijungti',
     'loginScreenSimpleText1': 'Pamiršote slaptažodį?',
@@ -190,6 +209,8 @@ export default {
     'registerScreenSimpleText1': `Jau turite paskyrą?\nPrisijunkite čia`,
     'registerScreenWrong': 'Vartotojas su tokiu el.paštu jau egzistuoja',
     'registerScreenValidate': 'Netinkamas el. Pašto adresas, bandykite dar kartą!',
+    'forgotScreenWrongCode': 'Neteisingas kodas, bandykite dar kartą',
+    'forgotScreenEmailExist': 'Nerastas el.paštas',
     'bugModalTitle': 'Praneškite apie Problemą!',
     'feedbackModalTitle': 'Palikite atsiliepimą!',
     'themeOptions': 'Temų valdymas',
@@ -233,6 +254,8 @@ export default {
     'errorNoInternet': 'Interneto ryšys nerastas!',
     'errorEmailNotSent': 'Problema siunčiant atsiliepimą, bandykite iš naujo!',
     'successEmailSent': 'Atsiliepimas išsiūstas sėkmingai!',
+    'successBugSent': 'Problemos pranešimas išsiūstas!',
+    'successFeedbackSent': 'Atsiliepimas išsiūstas!',
     'showNotChosenDays': 'Rodyti įproti nepasirinktomis dienomis',
     'longClickHabit': 'Ilgas paspaudimas įpročio žymėjimui',
     'userSettings': 'Vartotojo nustatymai',
@@ -256,11 +279,15 @@ export default {
       'react-native-collapsible/Accordion\n'+
       'react-native-chart-kit\n'+
       'react-native-calendars\n'+
+      'react-native-swipe-gestures\n'+
       'moment.js',
     'accordionTitle3': 'Pakeitimų žurnalas',
-    'accordionContent3': 'Pridedamas suktuko įkėlimas ištrinant ar kuriant įpročius\n'+
-      'Pakeistas klaidos pranešimo fonas, kad būtų geriau matomas',
-    'version': 'Versija 0.0.1',
-    'createdBy': 'Kūrėjas - Simonas Kralikas'
+    'accordionContent3': 'Pridėtas gestas perbraukite kairėn ir dešinėn, kad būtų lengviau pakeisti datą pagrindiniame ekrane\n'+
+      'Pridėta slaptažodžio atkūrimo galimybė\n'+
+      'Pridėta įvairių klaidų pranešimų\n'+
+      'Paskyras galima sukurti tik naudojant galiojantį el. Pašto adresą',
+    'version': 'Version 0.0.2',
+    'createdBy': 'Kūrėjas - Simonas Kralikas',
+    'contact': 'patkppDev@gmail.com',
   }
 }

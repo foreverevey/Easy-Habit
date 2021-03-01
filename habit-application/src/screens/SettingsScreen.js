@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 import habitApi from '../api/habitApi';
 import NetInfo from '@react-native-community/netinfo';
+import Spinner from 'react-native-loading-spinner-overlay';
 import translations from '../translation/Translations';
 import Spacer from '../components/Spacer';
 import ThemeSwitch from '../components/ThemeSwitch';
@@ -29,6 +30,7 @@ const SettingsScreen = ({navigation}) => {
   const [feedbackModal, setFeedbackModal] = useState(false);
   const [errModalMsg, setErrModalMsg] = useState('');
   const [email, setEmail] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const _changeThemeCheerful = () => {
     if (state.theme.name === 'cheerful') {
@@ -84,23 +86,31 @@ const SettingsScreen = ({navigation}) => {
   };
 
   const sendEmail = async (body, subject) => {
+    setLoading(true);
     NetInfo.fetch().then(async state => {
       if(state.isInternetReachable){
         try {
           const to = "patkppDev@gmail.com";
           const from = "patkppDev@gmail.com";
           const response = await habitApi.post('/email', {to, from, body, subject});
-          setErrModalMsg(languageContext.state.language.successEmailSent);
+          setLoading(false);
+          if(subject==='Bug Report'){
+            setErrModalMsg(languageContext.state.language.successBugSent);
+          } else {
+            setErrModalMsg(languageContext.state.language.successFeedbackSent);
+          }
           setTimeout(() => {
             setErrModalMsg('');
           }, 1500);
         } catch (error) {
+          setLoading(false);
           setErrModalMsg(languageContext.state.language.errorEmailNotSent);
           setTimeout(() => {
             setErrModalMsg('');
           }, 1500);
         }
       } else {
+        setLoading(false);
         setErrModalMsg(languageContext.state.language.errorNoInternet);
       }
     });
@@ -135,6 +145,13 @@ const SettingsScreen = ({navigation}) => {
       : false}
       errMessage={errModalMsg}
       onPressOutside={() => setErrModalMsg('')}/>
+      <View>
+      <Spinner
+        visible={loading?true:false}
+        textContent={languageContext.state.language.spinnerLoading}
+        textStyle={styles(state.theme).spinnerTextStyle}
+      />
+    </View>
   <ScrollView>
     <ImageBackground source={{
         uri: state.theme.backgroundImage
@@ -311,7 +328,10 @@ const styles = (props) => StyleSheet.create({
     fontSize: 16,
     color: props.buttonText,
     textAlign: 'left',
-  }
+  },
+  spinnerTextStyle: {
+    color: '#FFF'
+  },
 });
 
 export default SettingsScreen;

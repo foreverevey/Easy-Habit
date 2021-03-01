@@ -5,6 +5,7 @@ import {FontAwesome5} from '@expo/vector-icons';
 import Spinner from 'react-native-loading-spinner-overlay';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import {useNetInfo} from "@react-native-community/netinfo";
+import GestureRecognizer, {swipeDirections} from 'react-native-swipe-gestures';
 import NetInfo from '@react-native-community/netinfo';
 import MyHeader from '../components/Header';
 import HabitRow from '../components/HabitRow';
@@ -33,6 +34,21 @@ const HomeScreen = ({navigation}) => {
   const [errModalMsg, setErrModalMsg] = useState('');
   const [reloadButton, setReloadButton] = useState(false);
   const netInfo = useNetInfo();
+
+  const config = {
+      velocityThreshold: 0.3,
+      directionalOffsetThreshold: 80
+    };
+
+  const onSwipeLeft = () => {
+    console.log('swipeLeft');
+    selectNextDay();
+  };
+
+  const onSwipeRight = () => {
+    console.log('swipeRight');
+    selectPreviousDay();
+  };
 
   const showDatePicker = () => {
     setDatePickerVisibility(true);
@@ -255,29 +271,55 @@ const HomeScreen = ({navigation}) => {
           onCancel={hideDatePicker}
         />
       </View>
-      <ImageBackground source={{uri: themeContext.state.theme.backgroundImage}} style={styles(themeContext.state.theme).ImageBackground}>
-            {reloadButton && <TouchableOpacity style={styles(themeContext.state.theme).ReloadButton} onPress={()=>loadHabits()}>
-              <FontAwesome5 style={styles(themeContext.state.theme).Icon} name="sync-alt"/>
-            </TouchableOpacity>}
-            {state.length === 0 && !loading && <TouchableOpacity style={styles(themeContext.state.theme).FirstCreate}
-              onPress={()=>navigation.navigate('Create', {theme: themeContext.state.theme, language: languageContext.state.language})}>
-              <Text style={styles(themeContext.state.theme).FirstText}>
-                Create your first habbit!
-              </Text>
-              <FontAwesome5 style={styles(themeContext.state.theme).Icon} name="plus"/>
-            </TouchableOpacity>}
-            <FlatList style={styles(themeContext.state.theme).flatList}
-              data={state}
-              keyExtractor={item => item._id}
-              extraData={selectedHabit}
-              renderItem= {({item}) => {
-                const selDay = new Date(selectedDay);
-                //item.trackedDays['mon'] == false then if selected day == mon and our settings
-                // is not show then not show
-                if(languageContext.state.showNotChosenDays === 'false'){
-                  const dayList = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-                  var dayName = dayList[selDay.getDay()];
-                  if(item.trackedDays[dayName]){
+      <GestureRecognizer
+        onSwipeLeft={()=>onSwipeLeft()}
+        onSwipeRight={()=>onSwipeRight()}
+        config={config}
+        style={{
+          flex: 1,
+        }}
+        >
+        <ImageBackground source={{uri: themeContext.state.theme.backgroundImage}} style={styles(themeContext.state.theme).ImageBackground}>
+              {reloadButton && <TouchableOpacity style={styles(themeContext.state.theme).ReloadButton} onPress={()=>loadHabits()}>
+                <FontAwesome5 style={styles(themeContext.state.theme).Icon} name="sync-alt"/>
+              </TouchableOpacity>}
+              {state.length === 0 && !loading && <TouchableOpacity style={styles(themeContext.state.theme).FirstCreate}
+                onPress={()=>navigation.navigate('Create', {theme: themeContext.state.theme, language: languageContext.state.language})}>
+                <Text style={styles(themeContext.state.theme).FirstText}>
+                  Create your first habbit!
+                </Text>
+                <FontAwesome5 style={styles(themeContext.state.theme).Icon} name="plus"/>
+              </TouchableOpacity>}
+              <FlatList style={styles(themeContext.state.theme).flatList}
+                data={state}
+                keyExtractor={item => item._id}
+                extraData={selectedHabit}
+                renderItem= {({item}) => {
+                  const selDay = new Date(selectedDay);
+                  //item.trackedDays['mon'] == false then if selected day == mon and our settings
+                  // is not show then not show
+                  if(languageContext.state.showNotChosenDays === 'false'){
+                    const dayList = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+                    var dayName = dayList[selDay.getDay()];
+                    if(item.trackedDays[dayName]){
+                      return (
+                        <>
+                          <HabitRow
+                            Text={item.name}
+                            Dates={item.dates}
+                            ID={item._id}
+                            SelectedDate={selectedDay}
+                            Selected={selectedHabit === item._id?true:false}
+                            onPress={()=>{navigation.navigate('Detail', {item: item._id, data: item, theme: themeContext.state.theme, language: languageContext.state.language})}}
+                            onLongPress={()=>{selectHabit(item._id)}}
+                            addDate={()=>{addDate(item._id)}}
+                            longPressSetting={languageContext.state.longClickHabit}
+                            removeDate={()=>{removeDate(item._id)}}>
+                          </HabitRow>
+                        </>
+                        );
+                    }
+                  } else {
                     return (
                       <>
                         <HabitRow
@@ -295,26 +337,10 @@ const HomeScreen = ({navigation}) => {
                       </>
                       );
                   }
-                } else {
-                  return (
-                    <>
-                      <HabitRow
-                        Text={item.name}
-                        Dates={item.dates}
-                        ID={item._id}
-                        SelectedDate={selectedDay}
-                        Selected={selectedHabit === item._id?true:false}
-                        onPress={()=>{navigation.navigate('Detail', {item: item._id, data: item, theme: themeContext.state.theme, language: languageContext.state.language})}}
-                        onLongPress={()=>{selectHabit(item._id)}}
-                        addDate={()=>{addDate(item._id)}}
-                        longPressSetting={languageContext.state.longClickHabit}
-                        removeDate={()=>{removeDate(item._id)}}>
-                      </HabitRow>
-                    </>
-                    );
-                }
-                }}/>
-      </ImageBackground>
+                  }}/>
+        </ImageBackground>
+      </GestureRecognizer>
+
     </View>
   )
 }

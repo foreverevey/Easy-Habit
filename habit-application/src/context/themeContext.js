@@ -40,8 +40,9 @@ const themeOptions = {
     chartRgba: '160, 230, 242',
     calendarText: '#b4dfe5',
     calendarBackground: '#04505d',
-    errModalBackground: 'black',
-    errModalText: 'white',
+    errModalBackground: 'white',
+    errModalText: 'black',
+    errModalBorder: 'black',
   },
   'cheerful': {
     pri1: '#fbe8a6',
@@ -71,8 +72,9 @@ const themeOptions = {
     chartRgba: '180, 223, 229',
     calendarText: '#b4dfe5',
     calendarBackground: '#303c6c',
-    errModalBackground: 'black',
-    errModalText: 'white',
+    errModalBackground: 'white',
+    errModalText: 'black',
+    errModalBorder: 'black',
   },
   'dark': {
     pri1: '#272b36',
@@ -102,8 +104,9 @@ const themeOptions = {
     chartRgba: '233, 30, 99',
     calendarText: '#e91e63',
     calendarBackground: '#181d20',
-    errModalBackground: 'black',
-    errModalText: 'white',
+    errModalBackground: 'white',
+    errModalText: 'black',
+    errModalBorder: 'black',
   },
 };
 

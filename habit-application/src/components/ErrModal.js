@@ -35,7 +35,7 @@ const styles = (props) => StyleSheet.create({
       height: 2
     },
     borderWidth:2,
-    borderColor: props.headerBackground,
+    borderColor: props.errModalBorder,
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5,
