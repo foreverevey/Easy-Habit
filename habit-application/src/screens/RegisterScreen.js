@@ -1,13 +1,21 @@
-import React, {useContext, useState} from 'react';
-import {View, Text, TextInput, StyleSheet, Image, ImageBackground} from 'react-native';
+import React, { useContext, useState } from 'react';
+import {
+  View,
+  Text,
+  TextInput,
+  StyleSheet,
+  Image,
+  ImageBackground,
+  TouchableOpacity } from 'react-native';
 import Spinner from 'react-native-loading-spinner-overlay';
 import isEmail from 'validator/lib/isEmail';
+import { FontAwesome } from '@expo/vector-icons';
 import ButtonLogin from '../components/ButtonLogin';
 import PasswordLock from '../components/PasswordLock';
 import SimpleTextLogin from '../components/SimpleTextLogin';
-import {MyContext} from '../context/authContext';
-import {MyContext as ThemeContext} from '../context/themeContext';
-import {MyContext as LanguageContext} from '../context/languageContext';
+import { MyContext } from '../context/authContext';
+import { MyContext as ThemeContext } from '../context/themeContext';
+import { MyContext as LanguageContext } from '../context/languageContext';
 
 const RegisterScreen = ({navigation}) => {
   const {state, signup} = useContext(MyContext);
@@ -39,6 +47,13 @@ const RegisterScreen = ({navigation}) => {
     }
   };
 
+  const navigateSettingsScreen = () => {
+    navigation.navigate('SettingsMain', {
+      theme: themeContext.state.theme,
+      language: languageContext.state.language,
+      flow: 'loginFlow'})
+  };
+
   return (
     <View style={styles(themeContext.state.theme).MainParent}>
       <View>
@@ -48,8 +63,12 @@ const RegisterScreen = ({navigation}) => {
           textStyle={styles(themeContext.state.theme).spinnerTextStyle}
         />
       </View>
-      <ImageBackground source={{uri: themeContext.state.theme.backgroundImage}} style={styles(themeContext.state.theme).ImageBackground}>
-        <Image source={require('../../assets/appLogo.png')} style={styles(themeContext.state.theme).ImageStyle}/>
+      <ImageBackground
+        source={{uri: themeContext.state.theme.backgroundImage}}
+        style={styles(themeContext.state.theme).ImageBackground}>
+        <Image
+          source={require('../../assets/appLogo.png')}
+          style={styles(themeContext.state.theme).ImageStyle}/>
         <TextInput
           style = {styles(themeContext.state.theme).input}
           autoCapitalize="none"
@@ -71,17 +90,33 @@ const RegisterScreen = ({navigation}) => {
             secureTextEntry={hiddenState ? true : false}
             onSubmitEditing={(e)=>{attemptSignUp(email,password)}}
           />
-          <PasswordLock onPress={()=>{setHiddenState(hiddenState => !hiddenState)}} name={hiddenState? "unlock" : "lock"}/>
+          <PasswordLock
+            onPress={()=>{setHiddenState(hiddenState => !hiddenState)}}
+            name={hiddenState? "unlock" : "lock"}/>
         </View>
         {badAttempt && <View>
-          <Text style={styles(themeContext.state.theme).errorMessage}>{languageContext.state.language.registerScreenWrong}</Text>
+          <Text style={styles(themeContext.state.theme).errorMessage}>
+            {languageContext.state.language.registerScreenWrong}
+          </Text>
         </View>}
         {!emailValidate && <View>
-          <Text style={styles(themeContext.state.theme).errorMessage}>{languageContext.state.language.registerScreenValidate}</Text>
+          <Text style={styles(themeContext.state.theme).errorMessage}>
+            {languageContext.state.language.registerScreenValidate}
+          </Text>
         </View>}
-        <ButtonLogin style={styles(themeContext.state.theme).Button} text={languageContext.state.language.register} onPress={()=>attemptSignUp(email,password)}/>
-        <SimpleTextLogin/>
-        <SimpleTextLogin text={languageContext.state.language.registerScreenSimpleText1} onPress={()=>navigation.navigate('Signin')} style={styles(themeContext.state.theme).NewAcc}/>
+        <ButtonLogin
+          style={styles(themeContext.state.theme).Button}
+          text={languageContext.state.language.register}
+          onPress={()=>attemptSignUp(email,password)}/>
+        <SimpleTextLogin
+          text={languageContext.state.language.registerScreenSimpleText1}
+          onPress={()=>navigation.navigate('Signin')}
+          style={styles(themeContext.state.theme).NewAcc}/>
+        <TouchableOpacity
+          style={{flex:1}}
+          onPress={()=>navigateSettingsScreen()}>
+          <FontAwesome style={{color:themeContext.state.theme.headerPlus, fontSize:30, alignSelf:'center', flex:1}} name="cog"/>
+        </TouchableOpacity>
       </ImageBackground>
   </View>
   )

@@ -1,8 +1,8 @@
-import React, {useState, useEffect, useContext} from 'react';
-import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
-import {FontAwesome} from '@expo/vector-icons';
-import {MyContext as ThemeContext} from '../context/themeContext';
-import {MyContext as LanguageContext} from '../context/languageContext';
+import React, { useState, useEffect, useContext } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { FontAwesome } from '@expo/vector-icons';
+import { MyContext as ThemeContext } from '../context/themeContext';
+import { MyContext as LanguageContext } from '../context/languageContext';
 
 const TrackedDaysList = (props) =>{
   const themeContext = useContext(ThemeContext);
@@ -11,69 +11,125 @@ const TrackedDaysList = (props) =>{
   return (
     <View style={styles(themeContext.state.theme).trackDays}>
       <View style={styles(themeContext.state.theme).Schedule1}>
-        <Text style={styles(themeContext.state.theme).Schedule1Item}>{languageContext.state.language.mon}</Text>
-        <Text style={styles(themeContext.state.theme).Schedule1Item}>{languageContext.state.language.tue}</Text>
-        <Text style={styles(themeContext.state.theme).Schedule1Item}>{languageContext.state.language.wen}</Text>
-        <Text style={styles(themeContext.state.theme).Schedule1Item}>{languageContext.state.language.thu}</Text>
-        <Text style={styles(themeContext.state.theme).Schedule1Item}>{languageContext.state.language.fri}</Text>
-        <Text style={styles(themeContext.state.theme).Schedule1Item}>{languageContext.state.language.sat}</Text>
-        <Text style={styles(themeContext.state.theme).Schedule1Item}>{languageContext.state.language.sun}</Text>
+        <Text style={styles(themeContext.state.theme).Schedule1Item}>
+          {languageContext.state.language.mon}
+        </Text>
+        <Text style={styles(themeContext.state.theme).Schedule1Item}>
+          {languageContext.state.language.tue}
+        </Text>
+        <Text style={styles(themeContext.state.theme).Schedule1Item}>
+          {languageContext.state.language.wen}
+        </Text>
+        <Text style={styles(themeContext.state.theme).Schedule1Item}>
+          {languageContext.state.language.thu}
+        </Text>
+        <Text style={styles(themeContext.state.theme).Schedule1Item}>
+          {languageContext.state.language.fri}
+        </Text>
+        <Text style={styles(themeContext.state.theme).Schedule1Item}>
+          {languageContext.state.language.sat}
+        </Text>
+        <Text style={styles(themeContext.state.theme).Schedule1Item}>
+          {languageContext.state.language.sun}
+        </Text>
       </View>
       <View style={styles(themeContext.state.theme).Schedule2}>
         <View style={styles(themeContext.state.theme).CheckboxView}>
-          <TouchableOpacity disabled={props.disabled} onPress={()=>props.changeTrackedDays('Mon')}>
+          <TouchableOpacity
+            disabled={props.disabled}
+            onPress={()=>props.changeTrackedDays('Mon')}>
             {props.trackedDays.Mon &&
-              <FontAwesome style={styles(themeContext.state.theme).CheckboxPlus} name="check"/>}
+              <FontAwesome
+                style={styles(themeContext.state.theme).CheckboxPlus}
+                name="check-square"/>}
             {!props.trackedDays.Mon &&
-              <FontAwesome style={styles(themeContext.state.theme).Checkbox} name='close'/>}
+              <FontAwesome
+                style={styles(themeContext.state.theme).Checkbox}
+                name='square'/>}
           </TouchableOpacity>
         </View>
         <View style={styles(themeContext.state.theme).CheckboxView}>
-          <TouchableOpacity disabled={props.disabled} onPress={()=>props.changeTrackedDays('Tue')}>
+          <TouchableOpacity
+            disabled={props.disabled}
+            onPress={()=>props.changeTrackedDays('Tue')}>
             {props.trackedDays.Tue &&
-              <FontAwesome style={styles(themeContext.state.theme).CheckboxPlus} name="check"/>}
+              <FontAwesome
+                style={styles(themeContext.state.theme).CheckboxPlus}
+                name="check-square"/>}
             {!props.trackedDays.Tue &&
-              <FontAwesome style={styles(themeContext.state.theme).Checkbox} name='close'/>}
+              <FontAwesome
+                style={styles(themeContext.state.theme).Checkbox}
+                name='square'/>}
           </TouchableOpacity>
         </View>
         <View style={styles(themeContext.state.theme).CheckboxView}>
-          <TouchableOpacity disabled={props.disabled} onPress={()=>props.changeTrackedDays('Wed')}>
+          <TouchableOpacity
+            disabled={props.disabled}
+            onPress={()=>props.changeTrackedDays('Wed')}>
             {props.trackedDays.Wed &&
-              <FontAwesome style={styles(themeContext.state.theme).CheckboxPlus} name="check"/>}
+              <FontAwesome
+                style={styles(themeContext.state.theme).CheckboxPlus}
+                name="check-square"/>}
             {!props.trackedDays.Wed &&
-              <FontAwesome style={styles(themeContext.state.theme).Checkbox} name='close'/>}
+              <FontAwesome
+                style={styles(themeContext.state.theme).Checkbox}
+                name='square'/>}
           </TouchableOpacity>
         </View>
         <View style={styles(themeContext.state.theme).CheckboxView}>
-          <TouchableOpacity disabled={props.disabled} onPress={()=>props.changeTrackedDays('Thu')}>
+          <TouchableOpacity
+            disabled={props.disabled}
+            onPress={()=>props.changeTrackedDays('Thu')}>
             {props.trackedDays.Thu &&
-              <FontAwesome style={styles(themeContext.state.theme).CheckboxPlus} name="check"/>}
+              <FontAwesome
+                style={styles(themeContext.state.theme).CheckboxPlus}
+                name="check-square"/>}
             {!props.trackedDays.Thu &&
-              <FontAwesome style={styles(themeContext.state.theme).Checkbox} name='close'/>}
+              <FontAwesome
+                style={styles(themeContext.state.theme).Checkbox}
+                name='square'/>}
           </TouchableOpacity>
         </View>
         <View style={styles(themeContext.state.theme).CheckboxView}>
-          <TouchableOpacity disabled={props.disabled} onPress={()=>props.changeTrackedDays('Fri')}>
+          <TouchableOpacity
+            disabled={props.disabled}
+            onPress={()=>props.changeTrackedDays('Fri')}>
             {props.trackedDays.Fri &&
-              <FontAwesome style={styles(themeContext.state.theme).CheckboxPlus} name="check"/>}
+              <FontAwesome
+                style={styles(themeContext.state.theme).CheckboxPlus}
+                name="check-square"/>}
             {!props.trackedDays.Fri &&
-              <FontAwesome style={styles(themeContext.state.theme).Checkbox} name='close'/>}
+              <FontAwesome
+                style={styles(themeContext.state.theme).Checkbox}
+                name='square'/>}
           </TouchableOpacity>
         </View>
         <View style={styles(themeContext.state.theme).CheckboxView}>
-          <TouchableOpacity disabled={props.disabled} onPress={()=>props.changeTrackedDays('Sat')}>
+          <TouchableOpacity
+            disabled={props.disabled}
+            onPress={()=>props.changeTrackedDays('Sat')}>
             {props.trackedDays.Sat &&
-              <FontAwesome style={styles(themeContext.state.theme).CheckboxPlus} name="check"/>}
+              <FontAwesome
+                style={styles(themeContext.state.theme).CheckboxPlus}
+                name="check-square"/>}
             {!props.trackedDays.Sat &&
-              <FontAwesome style={styles(themeContext.state.theme).Checkbox} name='close'/>}
+              <FontAwesome
+                style={styles(themeContext.state.theme).Checkbox}
+                name='square'/>}
           </TouchableOpacity>
         </View>
         <View style={styles(themeContext.state.theme).CheckboxView}>
-          <TouchableOpacity disabled={props.disabled} onPress={()=>props.changeTrackedDays('Sun')}>
+          <TouchableOpacity
+            disabled={props.disabled}
+            onPress={()=>props.changeTrackedDays('Sun')}>
             {props.trackedDays.Sun &&
-              <FontAwesome style={styles(themeContext.state.theme).CheckboxPlus} name="check"/>}
+              <FontAwesome
+                style={styles(themeContext.state.theme).CheckboxPlus}
+                name="check-square"/>}
             {!props.trackedDays.Sun &&
-              <FontAwesome style={styles(themeContext.state.theme).Checkbox} name='close'/>}
+              <FontAwesome
+                style={styles(themeContext.state.theme).Checkbox}
+                name='square'/>}
           </TouchableOpacity>
         </View>
       </View>

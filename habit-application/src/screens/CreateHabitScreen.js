@@ -1,8 +1,14 @@
-import React, {useState, useEffect, useContext} from 'react';
-import {View, Text, TextInput, StyleSheet, TouchableOpacity, ImageBackground} from 'react-native';
-import {FontAwesome} from '@expo/vector-icons';
+import React, { useState, useEffect, useContext } from 'react';
+import {
+  View,
+  Text,
+  TextInput,
+  StyleSheet,
+  TouchableOpacity,
+  ImageBackground } from 'react-native';
+import { FontAwesome } from '@expo/vector-icons';
 import CheckBox from '@react-native-community/checkbox';
-import {useNetInfo} from "@react-native-community/netinfo";
+import { useNetInfo } from "@react-native-community/netinfo";
 import NetInfo from '@react-native-community/netinfo';
 import Spinner from 'react-native-loading-spinner-overlay';
 import Spacer from '../components/Spacer';
@@ -10,10 +16,10 @@ import ButtonLogin from '../components/ButtonLogin';
 import MyHeaderSecondary from '../components/HeaderSecondary';
 import TrackedDaysList from '../components/TrackedDaysList';
 import ErrModal from '../components/ErrModal';
-import {MyContext} from '../context/authContext';
-import {MyContext as HabitContext} from '../context/habitContext';
-import {MyContext as ThemeContext} from '../context/themeContext';
-import {MyContext as LanguageContext} from '../context/languageContext';
+import { MyContext } from '../context/authContext';
+import { MyContext as HabitContext } from '../context/habitContext';
+import { MyContext as ThemeContext } from '../context/themeContext';
+import { MyContext as LanguageContext } from '../context/languageContext';
 
 const CreateHabitScreen = ({navigation}) =>{
   const {state} = useContext(MyContext);
@@ -61,7 +67,10 @@ const CreateHabitScreen = ({navigation}) =>{
 
   return (
     <View style={styles(themeContext.state.theme).MainParent}>
-      <ErrModal isVisible={errModalMsg!==''?true:false} errMessage={errModalMsg} onPressOutside={()=>setErrModalMsg('')}/>
+      <ErrModal
+        isVisible={errModalMsg!==''?true:false}
+        errMessage={errModalMsg}
+        onPressOutside={()=>setErrModalMsg('')}/>
       <View>
         <Spinner
           visible={loading?true:false}
@@ -69,9 +78,12 @@ const CreateHabitScreen = ({navigation}) =>{
           textStyle={styles(themeContext.state.theme).spinnerTextStyle}
         />
       </View>
-      <ImageBackground source={{uri: themeContext.state.theme.backgroundImage}} style={styles(themeContext.state.theme).ImageBackground}>
+      <ImageBackground
+        source={{uri: themeContext.state.theme.backgroundImage}}
+        style={styles(themeContext.state.theme).ImageBackground}>
         <Spacer>
-          <TextInput style={styles(themeContext.state.theme).TextInputName}
+          <TextInput
+            style={styles(themeContext.state.theme).TextInputName}
             autoCapitalize="sentences"
             autoCorrect={false}
             value={name}
@@ -81,7 +93,8 @@ const CreateHabitScreen = ({navigation}) =>{
             paddingLeft={15}/>
         </Spacer>
         <Spacer>
-          <TextInput style={styles(themeContext.state.theme).TextInputDescription}
+          <TextInput
+            style={styles(themeContext.state.theme).TextInputDescription}
             multiline
             autoCapitalize="sentences"
             autoCorrect={false}
@@ -94,12 +107,22 @@ const CreateHabitScreen = ({navigation}) =>{
         </Spacer>
         <Spacer>
           {false && <View style={styles(themeContext.state.theme).Grouped}>
-            <Text style={styles(themeContext.state.theme).Text}>{languageContext.state.language.privateText}</Text>
-            <CheckBox value={privateBool} onValueChange={()=>{setPrivateBool(!privateBool)}}/>
+            <Text style={styles(themeContext.state.theme).Text}>
+              {languageContext.state.language.privateText}
+            </Text>
+            <CheckBox
+              value={privateBool}
+              onValueChange={()=>{setPrivateBool(!privateBool)}}/>
           </View>}
         </Spacer>
-        <TrackedDaysList changeTrackedDays={changeTrackedDays} disabled={false} trackedDays={trackedDays}/>
-        <ButtonLogin style={styles(themeContext.state.theme).ButtonSave} text={languageContext.state.language.create} onPress={()=>createHabit(name,description, privateBool, trackedDays)}/>
+        <TrackedDaysList
+          changeTrackedDays={changeTrackedDays}
+          disabled={false}
+          trackedDays={trackedDays}/>
+        <ButtonLogin
+          style={styles(themeContext.state.theme).ButtonSave}
+          text={languageContext.state.language.create}
+          onPress={()=>createHabit(name,description, privateBool, trackedDays)}/>
       </ImageBackground>
     </View>
   )

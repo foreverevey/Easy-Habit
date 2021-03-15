@@ -1,12 +1,17 @@
 import React from 'react';
-import {StyleSheet, Text, View, TouchableOpacity, Dimensions} from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  Dimensions } from 'react-native';
 import { debounce } from "lodash";
 import { throttle } from "lodash";
-import {FontAwesome} from '@expo/vector-icons';
+import { FontAwesome } from '@expo/vector-icons';
 
 const MyHeaderSecondary = (navigation, text, theme, language) => {
-
   const screenHeight = Dimensions.get('window').height;
+  const screenWidth = Dimensions.get('window').width;
   const themeParam = navigation.getParam('theme');
   const languageParam = navigation.getParam('language');
   const edit = navigation.getParam('edit');
@@ -14,7 +19,7 @@ const MyHeaderSecondary = (navigation, text, theme, language) => {
   var editValue;
   if(edit !== undefined){
     editValue = edit;
-  }
+  };
 
   if(themeParam !== undefined){
     theme = themeParam;
@@ -26,7 +31,7 @@ const MyHeaderSecondary = (navigation, text, theme, language) => {
 
   const editNav = () =>{
     navigation.getParam('editHabit')()
-  }
+  };
 
   const handlerEdit = throttle(editNav, 500);
 
@@ -40,24 +45,45 @@ const MyHeaderSecondary = (navigation, text, theme, language) => {
       headerLeft: () => (
         <View style={styles.container}>
           <TouchableOpacity
-            style={{alignItems: 'center', marginLeft:10, width:60, textAlign:'center', textAlignVertical:'center'}}
+            style={{
+              alignItems: 'center',
+              marginLeft:10,
+              width:60,
+              textAlign:'center',
+              textAlignVertical:'center',
+              minHeight: screenHeight * 0.10,
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}
             onPress={()=>navigation.goBack()}>
-            <FontAwesome style={{color:theme.headerPlus,fontSize:30}} name="angle-left"/>
+            <FontAwesome
+              style={{color:theme.headerPlus,fontSize:30}}
+              name="angle-left"/>
           </TouchableOpacity>
         </View>
       ),
       headerRight: () => (
         <View style={styles.container}>
           <TouchableOpacity
-            style={{marginRight:30}}
+            style={{
+              marginRight:30,
+              minWidth: screenWidth*0.15,
+              minHeight: screenHeight * 0.10,
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}
             onPress={()=>handlerEdit()}>
-            <FontAwesome style={{color:theme.headerPlus,fontSize:30}} name={editValue?"times":"edit"}/>
+            <FontAwesome
+              style={{color:theme.headerPlus,fontSize:30}}
+              name={editValue?"times":"edit"}/>
           </TouchableOpacity>
         </View>
       ),
       headerTitle: () => (
         <View style={styles.container}>
-          <Text style={{color:theme.headerPlus,fontSize:30}}>{language.detailScreenHeaderText}</Text>
+          <Text style={{color:theme.headerPlus,fontSize:30}}>
+            {language.detailScreenHeaderText}
+          </Text>
         </View>
       ),
       headerTitleAlign: 'center',
@@ -72,15 +98,28 @@ const MyHeaderSecondary = (navigation, text, theme, language) => {
       headerLeft: () => (
         <View style={styles.container}>
           <TouchableOpacity
-            style={{alignItems: 'center', marginLeft:10, width:60, textAlign:'center', textAlignVertical:'center'}}
+            style={{
+              alignItems: 'center',
+              marginLeft:10,
+              width:60,
+              textAlign:'center',
+              textAlignVertical:'center',
+              minHeight: screenHeight * 0.10,
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}
             onPress={()=>navigation.goBack()}>
-            <FontAwesome style={{color:theme.headerPlus,fontSize:30}} name="angle-left"/>
+            <FontAwesome
+              style={{color:theme.headerPlus,fontSize:30}}
+              name="angle-left"/>
           </TouchableOpacity>
         </View>
       ),
       headerTitle: () => (
         <View style={styles.container}>
-          <Text style={{color:theme.headerPlus,fontSize:30}}>{language.settingScreenHeaderText}</Text>
+          <Text style={{color:theme.headerPlus,fontSize:30}}>
+            {language.settingScreenHeaderText}
+          </Text>
         </View>
       ),
       headerTitleAlign: 'center',
@@ -95,15 +134,28 @@ const MyHeaderSecondary = (navigation, text, theme, language) => {
       headerLeft: () => (
         <View style={styles.container}>
           <TouchableOpacity
-            style={{alignItems: 'center', marginLeft:10, width:60, textAlign:'center', textAlignVertical:'center'}}
+            style={{
+              alignItems: 'center',
+              marginLeft:10,
+              width:60,
+              textAlign:'center',
+              textAlignVertical:'center',
+              minHeight: screenHeight * 0.10,
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}
             onPress={()=>navigation.goBack()}>
-            <FontAwesome style={{color:theme.headerPlus,fontSize:30}} name="angle-left"/>
+            <FontAwesome
+              style={{color:theme.headerPlus,fontSize:30}}
+              name="angle-left"/>
           </TouchableOpacity>
         </View>
       ),
       headerTitle: () => (
         <View style={styles.container}>
-          <Text style={{color:theme.headerPlus,fontSize:30}}>{language.createScreenHeaderText}</Text>
+          <Text style={{color:theme.headerPlus,fontSize:30}}>
+            {language.createScreenHeaderText}
+          </Text>
         </View>
       ),
       headerTitleAlign: 'center',
@@ -118,15 +170,28 @@ const MyHeaderSecondary = (navigation, text, theme, language) => {
       headerLeft: () => (
         <View style={styles.container}>
           <TouchableOpacity
-            style={{alignItems: 'center', marginLeft:10, width:60, textAlign:'center', textAlignVertical:'center'}}
+            style={{
+              alignItems: 'center',
+              marginLeft:10,
+              width:60,
+              textAlign:'center',
+              textAlignVertical:'center',
+              minHeight: screenHeight * 0.10,
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}
             onPress={()=>navigation.goBack()}>
-            <FontAwesome style={{color:theme.headerPlus,fontSize:30}} name="angle-left"/>
+            <FontAwesome
+              style={{color:theme.headerPlus,fontSize:30}}
+              name="angle-left"/>
           </TouchableOpacity>
         </View>
       ),
       headerTitle: () => (
         <View style={styles.container}>
-          <Text style={{color:theme.headerPlus,fontSize:30}}>{language.aboutScreenHeaderText}</Text>
+          <Text style={{color:theme.headerPlus,fontSize:30}}>
+            {language.aboutScreenHeaderText}
+          </Text>
         </View>
       ),
       headerTitleAlign: 'center',
@@ -141,15 +206,26 @@ const MyHeaderSecondary = (navigation, text, theme, language) => {
       headerLeft: () => (
         <View style={styles.container}>
           <TouchableOpacity
-            style={{alignItems: 'center', marginLeft:10, width:60, textAlign:'center', textAlignVertical:'center'}}
+            style={{
+              alignItems: 'center',
+              marginLeft:10,
+              width:60,
+              textAlign:'center',
+              textAlignVertical:'center',
+              backgroundColor: 'black',
+            }}
             onPress={()=>navigation.goBack()}>
-            <FontAwesome style={{color:theme.headerPlus,fontSize:30}} name="angle-left"/>
+            <FontAwesome
+              style={{color:theme.headerPlus,fontSize:30}}
+              name="angle-left"/>
           </TouchableOpacity>
         </View>
       ),
       headerTitle: () => (
         <View>
-          <Text style={{color:theme.headerPlus,fontSize:20}}>{language.forgotPasswordHeaderText}</Text>
+          <Text style={{color:theme.headerPlus,fontSize:20}}>
+            {language.forgotPasswordHeaderText}
+          </Text>
         </View>
       ),
       headerTitleAlign: 'center',

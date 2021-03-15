@@ -1,5 +1,5 @@
 import createDataContext from './createDataContext';
-import {AsyncStorage, Image} from 'react-native';
+import { AsyncStorage, Image } from 'react-native';
 import { navigate } from '../navigationRef';
 import cleanBackground from '../../assets/cleanBackground.png';
 import cheerfulBackground from '../../assets/cheerfulBackground.png';

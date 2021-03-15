@@ -76,6 +76,7 @@ export default {
     'accordionContent2': 'React Native\n'+
       'Expo\n'+
       'AWS lambda\n'+
+      'amplify\n'+
       'AWS SES\n'+
       'MongoDB + Mongoose\n'+
       'Express.js\n'+
@@ -95,6 +96,7 @@ export default {
     'version': 'Version 0.0.2',
     'createdBy': 'Created by Simonas Kralikas',
     'contact': 'patkppDev@gmail.com',
+    'activateShortClick': 'Long Click enabled, go to Settings to change to short click',
     },
   'Dansk': {
     'label': 'Dansk',
@@ -173,6 +175,7 @@ export default {
     'accordionContent2': 'React Native\n'+
       'Expo\n'+
       'AWS lambda\n'+
+      'amplify\n'+
       'AWS SES\n'+
       'MongoDB + Mongoose\n'+
       'Express.js\n'+
@@ -192,6 +195,7 @@ export default {
     'version': 'Version 0.0.2',
     'createdBy': 'Lavet af Simonas Kralikas',
     'contact': 'patkppDev@gmail.com',
+    'activateShortClick': 'Langt klik aktiveret, gå til Indstillinger for at skifte til kort klik',
   },
   'Lietuvių':{
     'label': 'Lietuvių',
@@ -270,6 +274,7 @@ export default {
     'accordionContent2': 'React Native\n'+
       'Expo\n'+
       'AWS lambda\n'+
+      'amplify\n'+
       'AWS SES\n'+
       'MongoDB + Mongoose\n'+
       'Express.js\n'+
@@ -289,5 +294,6 @@ export default {
     'version': 'Version 0.0.2',
     'createdBy': 'Kūrėjas - Simonas Kralikas',
     'contact': 'patkppDev@gmail.com',
+    'activateShortClick': 'Ilgas paspaudimas įgalintas, pakeiskite Nustatymuose',
   }
 }

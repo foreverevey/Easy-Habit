@@ -1,7 +1,7 @@
-import React, {useContext} from 'react';
-import {View, StyleSheet, Text} from 'react-native';
-import {FontAwesome5} from '@expo/vector-icons';
-import {MyContext as ThemeContext} from '../context/themeContext';
+import React, { useContext } from 'react';
+import { View, StyleSheet, Text } from 'react-native';
+import { FontAwesome5 } from '@expo/vector-icons';
+import { MyContext as ThemeContext } from '../context/themeContext';
 
 const StreakRow = (props) => {
   const {state} = useContext(ThemeContext);

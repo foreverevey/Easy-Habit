@@ -1,12 +1,14 @@
-import React, {useContext} from 'react';
-import {View, Text ,StyleSheet, TouchableOpacity} from 'react-native';
-import {MyContext as ThemeContext} from '../context/themeContext';
+import React, { useContext } from 'react';
+import { View, Text ,StyleSheet, TouchableOpacity } from 'react-native';
+import { MyContext as ThemeContext } from '../context/themeContext';
 
 const SimpleTextLogin = (props) => {
   const {state} = useContext(ThemeContext);
 
   return (
-    <TouchableOpacity style={styles(state.theme).ForgotPass} onPress={props.onPress}>
+    <TouchableOpacity
+      style={styles(state.theme).ForgotPass} 
+      onPress={props.onPress}>
       <Text style={styles(state.theme).ForgotText}>{props.text}</Text>
     </TouchableOpacity>
   )

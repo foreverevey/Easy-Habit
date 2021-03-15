@@ -1,4 +1,4 @@
-import React, {useState, useContext, useEffect} from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import {
   View,
   Text,
@@ -9,14 +9,17 @@ import {
   ImageBackground,
   TextInput,
   TouchableOpacity,
-  Dimensions
-} from 'react-native';
+  Dimensions } from 'react-native';
 import habitApi from '../api/habitApi';
-import {Calendar, CalendarList, Agenda, LocaleConfig} from 'react-native-calendars';
-import {ContributionGraph, BarChart, LineChart} from 'react-native-chart-kit';
+import {
+  Calendar,
+  CalendarList,
+  Agenda,
+  LocaleConfig } from 'react-native-calendars';
+import { ContributionGraph, BarChart, LineChart } from 'react-native-chart-kit';
 import moment from 'moment';
 import 'moment/min/locales.min'
-import {FontAwesome} from '@expo/vector-icons';
+import { FontAwesome } from '@expo/vector-icons';
 import CheckBox from '@react-native-community/checkbox';
 import NetInfo from '@react-native-community/netinfo';
 import Spinner from 'react-native-loading-spinner-overlay';
@@ -25,9 +28,9 @@ import StreakRow from '../components/StreakRow';
 import ButtonLogin from '../components/ButtonLogin';
 import TrackedDaysList from '../components/TrackedDaysList';
 import MyHeaderSecondary from '../components/HeaderSecondary';
-import {MyContext as HabitContext} from '../context/habitContext';
-import {MyContext as ThemeContext} from '../context/themeContext';
-import {MyContext as LanguageContext} from '../context/languageContext';
+import { MyContext as HabitContext } from '../context/habitContext';
+import { MyContext as ThemeContext } from '../context/themeContext';
+import { MyContext as LanguageContext } from '../context/languageContext';
 
 const HabitDetailScreen = ({navigation}) => {
   const {state, editHabit} = useContext(HabitContext);
@@ -49,10 +52,13 @@ const HabitDetailScreen = ({navigation}) => {
     var datesArray = [];
     formatDates.forEach(date=>{
       const newDate = new Date(date.date);
-      date.date = newDate.getFullYear()+'-' + ('0' + (newDate.getMonth()+1)).slice(-2) + '-'+ ('0' + newDate.getDate()).slice(-2);
+      date.date = newDate.getFullYear()+'-' +
+      ('0' + (newDate.getMonth()+1)).slice(-2) + '-'+
+      ('0' + newDate.getDate()).slice(-2);
       datesArray.push(newDate);
     });
-    var markedDates = datesArray.reduce((c, v) => Object.assign(c, {[v]: {selected: true,marked: true,textColor: 'gray'}}), {});
+    var markedDates = datesArray.reduce((c, v) => Object.assign(c, {
+      [v]: {selected: true,marked: true,textColor: 'gray'}}), {});
     datesArray.sort((a, b) => a - b);
     var markedDates = getMarkedDates(datesArray);
     var [longestStreak, currentStreak] = getStreak(datesArray, trackedHabitDays);
@@ -107,12 +113,38 @@ const HabitDetailScreen = ({navigation}) => {
 
   const getMarkedDates = (datesArray) =>{
     var markedDates = {};
-    var startingDay = {startingDay: true, selected: true, marked: true, textColor: themeContext.state.theme.text, color: themeContext.state.theme.calendarText,};
-    var onlyDay = {startingDay: true, endingDay: true, selected: true, marked: true, textColor: themeContext.state.theme.text, color: themeContext.state.theme.calendarText,};
-    var endingDay = {endingDay: true, selected: true, marked: true, textColor: themeContext.state.theme.text, color: themeContext.state.theme.calendarText,};
-    var middleDay = {selected: true, marked: true, textColor: themeContext.state.theme.text, color: themeContext.state.theme.calendarText,};
+    var startingDay = {
+      startingDay: true,
+      selected: true,
+      marked: true,
+      textColor: themeContext.state.theme.text,
+      color: themeContext.state.theme.calendarText
+    };
+    var onlyDay = {
+      startingDay: true,
+      endingDay: true,
+      selected: true,
+      marked: true,
+      textColor: themeContext.state.theme.text,
+      color: themeContext.state.theme.calendarText
+    };
+    var endingDay = {
+      endingDay: true,
+      selected: true,
+      marked: true,
+      textColor: themeContext.state.theme.text,
+      color: themeContext.state.theme.calendarText
+    };
+    var middleDay = {
+      selected: true,
+      marked: true,
+      textColor: themeContext.state.theme.text,
+      color: themeContext.state.theme.calendarText
+    };
     for ( var i=0; i < datesArray.length; i++){
-      var formatedDate = datesArray[i].getFullYear()+'-' + ('0' + (datesArray[i].getMonth()+1)).slice(-2) + '-'+ ('0' + datesArray[i].getDate()).slice(-2);
+      var formatedDate = datesArray[i].getFullYear()+'-' + ('0' +
+      (datesArray[i].getMonth()+1)).slice(-2) + '-'+
+      ('0' + datesArray[i].getDate()).slice(-2);
       if(i===0){
         markedDates[formatedDate] = startingDay;
         var current = datesArray[i];
@@ -173,12 +205,18 @@ const HabitDetailScreen = ({navigation}) => {
     const daysTrackObj = getTrackedDaysDiff(trackedHabitDays);
 
     for (var i=0; i < datesArray.length; i++) {
+      var dayNow = moment(datesArray[i]);
+      var daysNowDiff = today.diff(dayNow, 'days');
+      if(daysNowDiff < 0){
+        continue;
+      }
       if(i===0){
         var startingDay = moment(datesArray[i]);
         if(datesArray.length === 1){
           var daysDiffCurrent = today.diff(startingDay, 'days');
           var daysDiffYesterday = yesterday.diff(startingDay, 'days');
-          if((daysDiffCurrent === 0 || daysDiffCurrent === 1) || (daysDiffYesterday === 0 || daysDiffYesterday === 1)){
+          if((daysDiffCurrent === 0 || daysDiffCurrent === 1) ||
+          (daysDiffYesterday === 0 || daysDiffYesterday === 1)){
             currentStreak = 1;
           };
           longestStreak = 1;
@@ -200,13 +238,21 @@ const HabitDetailScreen = ({navigation}) => {
       startingDay = currentDay;
       if(daysDiff === daysTrackObj[startingDayFormat]){
         streakNumber++;
+        if(currentStreak < streakNumber){
+          currentStreak = streakNumber;
+        };
         if(i === datesArray.length - 1){
           var daysDiffCurrent = today.diff(currentDay, 'days');
           var daysDiffYesterday = yesterday.diff(currentDay, 'days');
-          if((daysDiffCurrent === 0 || daysDiffCurrent === 1) || (daysDiffYesterday === 0 || daysDiffYesterday === 1)){
+          console.log('days diff', daysDiffCurrent, currentDay);
+          if((daysDiffCurrent === 0 || daysDiffCurrent === 1) ||
+          (daysDiffYesterday === 0 || daysDiffYesterday === 1))
+          {
             currentStreak = streakNumber;
-          } else{
-            currentStreak = 0;
+          } else {
+            if(daysDiffCurrent > 0){
+              currentStreak = 0;
+            }
           };
         };
         if(longestStreak < streakNumber){
@@ -216,14 +262,21 @@ const HabitDetailScreen = ({navigation}) => {
         if(longestStreak < streakNumber){
           longestStreak = streakNumber;
         };
+        if(currentStreak < streakNumber){
+          currentStreak = streakNumber;
+        };
         streakNumber = 1;
         if(i === datesArray.length - 1){
           var daysDiffCurrent = today.diff(currentDay, 'days');
           var daysDiffYesterday = yesterday.diff(currentDay, 'days');
-          if((daysDiffCurrent === 0 || daysDiffCurrent === 1) || (daysDiffYesterday === 0 || daysDiffYesterday === 1)){
+          console.log('days diff', daysDiffCurrent, currentDay);
+          if((daysDiffCurrent === 0 || daysDiffCurrent === 1) ||
+          (daysDiffYesterday === 0 || daysDiffYesterday === 1)){
             currentStreak = streakNumber;
           } else{
-            currentStreak = 0;
+            if(daysDiffCurrent > 0){
+              currentStreak = 0;
+            }
           };
         };
       };
@@ -305,12 +358,10 @@ const HabitDetailScreen = ({navigation}) => {
     setEdit(!edit);
   };
 
-
-
   const saveEditHabit = async () => {
-    setLoading(true);
     NetInfo.fetch().then(async state => {
       if(state.isInternetReachable){
+        setLoading(true);
         await editHabit(id, name, privateBool, description, trackedDays);
         setLoading(false);
         setEdit(false);
@@ -338,9 +389,12 @@ const HabitDetailScreen = ({navigation}) => {
           />
         </View>
         <ScrollView>
-          <ImageBackground source={{uri: themeContext.state.theme.backgroundImage}} style={styles(themeContext.state.theme).ImageBackground}>
+          <ImageBackground
+            source={{uri: themeContext.state.theme.backgroundImage}}
+            style={styles(themeContext.state.theme).ImageBackground}>
             <View style={styles(themeContext.state.theme).HabitDetails}>
-              <TextInput style={styles(themeContext.state.theme).TextInputName}
+              <TextInput
+                style={styles(themeContext.state.theme).TextInputName}
                 autoCapitalize="none"
                 autoCorrect={false}
                 value={name}
@@ -348,7 +402,8 @@ const HabitDetailScreen = ({navigation}) => {
                 editable={edit?true:false}
                 placeholder={languageContext.state.language.habitNamePlaceholder}
                 paddingLeft={15}/>
-              <TextInput style={styles(themeContext.state.theme).TextInputDescription}
+              <TextInput
+                style={styles(themeContext.state.theme).TextInputDescription}
                 multiline
                 autoCapitalize="none"
                 autoCorrect={false}
@@ -359,17 +414,26 @@ const HabitDetailScreen = ({navigation}) => {
                 paddingLeft={15}
                 paddingTop={15}/>
               {false && <View style={styles(themeContext.state.theme).Grouped}>
-                <Text style={styles(themeContext.state.theme).Text}>{languageContext.state.language.privateText}</Text>
+                <Text style={styles(themeContext.state.theme).Text}>
+                  {languageContext.state.language.privateText}
+                </Text>
                 <CheckBox
                   style={styles(themeContext.state.theme).CheckboxPrivate}
                   disabled={edit?false:true}
                   value={privateBool}
                   onValueChange={setPrivateBool}
-                  tintColors={{true:themeContext.state.theme.checkPlus, false:themeContext.state.theme.habitRowBackground}}
+                  tintColors={{true:themeContext.state.theme.checkPlus,
+                    false:themeContext.state.theme.habitRowBackground}}
                   />
               </View>}
-              <TrackedDaysList changeTrackedDays={changeTrackedDays} disabled={edit?false:true} trackedDays={trackedDays}/>
-              {edit && <ButtonLogin style={styles(themeContext.state.theme).ButtonSave} text={languageContext.state.language.save} onPress={()=>{
+              <TrackedDaysList
+                changeTrackedDays={changeTrackedDays}
+                disabled={edit?false:true}
+                trackedDays={trackedDays}/>
+              {edit && <ButtonLogin
+                style={styles(themeContext.state.theme).ButtonSave}
+                text={languageContext.state.language.save}
+                onPress={()=>{
                   saveEditHabit();
                 }
                 }/>}
@@ -377,7 +441,9 @@ const HabitDetailScreen = ({navigation}) => {
             <StreakRow StreakText={languageContext.state.language.longestStreak + `${longestStreak}`}/>
             <StreakRow StreakText={languageContext.state.language.currentStreak + `${currentStreak}`}/>
             <View style={styles(themeContext.state.theme).GraphView}>
-              <Text style={styles(themeContext.state.theme).GraphText}>{languageContext.state.language.monthlyLineChart}</Text>
+              <Text style={styles(themeContext.state.theme).GraphText}>
+                {languageContext.state.language.monthlyLineChart}
+              </Text>
               <LineChart
                 style={styles(themeContext.state.theme).LineChart}
                 data={barData}
@@ -388,7 +454,9 @@ const HabitDetailScreen = ({navigation}) => {
               />
             </View>
             <View style={styles(themeContext.state.theme).GraphView}>
-              <Text style={styles(themeContext.state.theme).GraphText}>{languageContext.state.language.calendarOverview}</Text>
+              <Text style={styles(themeContext.state.theme).GraphText}>
+                {languageContext.state.language.calendarOverview}
+              </Text>
               <Calendar
                 style={styles(themeContext.state.theme).Calendar}
                 markedDates={dates}
@@ -416,30 +484,6 @@ const HabitDetailScreen = ({navigation}) => {
       </View>
   )
 }
-
-// calendarBackground: '#ffffff',
-// textSectionTitleColor: '#b6c1cd',
-// textSectionTitleDisabledColor: '#d9e1e8',
-// selectedDayBackgroundColor: '#00adf5',
-// selectedDayTextColor: '#ffffff',
-// todayTextColor: '#00adf5',
-// dayTextColor: '#2d4150',
-// textDisabledColor: '#d9e1e8',
-// dotColor: '#00adf5',
-// selectedDotColor: '#ffffff',
-// arrowColor: 'orange',
-// disabledArrowColor: '#d9e1e8',
-// monthTextColor: 'blue',
-// indicatorColor: 'blue',
-// textDayFontFamily: 'monospace',
-// textMonthFontFamily: 'monospace',
-// textDayHeaderFontFamily: 'monospace',
-// textDayFontWeight: '300',
-// textMonthFontWeight: 'bold',
-// textDayHeaderFontWeight: '300',
-// textDayFontSize: 16,
-// textMonthFontSize: 16,
-// textDayHeaderFontSize: 16
 
 HabitDetailScreen.navigationOptions = ({navigation}) => {
   const text = 'Habit details';

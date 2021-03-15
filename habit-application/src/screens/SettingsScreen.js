@@ -1,4 +1,4 @@
-import React, {useState, useContext, useEffect} from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import {
   View,
   Text,
@@ -7,8 +7,8 @@ import {
   ImageBackground,
   AsyncStorage,
   Picker,
-  ScrollView
-} from 'react-native';
+  ScrollView,
+  Dimensions } from 'react-native';
 import habitApi from '../api/habitApi';
 import NetInfo from '@react-native-community/netinfo';
 import Spinner from 'react-native-loading-spinner-overlay';
@@ -20,8 +20,8 @@ import LineButton from '../components/LineButton';
 import CustomModal from '../components/CustomModal';
 import ErrModal from '../components/ErrModal';
 import MyHeaderSecondary from '../components/HeaderSecondary';
-import {MyContext as ThemeContext} from '../context/themeContext';
-import {MyContext as LanguageContext} from '../context/languageContext';
+import { MyContext as ThemeContext } from '../context/themeContext';
+import { MyContext as LanguageContext } from '../context/languageContext';
 
 const SettingsScreen = ({navigation}) => {
   const {state, changeTheme} = useContext(ThemeContext);
@@ -31,6 +31,10 @@ const SettingsScreen = ({navigation}) => {
   const [errModalMsg, setErrModalMsg] = useState('');
   const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);
+  const screenHeight = Dimensions.get('window').height;
+
+  const {params} = navigation.state;
+  const flow = params.flow;
 
   const _changeThemeCheerful = () => {
     if (state.theme.name === 'cheerful') {
@@ -75,12 +79,11 @@ const SettingsScreen = ({navigation}) => {
   const clearStorage = async () => {
     try {
       await AsyncStorage.removeItem('token');
-      await AsyncStorage.removeItem('theme');
-      await AsyncStorage.removeItem('showNotChosenDays');
-      await AsyncStorage.removeItem('longClickHabit');
+      // await AsyncStorage.removeItem('theme');
+      // await AsyncStorage.removeItem('showNotChosenDays');
+      // await AsyncStorage.removeItem('longClickHabit');
       return true;
     } catch (error) {
-      console.log(error);
       return false;
     }
   };
@@ -155,7 +158,8 @@ const SettingsScreen = ({navigation}) => {
   <ScrollView>
     <ImageBackground source={{
         uri: state.theme.backgroundImage
-      }} style={styles(state.theme).ImageBackground}>
+      }} style={styles(state.theme).ImageBackground}
+      style={{minHeight: screenHeight * 0.85}}>
       <CustomModal
         modalSend={languageContext.state.language.modalSend}
         modalPlaceholder={languageContext.state.language.modalPlaceholder}
@@ -196,18 +200,20 @@ const SettingsScreen = ({navigation}) => {
       <Text style={styles(state.theme).Header}>
         {languageContext.state.language.userSettings}
       </Text>
-      <ThemeSwitch Value={languageContext.state.showNotChosenDays === 'true'
+      {flow === 'mainFlow' && <ThemeSwitch
+        Value={languageContext.state.showNotChosenDays === 'true'
           ? true
           : false}
           OnValueChange={() => {
             _changeShowNotChosenDays()
-        }} Text={languageContext.state.language.showNotChosenDays}/>
-      <ThemeSwitch Value={languageContext.state.longClickHabit === 'true'
+        }} Text={languageContext.state.language.showNotChosenDays}/>}
+      {flow === 'mainFlow' && <ThemeSwitch
+        Value={languageContext.state.longClickHabit === 'true'
           ? true
           : false}
           OnValueChange={() => {
             _changeLongClickHabit()
-        }} Text={languageContext.state.language.longClickHabit}/>
+        }} Text={languageContext.state.language.longClickHabit}/>}
       <View style={styles(state.theme).Picker}>
         <Picker
           style={styles(state.theme).PickerText}
@@ -224,32 +230,46 @@ const SettingsScreen = ({navigation}) => {
           }
         </Picker>
       </View>
-      <Text style={styles(state.theme).Header}>
+      {flow === 'mainFlow' && <Text style={styles(state.theme).Header}>
         {languageContext.state.language.letUsKnow}
-      </Text>
-      <LineButton
+      </Text>}
+      {flow === 'mainFlow' && <LineButton
         text={languageContext.state.language.bugReportText}
-        onPress={() => openModal('bug')} type='bug'/>
-      <LineButton
+        onPress={() => openModal('bug')} type='bug'/>}
+      {flow === 'mainFlow' && <LineButton
         text={languageContext.state.language.feedbackSimpleText}
-        onPress={() => openModal('feedback')} type='paper-plane'/>
+        onPress={() => openModal('feedback')} type='paper-plane'/>}
       <Spacer/>
-      <View style={styles(state.theme).Username}>
-        <Text style={styles(state.theme).UsernameLabel}>{languageContext.state.language.usernameLabel}</Text>
+      {flow === 'mainFlow' && <View style={styles(state.theme).Username}>
+        <Text style={styles(state.theme).UsernameLabel}>
+          {languageContext.state.language.usernameLabel}
+        </Text>
         <Text style={styles(state.theme).UsernameText}>
           {email}
         </Text>
-      </View>
+      </View>}
       <LineButton
         text={languageContext.state.language.about}
-        onPress={() => navigation.navigate('About', {theme: state.theme, language: languageContext.state.language})} type='info'/>
-      <ButtonLogin style={styles(state.theme).ButtonSave}
+        onPress={() => {
+          if(flow === 'loginFlow'){
+            navigation.navigate('AboutMain', {
+              theme: state.theme,
+              language: languageContext.state.language})
+          } else {
+            navigation.navigate('About', {
+              theme: state.theme,
+              language: languageContext.state.language})
+          }
+        }
+        } type='info'/>
+      {flow === 'mainFlow' && <ButtonLogin
+        style={styles(state.theme).ButtonSave}
         text={languageContext.state.language.logout}
         onPress={async () => {
           await clearStorage();
           navigation.navigate('Signin');
         }
-      }/>
+      }/>}
     </ImageBackground>
   </ScrollView>
 </View>)
@@ -269,7 +289,7 @@ const styles = (props) => StyleSheet.create({
     justifyContent: 'space-around'
   },
   ImageBackground: {
-    flex: 1
+    flex: 1,
   },
   Header: {
     fontSize: 18,
@@ -289,8 +309,6 @@ const styles = (props) => StyleSheet.create({
   },
   Picker: {
     backgroundColor: props.habitRowBackground,
-    // paddingTop: 5,
-    // paddingBottom: 5,
     marginBottom: 0,
     marginTop: 5,
     height: 37,

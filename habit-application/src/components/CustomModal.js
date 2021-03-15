@@ -1,7 +1,13 @@
-import React, {useState, useContext} from 'react';
-import {View, StyleSheet, Text, TouchableOpacity, Modal, TextInput} from 'react-native';
-import {FontAwesome5} from '@expo/vector-icons';
-import {MyContext as ThemeContext} from '../context/themeContext';
+import React, { useState, useContext } from 'react';
+import {
+  View,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  Modal,
+  TextInput} from 'react-native';
+import { FontAwesome5 } from '@expo/vector-icons';
+import { MyContext as ThemeContext } from '../context/themeContext';
 
 const CustomModal = (props) => {
   const {state} = useContext(ThemeContext);
@@ -20,7 +26,9 @@ const CustomModal = (props) => {
 
   return (
     <Modal visible={props.isVisible} transparent={true}>
-      <TouchableOpacity style={styles(state.theme).centeredView} onPress={props.onPressOutside}>
+      <TouchableOpacity
+        style={styles(state.theme).centeredView}
+        onPress={props.onPressOutside}>
         <View style={styles(state.theme).modalView}>
           <Text style={styles(state.theme).modalText}>{props.title}</Text>
           <TextInput
@@ -33,8 +41,11 @@ const CustomModal = (props) => {
             placeholderTextColor={state.theme.buttonText}
             multiline={true}
             paddingLeft={15}/>
-          <TouchableOpacity style={styles(state.theme).modalSend} onPress={()=>handleEmail()}>
-            <Text style={styles(state.theme).modalSendText}>{props.modalSend}</Text>
+          <TouchableOpacity
+            style={styles(state.theme).modalSend}
+            onPress={()=>handleEmail()}>
+            <Text
+              style={styles(state.theme).modalSendText}>{props.modalSend}</Text>
           </TouchableOpacity>
         </View>
       </TouchableOpacity>

@@ -1,14 +1,19 @@
-import React, {useContext, useState} from 'react';
-import {View, Text, TextInput, StyleSheet, ImageBackground} from 'react-native';
+import React, { useContext, useState } from 'react';
+import {
+  View,
+  Text,
+  TextInput,
+  StyleSheet,
+  ImageBackground } from 'react-native';
 import Spinner from 'react-native-loading-spinner-overlay';
 import isEmail from 'validator/lib/isEmail';
 import ButtonLogin from '../components/ButtonLogin';
 import PasswordLock from '../components/PasswordLock';
 import SimpleTextLogin from '../components/SimpleTextLogin';
 import MyHeaderSecondary from '../components/HeaderSecondary';
-import {MyContext} from '../context/authContext';
-import {MyContext as ThemeContext} from '../context/themeContext';
-import {MyContext as LanguageContext} from '../context/languageContext';
+import { MyContext } from '../context/authContext';
+import { MyContext as ThemeContext } from '../context/themeContext';
+import { MyContext as LanguageContext } from '../context/languageContext';
 
 const ForgotPasswordScreen = ({navigation}) => {
   const {state, signup, forgotPassword, submitCode, submitPassword} = useContext(MyContext);
@@ -30,13 +35,10 @@ const ForgotPasswordScreen = ({navigation}) => {
       setLoading(true);
       setEmailValidate(true);
       const attempt = await forgotPassword({email});
-      // const attempt = true;
-      console.log('attempt', attempt);
       if(attempt){
         setEnterCode(true);
         setLoading(false);
       } else {
-        // setEmail('');
         setEmailExist(false);
         setLoading(false);
       }
@@ -48,8 +50,6 @@ const ForgotPasswordScreen = ({navigation}) => {
   const sendCode = async (code) => {
     setLoading(true);
     const attempt = await submitCode({email, code});
-    // const attempt = true;
-    console.log('sendcode attempt', attempt);
     if(attempt){
       setEnterCode(false);
       setChangePassword(true);
@@ -57,7 +57,6 @@ const ForgotPasswordScreen = ({navigation}) => {
     } else {
       setCodeValidate(false);
       setCode('');
-      // setEmail('');
       setLoading(false);
     }
   }
@@ -65,7 +64,6 @@ const ForgotPasswordScreen = ({navigation}) => {
   const sendPassword = async (password) => {
     setLoading(true);
     const attempt = await submitPassword({email, password});
-    // const attempt = true;
     if(attempt){
       setChangePassword(false);
       setLoading(false);
@@ -85,7 +83,9 @@ const ForgotPasswordScreen = ({navigation}) => {
           textStyle={styles(themeContext.state.theme).spinnerTextStyle}
         />
       </View>
-      <ImageBackground source={{uri: themeContext.state.theme.backgroundImage}} style={styles(themeContext.state.theme).ImageBackground}>
+      <ImageBackground
+        source={{uri: themeContext.state.theme.backgroundImage}}
+        style={styles(themeContext.state.theme).ImageBackground}>
         {!enterCode && !changePassword && <View>
           <TextInput
             style = {styles(themeContext.state.theme).input}
@@ -97,12 +97,19 @@ const ForgotPasswordScreen = ({navigation}) => {
             placeholderTextColor={themeContext.state.theme.placeholderText}
           />
           {!emailValidate && <View>
-            <Text style={styles(themeContext.state.theme).errorMessage}>{languageContext.state.language.registerScreenValidate}</Text>
+            <Text style={styles(themeContext.state.theme).errorMessage}>
+              {languageContext.state.language.registerScreenValidate}
+            </Text>
           </View>}
           {!emailExist && <View>
-            <Text style={styles(themeContext.state.theme).errorMessage}>{languageContext.state.language.forgotScreenEmailExist}</Text>
+            <Text style={styles(themeContext.state.theme).errorMessage}>
+              {languageContext.state.language.forgotScreenEmailExist}
+            </Text>
           </View>}
-          <ButtonLogin style={styles(themeContext.state.theme).Button} text={languageContext.state.language.submit} onPress={()=>submitEmail(email)}/>
+          <ButtonLogin
+            style={styles(themeContext.state.theme).Button}
+            text={languageContext.state.language.submit}
+            onPress={()=>submitEmail(email)}/>
       </View>}
       {enterCode && !changePassword && <View>
         <TextInput
@@ -115,9 +122,14 @@ const ForgotPasswordScreen = ({navigation}) => {
           placeholderTextColor={themeContext.state.theme.placeholderText}
         />
       {!codeValidate && <View>
-          <Text style={styles(themeContext.state.theme).errorMessage}>{languageContext.state.language.forgotScreenWrongCode}</Text>
+          <Text style={styles(themeContext.state.theme).errorMessage}>
+            {languageContext.state.language.forgotScreenWrongCode}
+          </Text>
         </View>}
-        <ButtonLogin style={styles(themeContext.state.theme).Button} text={languageContext.state.language.submit} onPress={()=>sendCode(code)}/>
+        <ButtonLogin
+          style={styles(themeContext.state.theme).Button}
+          text={languageContext.state.language.submit}
+          onPress={()=>sendCode(code)}/>
       </View>}
       {!enterCode && changePassword && <View>
         <TextInput
@@ -130,9 +142,14 @@ const ForgotPasswordScreen = ({navigation}) => {
           placeholderTextColor={themeContext.state.theme.placeholderText}
         />
         {!emailValidate && <View>
-          <Text style={styles(themeContext.state.theme).errorMessage}>{languageContext.state.language.registerScreenValidate}</Text>
+          <Text style={styles(themeContext.state.theme).errorMessage}>
+            {languageContext.state.language.registerScreenValidate}
+          </Text>
         </View>}
-        <ButtonLogin style={styles(themeContext.state.theme).Button} text={languageContext.state.language.submit} onPress={()=>sendPassword(password)}/>
+        <ButtonLogin
+          style={styles(themeContext.state.theme).Button}
+          text={languageContext.state.language.submit}
+          onPress={()=>sendPassword(password)}/>
       </View>}
       </ImageBackground>
   </View>

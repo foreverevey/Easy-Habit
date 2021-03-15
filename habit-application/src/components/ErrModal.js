@@ -1,14 +1,16 @@
-import React, {useState, useContext} from 'react';
-import {View, StyleSheet, Text, TouchableOpacity, Modal} from 'react-native';
-import {FontAwesome5} from '@expo/vector-icons';
-import {MyContext as ThemeContext} from '../context/themeContext';
+import React, { useState, useContext } from 'react';
+import { View, StyleSheet, Text, TouchableOpacity, Modal } from 'react-native';
+import { FontAwesome5 } from '@expo/vector-icons';
+import { MyContext as ThemeContext } from '../context/themeContext';
 
 const ErrModal = (props) => {
   const {state} = useContext(ThemeContext);
 
   return (
     <Modal visible={props.isVisible} transparent={true} animationType="slide">
-      <TouchableOpacity style={styles(state.theme).centeredView} onPress={props.onPressOutside}>
+      <TouchableOpacity
+        style={styles(state.theme).centeredView}
+        onPress={props.onPressOutside}>
         <View style={styles(state.theme).modalView}>
           <Text style={styles(state.theme).modalText}>{props.errMessage}</Text>
         </View>
@@ -21,7 +23,6 @@ const styles = (props) => StyleSheet.create({
   centeredView: {
     flex: 1,
     justifyContent: 'flex-end',
-    // alignItems: "center",
     marginTop: 22,
   },
   modalView: {

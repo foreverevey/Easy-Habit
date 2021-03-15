@@ -1,6 +1,6 @@
-import React, {useState, useContext} from 'react';
-import {View, StyleSheet, Text, TouchableOpacity, Switch} from 'react-native';
-import {MyContext as ThemeContext} from '../context/themeContext';
+import React, { useState, useContext } from 'react';
+import { View, StyleSheet, Text, TouchableOpacity, Switch } from 'react-native';
+import { MyContext as ThemeContext } from '../context/themeContext';
 
 const ThemeSwitch = (props) => {
   const {state} = useContext(ThemeContext);
@@ -12,8 +12,11 @@ const ThemeSwitch = (props) => {
         style={styles(state.theme).Switch}
         value={props.Value}
         onValueChange={props.OnValueChange}
-        thumbColor={props.Value?state.theme.sliderThumbOn:state.theme.sliderThumbOff}
-        trackColor={{false: state.theme.sliderTrackOff, true: state.theme.sliderTrackOn}}
+        thumbColor={props.Value
+          ?state.theme.sliderThumbOn
+          :state.theme.sliderThumbOff}
+        trackColor={{false: state.theme.sliderTrackOff, 
+          true: state.theme.sliderTrackOn}}
         />
     </View>
   )

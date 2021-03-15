@@ -1,7 +1,12 @@
 import React from 'react';
-import {StyleSheet, Text, View, TouchableOpacity, Dimensions} from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  Dimensions } from 'react-native';
 import { throttle } from "lodash";
-import {FontAwesome} from '@expo/vector-icons';
+import { FontAwesome } from '@expo/vector-icons';
 
 const MyHeader = (navigation, language) => {
 
@@ -14,6 +19,7 @@ const MyHeader = (navigation, language) => {
   const monthNamesLanguage = language.monthNames;
 
   const screenHeight = Dimensions.get('window').height;
+  const screenWidth = Dimensions.get('window').width;
 
   const getDate = () => {
     const selectedDate = navigation.getParam('selectedDay');
@@ -38,7 +44,7 @@ const MyHeader = (navigation, language) => {
   }
 
   const navigateSettings = () => {
-    navigation.navigate('Settings', {theme: themeOptions, language: language})
+    navigation.navigate('Settings', {theme: themeOptions, language: language, flow: 'mainFlow'})
   }
 
   const navigateCreate = () => {
@@ -58,9 +64,15 @@ const MyHeader = (navigation, language) => {
     headerLeft: () => (
       <View style={styles.container}>
         {navigation.getParam('selectedHabit') === null && <TouchableOpacity
-          style={{marginLeft:30,}}
+          style={{
+            marginLeft:15,
+            minWidth: screenWidth*0.15,
+            minHeight: screenHeight * 0.10,
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
           onPress={()=>handlerCreate()}>
-          <FontAwesome style={{color:themeOptions?themeOptions.headerPlus:'#fff',fontSize:30}} name="plus"/>
+          <FontAwesome style={{color:themeOptions?themeOptions.headerPlus:'#fff', fontSize:30}} name="plus"/>
         </TouchableOpacity>}
         {navigation.getParam('selectedHabit') !== null && <TouchableOpacity
           style={{marginLeft:30,}}
@@ -72,9 +84,15 @@ const MyHeader = (navigation, language) => {
     headerRight: () => (
       <View style={styles.container}>
         <TouchableOpacity
-          style={{marginRight:30}}
+          style={{
+            marginRight:15,
+            minWidth: screenWidth*0.15,
+            minHeight: screenHeight * 0.10,
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
           onPress={()=>handlerSettings()}>
-          <FontAwesome style={{color:themeOptions?themeOptions.headerPlus:'#fff',fontSize:30}} name="cog"/>
+          <FontAwesome style={{color:themeOptions?themeOptions.headerPlus:'#fff', fontSize:30}} name="cog"/>
         </TouchableOpacity>
       </View>
     ),

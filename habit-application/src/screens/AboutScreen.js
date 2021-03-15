@@ -1,9 +1,18 @@
-import React, {useState, useEffect, useContext} from 'react';
-import {View, Text, TextInput, StyleSheet, TouchableOpacity, ImageBackground, Image, ScrollView, Dimensions} from 'react-native';
-import {FontAwesome} from '@expo/vector-icons';
+import React, { useState, useEffect, useContext } from 'react';
+import {
+  View,
+  Text,
+  TextInput,
+  StyleSheet,
+  TouchableOpacity,
+  ImageBackground,
+  Image,
+  ScrollView,
+  Dimensions } from 'react-native';
+import { FontAwesome } from '@expo/vector-icons';
 import MyHeaderSecondary from '../components/HeaderSecondary';
-import {MyContext as ThemeContext} from '../context/themeContext';
-import {MyContext as LanguageContext} from '../context/languageContext';
+import { MyContext as ThemeContext } from '../context/themeContext';
+import { MyContext as LanguageContext } from '../context/languageContext';
 import Accordion from 'react-native-collapsible/Accordion';
 
 const AboutScreen = ({navigation}) =>{
@@ -30,18 +39,19 @@ const AboutScreen = ({navigation}) =>{
   _renderHeader = section => {
     return (
       <View style={styles(themeContext.state.theme).header}>
-        <Text style={styles(themeContext.state.theme).headerText}>{section.title}</Text>
+        <Text style={styles(themeContext.state.theme).headerText}>
+          {section.title}
+        </Text>
       </View>
     );
   };
 
   _renderContent = section => {
-    // console.log('renderingContent', section);
-    // var index = SECTIONS.findIndex(x => x.title === section.title);
-    // console.log('index', index, activeSections.includes(index), activeSections);
     return (
       <View style={styles(themeContext.state.theme).content}>
-        <Text style={styles(themeContext.state.theme).headerContentText}>{section.content}</Text>
+        <Text style={styles(themeContext.state.theme).headerContentText}>
+          {section.content}
+        </Text>
       </View>
     );
   };
@@ -53,7 +63,9 @@ const AboutScreen = ({navigation}) =>{
   return (
     <View style={styles(themeContext.state.theme).MainParent}>
       <ScrollView contentContainerStyle={{ flex: 1 }}>
-        <ImageBackground source={{uri: themeContext.state.theme.backgroundImage}} style={styles(themeContext.state.theme).ImageBackground}>
+        <ImageBackground
+          source={{uri: themeContext.state.theme.backgroundImage}}
+          style={styles(themeContext.state.theme).ImageBackground}>
           <Accordion
             sections={SECTIONS}
             activeSections={activeSections}
@@ -62,10 +74,18 @@ const AboutScreen = ({navigation}) =>{
             onChange={(item)=>_updateSections(item)}
             expandMultiple={true}
           />
-          <Image source={require('../../assets/appLogo.png')} style={styles(themeContext.state.theme).ImageStyle}/>
-          <Text style={styles(themeContext.state.theme).Text}>{languageContext.state.language.version}</Text>
-          <Text style={styles(themeContext.state.theme).Text}>{languageContext.state.language.createdBy}</Text>
-          <Text style={styles(themeContext.state.theme).Text}>{languageContext.state.language.contact}</Text>
+          <Image
+            source={require('../../assets/appLogo.png')}
+            style={styles(themeContext.state.theme).ImageStyle}/>
+          <Text style={styles(themeContext.state.theme).Text}>
+            {languageContext.state.language.version}
+          </Text>
+          <Text style={styles(themeContext.state.theme).Text}>
+            {languageContext.state.language.createdBy}
+          </Text>
+          <Text style={styles(themeContext.state.theme).Text}>
+            {languageContext.state.language.contact}
+          </Text>
         </ImageBackground>
       </ScrollView>
     </View>

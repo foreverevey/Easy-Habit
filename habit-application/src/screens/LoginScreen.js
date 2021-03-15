@@ -1,19 +1,27 @@
-import React, {useState, useContext, useEffect} from 'react';
-import {View, Text, TextInput, StyleSheet, Image, AsyncStorage, ImageBackground} from 'react-native';
+import React, { useState, useContext, useEffect } from 'react';
+import {
+  View,
+  Text,
+  TextInput,
+  StyleSheet,
+  Image,
+  AsyncStorage,
+  ImageBackground,
+  TouchableOpacity } from 'react-native';
 import Spinner from 'react-native-loading-spinner-overlay';
-import {useNetInfo} from "@react-native-community/netinfo";
+import { useNetInfo } from "@react-native-community/netinfo";
 import changeNavigationBarColor, {
   hideNavigationBar,
-  showNavigationBar,
-} from 'react-native-navigation-bar-color';
+  showNavigationBar } from 'react-native-navigation-bar-color';
 import NetInfo from '@react-native-community/netinfo';
+import { FontAwesome } from '@expo/vector-icons';
 import ButtonLogin from '../components/ButtonLogin';
 import PasswordLock from '../components/PasswordLock';
 import SimpleTextLogin from '../components/SimpleTextLogin';
 import ErrModal from '../components/ErrModal';
-import {MyContext} from '../context/authContext';
-import {MyContext as ThemeContext} from '../context/themeContext';
-import {MyContext as LanguageContext} from '../context/languageContext';
+import { MyContext } from '../context/authContext';
+import { MyContext as ThemeContext } from '../context/themeContext';
+import { MyContext as LanguageContext } from '../context/languageContext';
 
 const LoginScreen = ({navigation}) => {
   const {state, signin, tryLocalSignin} = useContext(MyContext);
@@ -34,7 +42,6 @@ const LoginScreen = ({navigation}) => {
       navigation.setParams({ theme: themeContext.state });
       navigation.setParams({ language: languageContext.state });
     }).then(()=>{
-      console.log('loading settings');
       setReadyNavigate(true);
     });
   }, []);
@@ -43,9 +50,14 @@ const LoginScreen = ({navigation}) => {
     if(netInfo.type !== 'unknown' && readyNavigate){
       if(netInfo.isInternetReachable){
         setErrModalMsg('');
-        setLoadingScreen(false);
+        tryLocalSignin().then((res)=>{
+          if(res){
+            navigation.navigate('Home', {language: languageContext.state.language});
+          } else {
+            setLoadingScreen(false);
+          }
+        });
       } else {
-        // setLoadingScreen(true);
         setErrModalMsg(languageContext.state.language.errorNoInternet);
       }
     }
@@ -78,17 +90,10 @@ const LoginScreen = ({navigation}) => {
   }, [readyNavigate]);
 
   const setUserSettings = async () =>{
-    // Load user selected theme and language from storage
     const userTheme = await AsyncStorage.getItem('theme');
     const userLanguage = await AsyncStorage.getItem('language');
     const showNotChosenDays = await AsyncStorage.getItem('showNotChosenDays');
     const longClickHabit = await AsyncStorage.getItem('longClickHabit');
-    // try{
-    //   changeNavigationBarColor('black');
-    //   // hideNavigationBar();
-    // } catch(e){
-    //   console.log('navigationcolor problem');
-    // }
     if(userTheme !== null){
       themeContext.changeTheme(userTheme);
     }
@@ -105,7 +110,6 @@ const LoginScreen = ({navigation}) => {
         } else {
           setBadAttempt(true);
           setPassword('');
-          // setLoading(false);
           setLoadingScreen(false);
         }
       } else {
@@ -121,18 +125,33 @@ const LoginScreen = ({navigation}) => {
     navigation.navigate('Signup');
   };
 
+  const navigateSettingsScreen = () => {
+    navigation.navigate('SettingsMain', {
+      theme: themeContext.state.theme,
+      language: languageContext.state.language,
+      flow: 'loginFlow'})
+  };
+
   const navigateForgotPasswordScreen = () => {
     setBadAttempt(false);
     setPassword('');
     setEmail('');
-    navigation.navigate('Forgot', {theme: themeContext.state.theme, language: languageContext.state.language});
+    navigation.navigate('Forgot', {
+      theme: themeContext.state.theme,
+      language: languageContext.state.language});
   };
 
   return (
     <View style={styles(themeContext.state.theme).MainParent}>
-      <ErrModal isVisible={errModalMsg!==''?true:false} errMessage={errModalMsg} onPressOutside={()=>setErrModalMsg('')}/>
-      {loadingScreen && <View style = {styles(themeContext.state.theme).loadingScreen}>
-        <Image source={require('../../assets/appLogo.png')} style={styles(themeContext.state.theme).LoadingImage}/>
+      <ErrModal
+        isVisible={errModalMsg!==''?true:false}
+        errMessage={errModalMsg}
+        onPressOutside={()=>setErrModalMsg('')}/>
+      {loadingScreen && <View
+        style={styles(themeContext.state.theme).loadingScreen}>
+        <Image
+          source={require('../../assets/appLogo.png')}
+          style={styles(themeContext.state.theme).LoadingImage}/>
       </View>}
       <View>
         <Spinner
@@ -141,8 +160,12 @@ const LoginScreen = ({navigation}) => {
           textStyle={styles(themeContext.state.theme).spinnerTextStyle}
         />
       </View>
-      {!loadingScreen && <ImageBackground source={{uri: themeContext.state.theme.backgroundImage}} style={styles(themeContext.state.theme).ImageBackground}>
-        <Image source={require('../../assets/appLogo.png')} style={styles(themeContext.state.theme).ImageStyle}/>
+      {!loadingScreen && <ImageBackground
+        source={{uri: themeContext.state.theme.backgroundImage}}
+        style={styles(themeContext.state.theme).ImageBackground}>
+        <Image
+          source={require('../../assets/appLogo.png')}
+          style={styles(themeContext.state.theme).ImageStyle}/>
         <TextInput
           style = {styles(themeContext.state.theme).input}
           autoCapitalize="none"
@@ -164,15 +187,32 @@ const LoginScreen = ({navigation}) => {
             secureTextEntry={hiddenState ? true : false}
             onSubmitEditing={(e)=>{attemptSignIn(email,password)}}
           />
-          <PasswordLock onPress={()=>{setHiddenState(hiddenState => !hiddenState)}} name={hiddenState? "unlock" : "lock"}
+          <PasswordLock
+            onPress={()=>{setHiddenState(hiddenState => !hiddenState)}}
+            name={hiddenState? "unlock" : "lock"}
             />
         </View>
         {badAttempt && <View>
-          <Text style={styles(themeContext.state.theme).errorMessage}>{languageContext.state.language.loginScreenWrong}</Text>
+          <Text style={styles(themeContext.state.theme).errorMessage}>
+            {languageContext.state.language.loginScreenWrong}
+          </Text>
         </View>}
-        <ButtonLogin style={styles(themeContext.state.theme).Button} text={languageContext.state.language.login} onPress={()=>attemptSignIn(email,password)}/>
-        <SimpleTextLogin text={languageContext.state.language.loginScreenSimpleText1} onPress={()=>navigateForgotPasswordScreen()}/>
-        <SimpleTextLogin text={languageContext.state.language.loginScreenSimpleText2} onPress={()=>navigateRegisterScreen()}/>
+        <ButtonLogin
+          style={styles(themeContext.state.theme).Button}
+          text={languageContext.state.language.login}
+          onPress={()=>attemptSignIn(email,password)}/>
+        <SimpleTextLogin
+          text={languageContext.state.language.loginScreenSimpleText1}
+          onPress={()=>navigateForgotPasswordScreen()}/>
+        <SimpleTextLogin
+          text={languageContext.state.language.loginScreenSimpleText2}
+          onPress={()=>navigateRegisterScreen()}/>
+        <TouchableOpacity
+          style={{flex:1}}
+          onPress={()=>navigateSettingsScreen()}>
+          <FontAwesome style={{color:themeContext.state.theme.headerPlus, fontSize:30, alignSelf:'center', flex:1}} name="cog"/>
+        </TouchableOpacity>
+
       </ImageBackground>}
     </View>
   )
@@ -210,8 +250,6 @@ const styles = (props) => StyleSheet.create({
     borderColor: props.text
   },
   MainParent:{
-    // borderWidth: 1,
-    // borderColor: 'black',
     flex: 1,
   },
   ImageStyle:{

@@ -22,6 +22,8 @@ const SwitchNavigator = createSwitchNavigator({
     Signin: LoginScreen,
     Signup: RegisterScreen,
     Forgot: ForgotPasswordScreen,
+    SettingsMain: SettingsScreen,
+    AboutMain: AboutScreen,
   }),
   mainFlow: createStackNavigator({
     Home: HomeScreen,

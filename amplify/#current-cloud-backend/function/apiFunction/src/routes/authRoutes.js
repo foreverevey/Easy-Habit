@@ -4,6 +4,7 @@ const jwt = require('jsonwebtoken');
 const User = mongoose.model('User');
 var aws = require("aws-sdk");
 var ses = new aws.SES({ region: "eu-west-1" });
+let saltKey = process.env.salt_key;
 
 const router = express.Router();
 
@@ -14,7 +15,7 @@ router.post('/signup', async (req,res)=>{
     const user = new User({email,password});
     await user.save();
 
-    const token = jwt.sign({ userId: user._id }, 'MY_SECRET_KEY');
+    const token = jwt.sign({ userId: user._id }, saltKey);
     res.send({ token });
   } catch(err){
     return res.status(422).send(err.message);
@@ -35,7 +36,7 @@ router.post('/signin', async (req, res)=>{
   }
   try{
     await user.comparePassword(password);
-    const token = jwt.sign( {userId: user._id }, 'MY_SECRET_KEY');
+    const token = jwt.sign( {userId: user._id }, saltKey);
     console.log(token);
     res.send({ token });
     console.log('sent');

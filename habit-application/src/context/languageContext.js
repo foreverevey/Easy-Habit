@@ -1,5 +1,5 @@
 import createDataContext from './createDataContext';
-import {AsyncStorage, Image} from 'react-native';
+import { AsyncStorage, Image } from 'react-native';
 import { navigate } from '../navigationRef';
 import translations from '../translation/Translations';
 

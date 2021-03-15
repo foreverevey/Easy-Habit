@@ -1,7 +1,7 @@
-import React, {useState, useEffect, useContext} from 'react';
-import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
-import {FontAwesome} from '@expo/vector-icons';
-import {MyContext as ThemeContext} from '../context/themeContext';
+import React, { useState, useEffect, useContext } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { FontAwesome } from '@expo/vector-icons';
+import { MyContext as ThemeContext } from '../context/themeContext';
 
 const HabitRow = (props) =>{
   const {state, changeTheme} = useContext(ThemeContext);
@@ -9,10 +9,11 @@ const HabitRow = (props) =>{
 
   useEffect(() => {
     const splitDay = props.SelectedDate.split('/');
-    const selectedDay = new Date(Date.UTC(splitDay[2], splitDay[0] - 1, splitDay[1]));
+    const selectedDay = new Date(
+      Date.UTC(splitDay[2], splitDay[0] - 1, splitDay[1]));
     var foundDay = false;
     if(props.Dates.length>0){
-      for(var i=0; i<props.Dates.length; i++){
+      for(var i=0; i < props.Dates.length; i++){
         var dateToObj = new Date(props.Dates[i].date);
         if(dateToObj.valueOf() === selectedDay.valueOf()){
           setSelected(true);
@@ -26,7 +27,7 @@ const HabitRow = (props) =>{
     }
   }, [props.SelectedDate]);
 
-  const addRemoveDate = () =>{
+  const addRemoveDate = () => {
     if(!selected){
       props.addDate();
       setSelected(true);
@@ -36,23 +37,46 @@ const HabitRow = (props) =>{
     }
   };
 
+  const activateShortPress = () => {
+    props.activateShortClick();
+  }
+
   return (
-    <TouchableOpacity style={props.Selected?styles(state.theme).RowSelected:styles(state.theme).Row} onPress={props.onPress} onLongPress={props.onLongPress}>
+    <TouchableOpacity
+      style={props.Selected
+        ?styles(state.theme).RowSelected
+        :styles(state.theme).Row}
+      onPress={props.onPress}
+      onLongPress={props.onLongPress}>
       <Text style={styles(state.theme).TextElem}>{props.Text}</Text>
       <View style={styles(state.theme).CheckboxView}>
-        {props.longPressSetting === 'true' && <TouchableOpacity onLongPress={()=>addRemoveDate()}>
+        {props.longPressSetting === 'true' && <TouchableOpacity
+          onLongPress={()=>addRemoveDate()}
+          onPress={()=>activateShortPress()}
+          style={styles(state.theme).TouchableSelect}
+          >
           {selected &&
-            <FontAwesome style={styles(state.theme).CheckboxPlus} name="check"/>}
+            <FontAwesome
+              style={styles(state.theme).CheckboxPlus}
+              name="check"/>}
           {!selected &&
-            <FontAwesome style={styles(state.theme).Checkbox} name='close'/>}
+            <FontAwesome
+              style={styles(state.theme).Checkbox}
+              name='close'/>}
         </TouchableOpacity>}
-        {props.longPressSetting === 'false' && <TouchableOpacity onPress={()=>addRemoveDate()}>
+        {props.longPressSetting === 'false' && <TouchableOpacity
+          onPress={()=>addRemoveDate()}
+          style={styles(state.theme).TouchableSelect}
+            >
           {selected &&
-            <FontAwesome style={styles(state.theme).CheckboxPlus} name="check"/>}
+            <FontAwesome
+              style={styles(state.theme).CheckboxPlus}
+              name="check"/>}
           {!selected &&
-            <FontAwesome style={styles(state.theme).Checkbox} name='close'/>}
+            <FontAwesome
+              style={styles(state.theme).Checkbox}
+              name='close'/>}
         </TouchableOpacity>}
-
       </View>
     </TouchableOpacity>
   )
@@ -87,6 +111,12 @@ const styles = (props) => StyleSheet.create({
     height: 65,
     borderRadius: 30,
   },
+  TouchableSelect:{
+    height:'100%',
+    width:'100%',
+    justifyContent:'center',
+    alignItems:'center'
+  },
   TextElem:{
     flex:8,
     textAlign: "left",
@@ -97,6 +127,8 @@ const styles = (props) => StyleSheet.create({
   CheckboxView:{
     flex:3,
     alignItems: 'center',
+    height:'100%',
+    justifyContent: 'center',
   },
   CheckboxPlus:{
     fontSize:30,

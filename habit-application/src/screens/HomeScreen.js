@@ -1,23 +1,31 @@
-import React, {useState, useEffect, useContext} from 'react';
-import {View, Text, StyleSheet, TouchableOpacity, FlatList, Platform, StatusBar, ImageBackground} from 'react-native';
-import {NavigationEvents} from 'react-navigation';
-import {FontAwesome5} from '@expo/vector-icons';
+import React, { useState, useEffect, useContext } from 'react';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  FlatList,
+  Platform,
+  StatusBar,
+  ImageBackground } from 'react-native';
+import { NavigationEvents } from 'react-navigation';
+import { FontAwesome5 } from '@expo/vector-icons';
 import Spinner from 'react-native-loading-spinner-overlay';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
-import {useNetInfo} from "@react-native-community/netinfo";
-import GestureRecognizer, {swipeDirections} from 'react-native-swipe-gestures';
+import { useNetInfo } from "@react-native-community/netinfo";
+import GestureRecognizer, { swipeDirections } from 'react-native-swipe-gestures';
 import NetInfo from '@react-native-community/netinfo';
 import MyHeader from '../components/Header';
 import HabitRow from '../components/HabitRow';
 import ErrModal from '../components/ErrModal';
-import {MyContext as HabitContext} from '../context/habitContext';
-import {MyContext as ThemeContext} from '../context/themeContext';
-import {MyContext as LanguageContext} from '../context/languageContext';
+import { MyContext as HabitContext } from '../context/habitContext';
+import { MyContext as ThemeContext } from '../context/themeContext';
+import { MyContext as LanguageContext } from '../context/languageContext';
 
 const HomeScreen = ({navigation}) => {
   const getFormatedDay = (selectDate) => {
     const dd = String(selectDate.getDate()).padStart(2, '0');
-    const mm = String(selectDate.getMonth() + 1).padStart(2, '0'); //January is 0!
+    const mm = String(selectDate.getMonth() + 1).padStart(2, '0');
     const yyyy = selectDate.getFullYear();
     const formatedDate = mm + '/' + dd + '/' + yyyy;
     return formatedDate;
@@ -41,12 +49,10 @@ const HomeScreen = ({navigation}) => {
     };
 
   const onSwipeLeft = () => {
-    console.log('swipeLeft');
     selectNextDay();
   };
 
   const onSwipeRight = () => {
-    console.log('swipeRight');
     selectPreviousDay();
   };
 
@@ -67,8 +73,6 @@ const HomeScreen = ({navigation}) => {
     setSelectedDay(formatedDate);
     hideDatePicker();
   };
-
-  //TODO add error messages when del habit or new habit goes wrong
 
   const delHabit = async (id) => {
     NetInfo.fetch().then(async state => {
@@ -247,13 +251,23 @@ const HomeScreen = ({navigation}) => {
     }
   };
 
+  const activateShortClick = () => {
+    setErrModalMsg(languageContext.state.language.activateShortClick);
+    setTimeout(() => {
+      setErrModalMsg('');
+    }, 3000);
+  };
+
   useEffect(() => {
     navigation.setParams({ selectedHabit: selectedHabit });
   }, [selectedHabit]);
 
   return (
     <View style={styles(themeContext.state.theme).container}>
-      <ErrModal isVisible={errModalMsg!==''?true:false} errMessage={errModalMsg} onPressOutside={()=>setErrModalMsg('')}/>
+      <ErrModal
+        isVisible={errModalMsg!==''?true:false}
+        errMessage={errModalMsg}
+        onPressOutside={()=>setErrModalMsg('')}/>
       <View>
         <Spinner
           visible={loading?true:false}
@@ -279,16 +293,27 @@ const HomeScreen = ({navigation}) => {
           flex: 1,
         }}
         >
-        <ImageBackground source={{uri: themeContext.state.theme.backgroundImage}} style={styles(themeContext.state.theme).ImageBackground}>
-              {reloadButton && <TouchableOpacity style={styles(themeContext.state.theme).ReloadButton} onPress={()=>loadHabits()}>
-                <FontAwesome5 style={styles(themeContext.state.theme).Icon} name="sync-alt"/>
+        <ImageBackground
+          source={{uri: themeContext.state.theme.backgroundImage}}
+          style={styles(themeContext.state.theme).ImageBackground}>
+              {reloadButton && <TouchableOpacity
+                style={styles(themeContext.state.theme).ReloadButton}
+                onPress={()=>loadHabits()}>
+                <FontAwesome5
+                  style={styles(themeContext.state.theme).Icon}
+                  name="sync-alt"/>
               </TouchableOpacity>}
-              {state.length === 0 && !loading && <TouchableOpacity style={styles(themeContext.state.theme).FirstCreate}
-                onPress={()=>navigation.navigate('Create', {theme: themeContext.state.theme, language: languageContext.state.language})}>
+              {state.length === 0 && !loading && <TouchableOpacity
+                style={styles(themeContext.state.theme).FirstCreate}
+                onPress={()=>navigation.navigate('Create', {
+                  theme: themeContext.state.theme,
+                  language: languageContext.state.language})}>
                 <Text style={styles(themeContext.state.theme).FirstText}>
                   Create your first habbit!
                 </Text>
-                <FontAwesome5 style={styles(themeContext.state.theme).Icon} name="plus"/>
+                <FontAwesome5
+                  style={styles(themeContext.state.theme).Icon}
+                  name="plus"/>
               </TouchableOpacity>}
               <FlatList style={styles(themeContext.state.theme).flatList}
                 data={state}
@@ -296,8 +321,6 @@ const HomeScreen = ({navigation}) => {
                 extraData={selectedHabit}
                 renderItem= {({item}) => {
                   const selDay = new Date(selectedDay);
-                  //item.trackedDays['mon'] == false then if selected day == mon and our settings
-                  // is not show then not show
                   if(languageContext.state.showNotChosenDays === 'false'){
                     const dayList = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
                     var dayName = dayList[selDay.getDay()];
@@ -310,9 +333,14 @@ const HomeScreen = ({navigation}) => {
                             ID={item._id}
                             SelectedDate={selectedDay}
                             Selected={selectedHabit === item._id?true:false}
-                            onPress={()=>{navigation.navigate('Detail', {item: item._id, data: item, theme: themeContext.state.theme, language: languageContext.state.language})}}
+                            onPress={()=>{navigation.navigate('Detail', {
+                              item: item._id,
+                              data: item,
+                              theme: themeContext.state.theme,
+                              language: languageContext.state.language})}}
                             onLongPress={()=>{selectHabit(item._id)}}
                             addDate={()=>{addDate(item._id)}}
+                            activateShortClick={()=>{activateShortClick()}}
                             longPressSetting={languageContext.state.longClickHabit}
                             removeDate={()=>{removeDate(item._id)}}>
                           </HabitRow>
@@ -328,9 +356,14 @@ const HomeScreen = ({navigation}) => {
                           ID={item._id}
                           SelectedDate={selectedDay}
                           Selected={selectedHabit === item._id?true:false}
-                          onPress={()=>{navigation.navigate('Detail', {item: item._id, data: item, theme: themeContext.state.theme, language: languageContext.state.language})}}
+                          onPress={()=>{navigation.navigate('Detail', {
+                            item: item._id,
+                            data: item,
+                            theme: themeContext.state.theme,
+                            language: languageContext.state.language})}}
                           onLongPress={()=>{selectHabit(item._id)}}
                           addDate={()=>{addDate(item._id)}}
+                          activateShortClick={()=>{activateShortClick()}}
                           longPressSetting={languageContext.state.longClickHabit}
                           removeDate={()=>{removeDate(item._id)}}>
                         </HabitRow>
@@ -347,6 +380,13 @@ const HomeScreen = ({navigation}) => {
 
 HomeScreen.navigationOptions = ({navigation}) => {
   const { params } = navigation.state;
+  if(params !== undefined){
+    if(!params.hasOwnProperty('language')){
+      return;
+    }
+  } else {
+    return;
+  }
   const language = params.language;
   return MyHeader(navigation, language);
 };

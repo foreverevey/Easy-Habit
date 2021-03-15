@@ -1,16 +1,14 @@
 import createDataContext from './createDataContext';
 import habitApi from '../api/habitApi';
-import {AsyncStorage} from 'react-native';
+import { AsyncStorage } from 'react-native';
 import { navigate } from '../navigationRef';
 
 const authReducer = (state, action) => {
   switch(action.type){
     case 'add_error':
       return {...state, errorMessage: action.payload}
-    //LOGGING IN
     case 'signin':
       return {errorMessage: '', token: action.payload}
-    // REGISTER
     case 'signup':
       return {errorMessage: '', token: action.payload}
     case 'forgot':
@@ -36,7 +34,6 @@ const tryLocalSignin = dispatch => async () =>{
 
 const signin = dispatch => {
   return async ({ email, password }) => {
-    //make api request to sign up with that email and password
     try{
       const response = await habitApi.post('/signin', {email, password});
       await AsyncStorage.setItem('token', response.data.token);
@@ -67,14 +64,10 @@ const signup = (dispatch) =>{
 
 const forgotPassword = (dispatch) => async ({email}) => {
   try{
-    console.log('is this working');
     const response = await habitApi.post('/signin/forgot', {email});
-    console.log('resp', response);
-    console.log('hi');
     dispatch({type:'forgot', payload: null});
     return true;
   }catch(err){
-    console.log('err', err, err.response);
     dispatch({type: 'add_error', payload: err.response.data.error});
     return false;
   }
@@ -84,7 +77,6 @@ const submitCode = (dispatch) => {
   return async ({email, code})=>{
     try{
       const response = await habitApi.post('/signin/submit', {email, code});
-      console.log('resp', response);
       dispatch({type:'submit', payload: null});
       return true;
     }catch(err){
@@ -98,7 +90,6 @@ const submitPassword = (dispatch) => {
   return async ({email, password})=>{
     try{
       const response = await habitApi.post('/signin/change', {email, password});
-      console.log('resp', response);
       dispatch({type:'change', payload: null});
       return true;
     }catch(err){
@@ -111,6 +102,6 @@ const submitPassword = (dispatch) => {
 
 export const { MyContext , Provider} = createDataContext(
   authReducer,
-  {signin, signup, tryLocalSignin, forgotPassword, submitCode, submitPassword},
+  { signin, signup, tryLocalSignin, forgotPassword, submitCode, submitPassword },
   { token: null, errorMessage: ''}
 );

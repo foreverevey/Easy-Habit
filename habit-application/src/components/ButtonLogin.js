@@ -1,6 +1,6 @@
-import React, {useContext} from 'react';
-import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
-import {MyContext as ThemeContext} from '../context/themeContext';
+import React, { useContext } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { MyContext as ThemeContext } from '../context/themeContext';
 
 const ButtonLogin = (props) => {
   const {state} = useContext(ThemeContext);
