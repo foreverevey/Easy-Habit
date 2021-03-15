@@ -328,7 +328,7 @@ const styles = (props) => StyleSheet.create({
   },
   Username:{
     flexDirection: 'row',
-    flex: 1,
+    // flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: props.habitRowBackground,

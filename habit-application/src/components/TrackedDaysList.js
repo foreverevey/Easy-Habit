@@ -144,31 +144,33 @@ const styles = (props) => StyleSheet.create({
   CheckboxPlus:{
     fontSize:26,
     color: props.checkPlus,
+    textAlign: 'center',
   },
   Checkbox:{
     fontSize:26,
     color: props.checkPlus,
+    textAlign: 'center',
   },
   Schedule2:{
     flexDirection: 'row',
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    marginLeft: 20,
   },
   Schedule1:{
     flexDirection: 'row',
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    marginLeft: 20,
   },
   Schedule1Item:{
     flex: 1,
     color: props.headerPlus,
+    textAlign: 'center',
   },
   trackDays:{
     height: 70,
+
   },
 });
 

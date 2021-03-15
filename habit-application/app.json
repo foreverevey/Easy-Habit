@@ -2,7 +2,7 @@
   "expo": {
     "name": "Easy Habit",
     "slug": "EasyHabit",
-    "version": "0.0.2",
+    "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/appLogo.png",
     "splash": {
@@ -25,7 +25,7 @@
         "backgroundColor": "#FFFFFF"
       },
       "package": "s.k.easyhabit",
-      "versionCode": 3
+      "versionCode": 5
     },
     "web": {
       "favicon": "./assets/appLogo.png"

@@ -89,10 +89,12 @@ export default {
       'react-native-swipe-gestures\n'+
       'moment.js',
     'accordionTitle3': 'Changelog',
-    'accordionContent3': 'Added gesture swipe left and right for easier date change in main screen\n'+
-      'Added password recovery option\n'+
-      'Added different error messages\n'+
-      'Acounts can only be created with valid email address',
+    'accordionContent3': 'Added message for long click settings change\n'+
+      'Fixed bug on internet being gone on login screen and not redirecting\n'+
+      'Fixed editing habit without internet loading spinner\n'+
+      'Added settings to login/register screens\n'+
+      'Changed icon for weekly days for habits\n'+
+      'Changed size of header buttons',
     'version': 'Version 0.0.2',
     'createdBy': 'Created by Simonas Kralikas',
     'contact': 'patkppDev@gmail.com',
@@ -188,10 +190,12 @@ export default {
       'react-native-swipe-gestures\n'+
       'moment.js',
     'accordionTitle3': 'Changelog',
-    'accordionContent3': 'Tilføjet gestus stryg til venstre og højre for lettere datoændring på hovedskærmen\n'+
-      'Tilføjet mulighed for gendannelse af adgangskode\n'+
-      'Tilføjet forskellige fejlmeddelelser\n'+
-      'Konti kan kun oprettes med gyldig e-mail-adresse',
+    'accordionContent3': 'Tilføjet besked for ændring af indstillinger for lange klik\n'+
+      'Rettet fejl på internettet er væk på loginskærmen og omdirigerer ikke\n'+
+      'Fast redigeringsvaner uden internetindlæsningsspinner\n'+
+      'Tilføjede indstillinger til login / register skærmbilleder\n'+
+      'Ændret ikon for ugentlige dage for vaner\n'+
+      'Ændret størrelse på header-knapper for lettere adgang',
     'version': 'Version 0.0.2',
     'createdBy': 'Lavet af Simonas Kralikas',
     'contact': 'patkppDev@gmail.com',
@@ -287,10 +291,12 @@ export default {
       'react-native-swipe-gestures\n'+
       'moment.js',
     'accordionTitle3': 'Pakeitimų žurnalas',
-    'accordionContent3': 'Pridėtas gestas perbraukite kairėn ir dešinėn, kad būtų lengviau pakeisti datą pagrindiniame ekrane\n'+
-      'Pridėta slaptažodžio atkūrimo galimybė\n'+
-      'Pridėta įvairių klaidų pranešimų\n'+
-      'Paskyras galima sukurti tik naudojant galiojantį el. Pašto adresą',
+    'accordionContent3': 'Pridėtas pranešimas apie ilgų paspaudimų nustatymų pakeitimą\n'+
+      'Ištaisyta klaida prisijungimo ekrane kai nėra interneto\n'+
+      'Ištaisyta klaida redaguojant įprotį, kai nėra interneto \n'+
+      'Pridėta nustatymų prie prisijungimo / registracijos ekranų\n'+
+      'Pakeista įpročių savaitės dienų piktograma\n'+
+      'Pakeistas antraštės mygtukų dydis',
     'version': 'Version 0.0.2',
     'createdBy': 'Kūrėjas - Simonas Kralikas',
     'contact': 'patkppDev@gmail.com',

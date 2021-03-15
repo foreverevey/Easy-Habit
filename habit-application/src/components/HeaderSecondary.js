@@ -212,7 +212,9 @@ const MyHeaderSecondary = (navigation, text, theme, language) => {
               width:60,
               textAlign:'center',
               textAlignVertical:'center',
-              backgroundColor: 'black',
+              minHeight: screenHeight * 0.10,
+              justifyContent: 'center',
+              alignItems: 'center',
             }}
             onPress={()=>navigation.goBack()}>
             <FontAwesome

@@ -7,7 +7,8 @@ import {
   FlatList,
   Platform,
   StatusBar,
-  ImageBackground } from 'react-native';
+  ImageBackground,
+  Dimensions } from 'react-native';
 import { NavigationEvents } from 'react-navigation';
 import { FontAwesome5 } from '@expo/vector-icons';
 import Spinner from 'react-native-loading-spinner-overlay';
@@ -42,6 +43,8 @@ const HomeScreen = ({navigation}) => {
   const [errModalMsg, setErrModalMsg] = useState('');
   const [reloadButton, setReloadButton] = useState(false);
   const netInfo = useNetInfo();
+  const screenHeight = Dimensions.get('window').height;
+  const screenWidth = Dimensions.get('window').height;
 
   const config = {
       velocityThreshold: 0.3,
@@ -263,7 +266,7 @@ const HomeScreen = ({navigation}) => {
   }, [selectedHabit]);
 
   return (
-    <View style={styles(themeContext.state.theme).container}>
+    <View style={styles(themeContext.state.theme, screenWidth, screenHeight).container}>
       <ErrModal
         isVisible={errModalMsg!==''?true:false}
         errMessage={errModalMsg}
@@ -272,7 +275,7 @@ const HomeScreen = ({navigation}) => {
         <Spinner
           visible={loading?true:false}
           textContent={languageContext.state.language.spinnerLoading}
-          textStyle={styles(themeContext.state.theme).spinnerTextStyle}
+          textStyle={styles(themeContext.state.theme, screenWidth, screenHeight).spinnerTextStyle}
         />
       </View>
       <View>
@@ -295,27 +298,27 @@ const HomeScreen = ({navigation}) => {
         >
         <ImageBackground
           source={{uri: themeContext.state.theme.backgroundImage}}
-          style={styles(themeContext.state.theme).ImageBackground}>
+          style={styles(themeContext.state.theme, screenWidth, screenHeight).ImageBackground}>
               {reloadButton && <TouchableOpacity
-                style={styles(themeContext.state.theme).ReloadButton}
+                style={styles(themeContext.state.theme, screenWidth, screenHeight).ReloadButton}
                 onPress={()=>loadHabits()}>
                 <FontAwesome5
-                  style={styles(themeContext.state.theme).Icon}
+                  style={styles(themeContext.state.theme, screenWidth, screenHeight).Icon}
                   name="sync-alt"/>
               </TouchableOpacity>}
               {state.length === 0 && !loading && <TouchableOpacity
-                style={styles(themeContext.state.theme).FirstCreate}
+                style={styles(themeContext.state.theme, screenWidth, screenHeight).FirstCreate}
                 onPress={()=>navigation.navigate('Create', {
                   theme: themeContext.state.theme,
                   language: languageContext.state.language})}>
-                <Text style={styles(themeContext.state.theme).FirstText}>
+                <Text style={styles(themeContext.state.theme, screenWidth, screenHeight).FirstText}>
                   Create your first habbit!
                 </Text>
                 <FontAwesome5
-                  style={styles(themeContext.state.theme).Icon}
+                  style={styles(themeContext.state.theme, screenWidth, screenHeight).Icon}
                   name="plus"/>
               </TouchableOpacity>}
-              <FlatList style={styles(themeContext.state.theme).flatList}
+              <FlatList style={styles(themeContext.state.theme, screenWidth, screenHeight).flatList}
                 data={state}
                 keyExtractor={item => item._id}
                 extraData={selectedHabit}
@@ -391,7 +394,7 @@ HomeScreen.navigationOptions = ({navigation}) => {
   return MyHeader(navigation, language);
 };
 
-const styles = (props) => StyleSheet.create({
+const styles = (props, screenWidth, screenHeight) => StyleSheet.create({
   spinnerTextStyle: {
     color: '#FFF'
   },

@@ -7,7 +7,8 @@ import {
   Image,
   AsyncStorage,
   ImageBackground,
-  TouchableOpacity } from 'react-native';
+  TouchableOpacity,
+  Dimensions } from 'react-native';
 import Spinner from 'react-native-loading-spinner-overlay';
 import { useNetInfo } from "@react-native-community/netinfo";
 import changeNavigationBarColor, {
@@ -36,6 +37,8 @@ const LoginScreen = ({navigation}) => {
   const [errModalMsg, setErrModalMsg] = useState('');
   const netInfo = useNetInfo();
   const [readyNavigate, setReadyNavigate] = useState(false);
+  const screenHeight = Dimensions.get('window').height;
+  const screenWidth = Dimensions.get('window').height;
 
   useEffect(()=>{
     setUserSettings().then(()=>{
@@ -142,32 +145,32 @@ const LoginScreen = ({navigation}) => {
   };
 
   return (
-    <View style={styles(themeContext.state.theme).MainParent}>
+    <View style={styles(themeContext.state.theme, screenWidth, screenHeight).MainParent}>
       <ErrModal
         isVisible={errModalMsg!==''?true:false}
         errMessage={errModalMsg}
         onPressOutside={()=>setErrModalMsg('')}/>
       {loadingScreen && <View
-        style={styles(themeContext.state.theme).loadingScreen}>
+        style={styles(themeContext.state.theme, screenWidth, screenHeight).loadingScreen}>
         <Image
           source={require('../../assets/appLogo.png')}
-          style={styles(themeContext.state.theme).LoadingImage}/>
+          style={styles(themeContext.state.theme, screenWidth, screenHeight).LoadingImage}/>
       </View>}
       <View>
         <Spinner
           visible={loading?true:false}
           textContent={languageContext.state.language.spinnerLoading}
-          textStyle={styles(themeContext.state.theme).spinnerTextStyle}
+          textStyle={styles(themeContext.state.theme, screenWidth, screenHeight).spinnerTextStyle}
         />
       </View>
       {!loadingScreen && <ImageBackground
         source={{uri: themeContext.state.theme.backgroundImage}}
-        style={styles(themeContext.state.theme).ImageBackground}>
+        style={styles(themeContext.state.theme, screenWidth, screenHeight).ImageBackground}>
         <Image
           source={require('../../assets/appLogo.png')}
-          style={styles(themeContext.state.theme).ImageStyle}/>
+          style={styles(themeContext.state.theme, screenWidth, screenHeight).ImageStyle}/>
         <TextInput
-          style = {styles(themeContext.state.theme).input}
+          style = {styles(themeContext.state.theme, screenWidth, screenHeight).input}
           autoCapitalize="none"
           autoCorrect={false}
           value={email}
@@ -175,9 +178,9 @@ const LoginScreen = ({navigation}) => {
           placeholder={languageContext.state.language.userNameInputPlaceholder}
           placeholderTextColor={themeContext.state.theme.placeholderText}
         />
-        <View style={styles(themeContext.state.theme).passwordInput}>
+        <View style={styles(themeContext.state.theme, screenWidth, screenHeight).passwordInput}>
           <TextInput
-            style = {styles(themeContext.state.theme).inputPass}
+            style = {styles(themeContext.state.theme, screenWidth, screenHeight).inputPass}
             autoCapitalize="none"
             autoCorrect={false}
             value={password}
@@ -193,12 +196,12 @@ const LoginScreen = ({navigation}) => {
             />
         </View>
         {badAttempt && <View>
-          <Text style={styles(themeContext.state.theme).errorMessage}>
+          <Text style={styles(themeContext.state.theme, screenWidth, screenHeight).errorMessage}>
             {languageContext.state.language.loginScreenWrong}
           </Text>
         </View>}
         <ButtonLogin
-          style={styles(themeContext.state.theme).Button}
+          style={styles(themeContext.state.theme, screenWidth, screenHeight).Button}
           text={languageContext.state.language.login}
           onPress={()=>attemptSignIn(email,password)}/>
         <SimpleTextLogin
@@ -224,16 +227,15 @@ LoginScreen.navigationOptions = () => {
   };
 };
 
-const styles = (props) => StyleSheet.create({
+const styles = (props, screenWidth, screenHeight) => StyleSheet.create({
   input:{
-    marginLeft:30,
-    paddingLeft:20,
-    marginRight:30,
+    marginLeft:screenWidth*0.05,
+    paddingLeft:10,
+    marginRight:screenWidth*0.05,
     borderBottomWidth:1,
-    borderRadius:30,
     borderColor: props.text,
     marginBottom: 10,
-    marginTop:75,
+    marginTop:screenHeight*0.05,
     color: props.text,
   },
   inputPass:{
@@ -245,9 +247,9 @@ const styles = (props) => StyleSheet.create({
   passwordInput:{
     flexDirection: 'row',
     borderBottomWidth: 1,
-    marginLeft:40,
-    marginRight:40,
-    borderColor: props.text
+    marginLeft:screenWidth*0.05,
+    marginRight:screenWidth*0.05,
+    borderColor: props.text,
   },
   MainParent:{
     flex: 1,
@@ -256,7 +258,7 @@ const styles = (props) => StyleSheet.create({
     width:150,
     height: 150,
     alignSelf: 'center',
-    marginTop: 75,
+    marginTop: screenHeight*0.1,
   },
   ImageBackground:{
     flex: 1,
@@ -273,7 +275,7 @@ const styles = (props) => StyleSheet.create({
     borderRadius: 30,
     backgroundColor: props.button,
     margin: 20,
-    height: 45,
+    height: screenWidth*0.07,
     alignItems: 'center',
     justifyContent: 'center',
     marginTop:50

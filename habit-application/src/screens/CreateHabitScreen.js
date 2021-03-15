@@ -5,7 +5,8 @@ import {
   TextInput,
   StyleSheet,
   TouchableOpacity,
-  ImageBackground } from 'react-native';
+  ImageBackground,
+  Dimensions } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import CheckBox from '@react-native-community/checkbox';
 import { useNetInfo } from "@react-native-community/netinfo";
@@ -35,6 +36,8 @@ const CreateHabitScreen = ({navigation}) =>{
   const [errModalMsg, setErrModalMsg] = useState('');
   const netInfo = useNetInfo();
   const [loading, setLoading] = useState(false);
+  const screenHeight = Dimensions.get('window').height;
+  const screenWidth = Dimensions.get('window').height;
 
   useEffect(() => {
     if(!netInfo.isInternetReachable){
@@ -66,7 +69,7 @@ const CreateHabitScreen = ({navigation}) =>{
   };
 
   return (
-    <View style={styles(themeContext.state.theme).MainParent}>
+    <View style={styles(themeContext.state.theme, screenHeight).MainParent}>
       <ErrModal
         isVisible={errModalMsg!==''?true:false}
         errMessage={errModalMsg}
@@ -75,15 +78,15 @@ const CreateHabitScreen = ({navigation}) =>{
         <Spinner
           visible={loading?true:false}
           textContent={languageContext.state.language.spinnerLoading}
-          textStyle={styles(themeContext.state.theme).spinnerTextStyle}
+          textStyle={styles(themeContext.state.theme, screenHeight).spinnerTextStyle}
         />
       </View>
       <ImageBackground
         source={{uri: themeContext.state.theme.backgroundImage}}
-        style={styles(themeContext.state.theme).ImageBackground}>
+        style={styles(themeContext.state.theme, screenHeight).ImageBackground}>
         <Spacer>
           <TextInput
-            style={styles(themeContext.state.theme).TextInputName}
+            style={styles(themeContext.state.theme, screenHeight).TextInputName}
             autoCapitalize="sentences"
             autoCorrect={false}
             value={name}
@@ -94,7 +97,7 @@ const CreateHabitScreen = ({navigation}) =>{
         </Spacer>
         <Spacer>
           <TextInput
-            style={styles(themeContext.state.theme).TextInputDescription}
+            style={styles(themeContext.state.theme, screenHeight).TextInputDescription}
             multiline
             autoCapitalize="sentences"
             autoCorrect={false}
@@ -106,8 +109,8 @@ const CreateHabitScreen = ({navigation}) =>{
             paddingTop={15}/>
         </Spacer>
         <Spacer>
-          {false && <View style={styles(themeContext.state.theme).Grouped}>
-            <Text style={styles(themeContext.state.theme).Text}>
+          {false && <View style={styles(themeContext.state.theme, screenHeight).Grouped}>
+            <Text style={styles(themeContext.state.theme, screenHeight).Text}>
               {languageContext.state.language.privateText}
             </Text>
             <CheckBox
@@ -120,7 +123,7 @@ const CreateHabitScreen = ({navigation}) =>{
           disabled={false}
           trackedDays={trackedDays}/>
         <ButtonLogin
-          style={styles(themeContext.state.theme).ButtonSave}
+          style={styles(themeContext.state.theme, screenHeight).ButtonSave}
           text={languageContext.state.language.create}
           onPress={()=>createHabit(name,description, privateBool, trackedDays)}/>
       </ImageBackground>
@@ -136,21 +139,21 @@ CreateHabitScreen.navigationOptions = ({navigation}) => {
   return MyHeaderSecondary(navigation, text, theme, language);
 };
 
-const styles = (props) => StyleSheet.create({
+const styles = (props, screenHeight) => StyleSheet.create({
   MainParent:{
     flex: 1,
   },
   TextInputName:{
     backgroundColor:'#fff',
     borderRadius: 15,
-    height:50,
+    height: screenHeight * 0.07,
     backgroundColor: props.habitRowBackground,
     color: props.buttonText,
   },
   TextInputDescription:{
     backgroundColor:'#fff',
     borderRadius: 15,
-    height:120,
+    height: screenHeight * 0.2,
     textAlignVertical: 'top',
     backgroundColor: props.habitRowBackground,
     color: props.buttonText,
@@ -201,13 +204,13 @@ const styles = (props) => StyleSheet.create({
     color: props.checkPlus,
   },
   trackDays:{
-    height: 70,
+    height: screenHeight * 0.1,
   },
   ButtonSave:{
     borderRadius: 30,
     backgroundColor: props.button,
     margin: 20,
-    height: 45,
+    height: screenHeight * 0.07,
     alignItems: 'center',
     justifyContent: 'center',
   },

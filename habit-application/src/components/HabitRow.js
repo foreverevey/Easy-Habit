@@ -1,11 +1,13 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Dimensions } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import { MyContext as ThemeContext } from '../context/themeContext';
 
 const HabitRow = (props) =>{
   const {state, changeTheme} = useContext(ThemeContext);
   const [selected, setSelected] = useState(false);
+  const screenHeight = Dimensions.get('window').height;
+  const screenWidth = Dimensions.get('window').height;
 
   useEffect(() => {
     const splitDay = props.SelectedDate.split('/');
@@ -44,37 +46,37 @@ const HabitRow = (props) =>{
   return (
     <TouchableOpacity
       style={props.Selected
-        ?styles(state.theme).RowSelected
-        :styles(state.theme).Row}
+        ?styles(state.theme, screenWidth, screenHeight).RowSelected
+        :styles(state.theme, screenWidth, screenHeight).Row}
       onPress={props.onPress}
       onLongPress={props.onLongPress}>
-      <Text style={styles(state.theme).TextElem}>{props.Text}</Text>
-      <View style={styles(state.theme).CheckboxView}>
+      <Text style={styles(state.theme, screenWidth, screenHeight).TextElem}>{props.Text}</Text>
+      <View style={styles(state.theme, screenWidth, screenHeight).CheckboxView}>
         {props.longPressSetting === 'true' && <TouchableOpacity
           onLongPress={()=>addRemoveDate()}
           onPress={()=>activateShortPress()}
-          style={styles(state.theme).TouchableSelect}
+          style={styles(state.theme, screenWidth, screenHeight).TouchableSelect}
           >
           {selected &&
             <FontAwesome
-              style={styles(state.theme).CheckboxPlus}
+              style={styles(state.theme, screenWidth, screenHeight).CheckboxPlus}
               name="check"/>}
           {!selected &&
             <FontAwesome
-              style={styles(state.theme).Checkbox}
+              style={styles(state.theme, screenWidth, screenHeight).Checkbox}
               name='close'/>}
         </TouchableOpacity>}
         {props.longPressSetting === 'false' && <TouchableOpacity
           onPress={()=>addRemoveDate()}
-          style={styles(state.theme).TouchableSelect}
+          style={styles(state.theme, screenWidth, screenHeight).TouchableSelect}
             >
           {selected &&
             <FontAwesome
-              style={styles(state.theme).CheckboxPlus}
+              style={styles(state.theme, screenWidth, screenHeight).CheckboxPlus}
               name="check"/>}
           {!selected &&
             <FontAwesome
-              style={styles(state.theme).Checkbox}
+              style={styles(state.theme, screenWidth, screenHeight).Checkbox}
               name='close'/>}
         </TouchableOpacity>}
       </View>
@@ -82,7 +84,7 @@ const HabitRow = (props) =>{
   )
 };
 
-const styles = (props) => StyleSheet.create({
+const styles = (props, screenWidth, screenHeight) => StyleSheet.create({
   Row:{
     flexDirection: 'row',
     flex: 1,
@@ -91,7 +93,7 @@ const styles = (props) => StyleSheet.create({
     backgroundColor: props.habitRowBackground,
     marginBottom:10,
     paddingLeft:10,
-    height:75,
+    height:screenHeight * 0.1,
     borderRadius:30,
   },
   RowSelected:{
@@ -108,7 +110,7 @@ const styles = (props) => StyleSheet.create({
     marginLeft: 10,
     marginRight: 10,
     paddingLeft: 10,
-    height: 65,
+    height: screenHeight * 0.08,
     borderRadius: 30,
   },
   TouchableSelect:{

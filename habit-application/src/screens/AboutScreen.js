@@ -62,7 +62,7 @@ const AboutScreen = ({navigation}) =>{
 
   return (
     <View style={styles(themeContext.state.theme).MainParent}>
-      <ScrollView contentContainerStyle={{ flex: 1 }}>
+      <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
         <ImageBackground
           source={{uri: themeContext.state.theme.backgroundImage}}
           style={styles(themeContext.state.theme).ImageBackground}>

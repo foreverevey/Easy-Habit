@@ -1,9 +1,9 @@
 {
   "expoServerPort": 19000,
   "packagerPort": 19001,
-  "packagerPid": 23312,
-  "expoServerNgrokUrl": "https://is-pwe.foreverevey.habit-application.exp.direct",
-  "packagerNgrokUrl": "https://packager.is-pwe.foreverevey.habit-application.exp.direct",
-  "ngrokPid": 22972,
+  "packagerPid": 24920,
+  "expoServerNgrokUrl": "https://mq-w78.foreverevey.habit-application.exp.direct",
+  "packagerNgrokUrl": "https://packager.mq-w78.foreverevey.habit-application.exp.direct",
+  "ngrokPid": 21784,
   "devToolsPort": 19002
 }
