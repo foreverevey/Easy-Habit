@@ -27,7 +27,9 @@
 <!-- PROJECT LOGO -->
 <br />
 <p align="center">
-
+  <a>
+    <img src="habit-application/assets/appLogo.png" alt="Logo" width="80" height="80">
+  </a>
   <h3 align="center">Easy Habit</h3>
 
   <p align="center">
@@ -78,9 +80,9 @@ Main functionalities:
 * Registration complete with email, reset password easily.
 * 3 different themes, 3 languages (EN, DK, LT)
 
-Of course, no one template will serve all projects since your needs may be different. So I'll be adding more in the near future. You may also suggest changes by forking this repo and creating a pull request or opening an issue. Thanks to all the people have have contributed to expanding this template!
+App has no adds whatsoever and no plans to implement. The goal of this app is professional growth and improvement.
 
-A list of commonly used resources that I find helpful are listed in the acknowledgements.
+There are no in-app purchases or any limitations. It's completely free, and only thing appreciated is feedback and reviews.
 
 ### Built With
 
@@ -104,11 +106,6 @@ Technologies used in this project:
 
 <!-- GETTING STARTED -->
 ## Getting Started
-
-This is an example of how you may give instructions on setting up your project locally.
-To get a local copy up and running follow these simple example steps.
-
-### Installation
 
 1. Get App at Google Store [Easy Habit](https://play.google.com/store/apps/details?id=s.k.easyhabit)
 
