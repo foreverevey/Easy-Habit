@@ -22,6 +22,7 @@ const authRoutes = require('./routes/authRoutes');
 const habitRoutes = require('./routes/habitRoutes');
 const emailRoutes = require('./routes/emailRoutes');
 const requireAuth = require('./middlewares/requireAuth');
+let mongoSecret = process.env.mongo_uri
 
 // declare a new express app
 var app = express()
@@ -38,7 +39,7 @@ app.use(function(req, res, next) {
   next()
 });
 
-const mongoUri = 'mongodb+srv://patkpp:oF5gKX6TJEzH2UsO@cluster0-wsz7g.mongodb.net/test?retryWrites=true&w=majority'
+const mongoUri = mongoSecret
 mongoose.connect(mongoUri, {
   useNewUrlParser: true,
   useCreateIndex: true

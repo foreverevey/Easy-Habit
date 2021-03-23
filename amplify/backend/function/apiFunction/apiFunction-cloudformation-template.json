@@ -68,7 +68,7 @@
 				"Timeout": "25",
 				"Code": {
 					"S3Bucket": "amplify-habit12202020-dev-135559-deployment",
-					"S3Key": "amplify-builds/apiFunction-716444733153784d4872-build.zip"
+					"S3Key": "amplify-builds/apiFunction-493579474a3145465744-build.zip"
 				}
 			}
 		},

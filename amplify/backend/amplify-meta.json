@@ -29,15 +29,15 @@
 				"Name": "apiFunction-dev",
 				"LambdaExecutionRole": "habit12202020LambdaRole16ffa4ad-dev"
 			},
-			"lastPushTimeStamp": "2021-03-15T09:43:30.629Z",
+			"lastPushTimeStamp": "2021-03-23T12:56:34.595Z",
 			"providerMetadata": {
 				"s3TemplateURL": "https://s3.amazonaws.com/amplify-habit12202020-dev-135559-deployment/amplify-cfn-templates/function/apiFunction-cloudformation-template.json",
 				"logicalId": "functionapiFunction"
 			},
-			"lastBuildTimeStamp": "2021-03-15T09:42:06.212Z",
-			"lastPackageTimeStamp": "2021-03-15T09:42:27.428Z",
-			"distZipFilename": "apiFunction-716444733153784d4872-build.zip",
-			"lastPushDirHash": "vorkF5R59DVp1l0pkhyDFwnKWS0="
+			"lastBuildTimeStamp": "2021-03-23T12:55:04.399Z",
+			"lastPackageTimeStamp": "2021-03-23T12:55:27.999Z",
+			"distZipFilename": "apiFunction-493579474a3145465744-build.zip",
+			"lastPushDirHash": "AAqdvpnTglTheqzxqjwNmxZvb8E="
 		}
 	},
 	"api": {
@@ -59,7 +59,7 @@
 				"RootUrl": "https://nnjf8umzo4.execute-api.eu-west-1.amazonaws.com/dev",
 				"ApiId": "nnjf8umzo4"
 			},
-			"lastPushTimeStamp": "2021-03-15T09:43:30.618Z",
+			"lastPushTimeStamp": "2021-03-23T12:56:34.583Z",
 			"providerMetadata": {
 				"s3TemplateURL": "https://s3.amazonaws.com/amplify-habit12202020-dev-135559-deployment/amplify-cfn-templates/api/mainApi-cloudformation-template.json",
 				"logicalId": "apimainApi"
