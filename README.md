@@ -52,14 +52,7 @@
     </li>
     <li>
       <a href="#getting-started">Getting Started</a>
-      <ul>
-        <li><a href="#prerequisites">Prerequisites</a></li>
-        <li><a href="#installation">Installation</a></li>
-      </ul>
     </li>
-    <li><a href="#usage">Usage</a></li>
-    <li><a href="#roadmap">Roadmap</a></li>
-    <li><a href="#contributing">Contributing</a></li>
     <li><a href="#license">License</a></li>
     <li><a href="#contact">Contact</a></li>
     <li><a href="#acknowledgements">Acknowledgements</a></li>
@@ -95,14 +88,6 @@ Technologies used in this project:
 * [MongoDB](https://www.mongodb.com/)
 * [Mongoose](https://mongoosejs.com/)
 * [Express.js](https://expressjs.com/)
-* [React Native Modal Datetime Picker](https://github.com/mmazzarolo/react-native-modal-datetime-picker)
-* [React Native Loading Spinner Overlay](https://github.com/joinspontaneous/react-native-loading-spinner-overlay)
-* [React Native NetInfo](https://github.com/react-native-netinfo/react-native-netinfo)
-* [React Native Collapsible](https://github.com/oblador/react-native-collapsible)
-* [React Native Chart Kit](https://github.com/indiespirit/react-native-chart-kit)
-* [React Native Calendars](https://github.com/wix/react-native-calendars)
-* [React Native Swipe Gestures](https://github.com/glepur/react-native-swipe-gestures)
-* [moment.js](https://momentjs.com/)
 
 <!-- GETTING STARTED -->
 ## Getting Started
@@ -124,6 +109,14 @@ Project Link: [https://github.com/your_username/repo_name](https://github.com/yo
 <!-- ACKNOWLEDGEMENTS -->
 ## Acknowledgements
 * [Font Awesome](https://fontawesome.com)
+* [React Native Modal Datetime Picker](https://github.com/mmazzarolo/react-native-modal-datetime-picker)
+* [React Native Loading Spinner Overlay](https://github.com/joinspontaneous/react-native-loading-spinner-overlay)
+* [React Native NetInfo](https://github.com/react-native-netinfo/react-native-netinfo)
+* [React Native Collapsible](https://github.com/oblador/react-native-collapsible)
+* [React Native Chart Kit](https://github.com/indiespirit/react-native-chart-kit)
+* [React Native Calendars](https://github.com/wix/react-native-calendars)
+* [React Native Swipe Gestures](https://github.com/glepur/react-native-swipe-gestures)
+* [moment.js](https://momentjs.com/)
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
