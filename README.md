@@ -38,7 +38,17 @@
   </p>
 </p>
 
-
+<div style="display:flex;">
+  <div style="flex:1;padding:20px">
+    <img src="habit-application/assets/Screenshot_1615821441.png" alt="Logo" width="180" height="320">
+  </div>
+  <div style="flex:1;padding:20px">
+    <img src="habit-application/assets/Screenshot_1615821437.png" alt="Logo" width="180" height="320">
+  </div>
+  <div style="flex:1;padding:20px">
+    <img src="habit-application/assets/Screenshot_1615821451.png" alt="Logo" width="180" height="320">
+  </div>
+</div>
 
 <!-- TABLE OF CONTENTS -->
 <details open="open">
