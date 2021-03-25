@@ -104,7 +104,7 @@ Distributed under the MIT License. See `LICENSE` for more information.
 
 Simonas Kralikas - patkppDev@gmail.com
 
-Project Link: [https://github.com/foreverevey/Habits](https://github.com/foreverevey/Habits)
+Project Link: [https://github.com/foreverevey/Easy-Habits](https://github.com/foreverevey/Easy-Habit)
 
 <!-- ACKNOWLEDGEMENTS -->
 ## Acknowledgements
